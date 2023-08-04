@@ -129,9 +129,9 @@
 
     <Paginate
       slot="pagination"
-      size={data?.pagination?.page_size ?? 10}
-      count={data?.pagination?.total_pages ?? 1}
-      index={data?.pagination?.current_page ?? 1}
+      size={data?.pagination?.page_size ?? 0}
+      count={data?.pagination?.total_pages ?? 0}
+      index={data?.pagination?.current_page ?? 0}
     />
   </Table>
 </div>
