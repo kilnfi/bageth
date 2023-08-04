@@ -5,7 +5,7 @@
 
 <header class="p-2 w-full xl:fixed flex justify-between items-center">
   <h1 class="bg-black text-white flex rounded text-xl gap-x-2">
-    <div class="w-10 bg-center bg-contain bg-no-repeat bg-[url(favicon.png)]" />
+    <div class="w-10 bg-center bg-contain bg-no-repeat bg-[url(/favicon.png)]" />
 
     <a href="/" class="pr-2 py-1"> bageth </a>
   </h1>
