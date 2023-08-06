@@ -20,7 +20,8 @@
 </script>
 
 <button
-  class="bg-black text-white px-1.5 py-0.5 rounded-md"
+  class="bg-black w-24 text-white border dark:bg-white dark:text-black
+    px-1.5 py-0.5 rounded-md"
   on:click={onChangeNetwork}
 >
   {#if $network === "mainnet"}

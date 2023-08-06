@@ -1,17 +1,25 @@
 <script lang="ts">
   import ConnectWallet from "./ConnectWallet.svelte";
+  import DarkModeSwitch from "./DarkModeSwitch.svelte";
   import NetworkSelector from "./NetworkSelector.svelte";
 </script>
 
-<header class="p-2 w-full xl:fixed flex justify-between items-center">
-  <h1 class="bg-black text-white flex rounded text-xl gap-x-2">
-    <div class="w-10 bg-center bg-contain bg-no-repeat bg-[url(/favicon.png)]" />
-
-    <a href="/" class="pr-2 py-1"> bageth </a>
-  </h1>
+<header class="py-2 xl:px-2 w-full xl:fixed flex justify-between items-center">
+  <a href="/" class="flex items-center rounded-md bg-black dark:invert text-white">
+    <img
+      src="/favicon.png"
+      alt="logo"
+      width="30"
+      height="30"
+      class="rounded-md"
+    />
+    <span class="px-1.5 py-0.5">bageth</span>
+  </a>
 
   <div class="flex items-center gap-x-2">
     <ConnectWallet />
+
+    <DarkModeSwitch />
 
     <NetworkSelector />
   </div>

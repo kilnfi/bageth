@@ -1,10 +1,6 @@
-<script>
-  export let loading = false;
-</script>
-
 <div class="w-full flex flex-col gap-y-4">
   <div class="max-w-full overflow-x-auto">
-    <table class="table w-full {loading ? 'loading' : ''}">
+    <table class="table w-full">
       <slot name="head" />
       <slot name="body" />
     </table>
@@ -25,5 +21,15 @@
   }
   :global(table td.table-btn) {
     @apply absolute right-0 top-0;
+  }
+
+  :global(html.dark table th) {
+    @apply border-white text-gray-200;
+  }
+  :global(html.dark table tr) {
+    @apply hover:bg-neutral-900;
+  }
+  :global(html.dark table td:not(.table-btn)) {
+    @apply text-white;
   }
 </style>

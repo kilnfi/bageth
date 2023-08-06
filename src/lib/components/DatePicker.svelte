@@ -61,7 +61,7 @@
   }
 </script>
 
-<div class="flex flex-col gap-y-3 border rounded-lg p-3">
+<div class="flex flex-col gap-y-3 border bg-white dark:bg-black rounded-lg p-3">
   <div class="flex gap-x-3 items-center justify-center">
     <input
       type="date"

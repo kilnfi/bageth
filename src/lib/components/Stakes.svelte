@@ -1,5 +1,5 @@
 <script lang="ts">
-  import tooltip from "$lib/tooltip";
+  import tooltip from "$lib/use/tooltip";
   import {
     formatAddress,
     formatEth,
@@ -13,6 +13,8 @@
   import Paginate from "./Paginate.svelte";
   import Table from "./Table.svelte";
   import EtherscanLink from "./EtherscanLink.svelte";
+  import { navigating } from "$app/stores";
+  import pulseLoading from "$lib/use/pulseLoading";
 
   export let data: Extract<PageServerData, { type: "stakes" }>["data"];
 
@@ -22,6 +24,32 @@
   function handleShowJSON(item: any) {
     json = JSON.stringify(item, null, 2);
     isModalOpen = true;
+  }
+
+  function getStateColour(state: string | undefined) {
+    if (state === undefined || state === "") return "";
+    if (["active_slashed", "exited_slashed"].includes(state)) {
+      return "bg-red-200";
+    }
+    if (["withdrawal_done", "unknown", "unstaked"].includes(state)) {
+      return "bg-gray-200";
+    }
+    if (
+      [
+        "active_exiting",
+        "exited_unslashed",
+        "exit_requested",
+        "pending_queued",
+        "deposit_in_progress",
+        "pending_initialized",
+        "withdrawal_possible",
+      ].includes(state)
+    ) {
+      return "bg-orange-200";
+    }
+    if (["active_ongoing"].includes(state)) {
+      return "bg-green-200";
+    }
   }
 
   const help = {
@@ -35,106 +63,89 @@
   };
 </script>
 
-<div class="w-11/12 xl:w-8/12 my-6">
-  <Table>
-    <thead slot="head">
-      <th>
-        <span use:tooltip={{ content: help.validator_address }}>
-          Validator
-        </span>
-      </th>
-      <th><span use:tooltip={{ content: help.state }}>Status</span></th>
-      <th>
-        <span use:tooltip={{ content: help.withdrawal_credentials }}>
-          Wallet
-        </span>
-      </th>
-      <th>
-        <span use:tooltip={{ content: help.balance }}> Staked balance </span>
-      </th>
-      <th><span use:tooltip={{ content: help.rewards }}>Rewards</span></th>
-      <th><span use:tooltip={{ content: help.gross_apy }}>GRR</span></th>
-      <th>
-        <span use:tooltip={{ content: help.activated_at }}>Activated at</span>
-      </th>
-    </thead>
+<Table>
+  <thead slot="head">
+    <th>
+      <span use:tooltip={{ content: help.validator_address }}> Validator </span>
+    </th>
+    <th><span use:tooltip={{ content: help.state }}>Status</span></th>
+    <th>
+      <span use:tooltip={{ content: help.withdrawal_credentials }}>
+        Wallet
+      </span>
+    </th>
+    <th>
+      <span use:tooltip={{ content: help.balance }}> Staked balance </span>
+    </th>
+    <th><span use:tooltip={{ content: help.rewards }}>Rewards</span></th>
+    <th><span use:tooltip={{ content: help.gross_apy }}>GRR</span></th>
+    <th>
+      <span use:tooltip={{ content: help.activated_at }}>Activated at</span>
+    </th>
+  </thead>
 
-    <tbody slot="body">
-      {#each data?.data ?? [] as item}
-        {@const wallet = item.withdrawal_credentials
-          ? formatWithdrawalCredentials(item.withdrawal_credentials)
-          : undefined}
-        <tr class="group/row relative">
-          <td>
-            {#if item.validator_address}
-              <BeaconchainLink href="/validator/{item.validator_address}">
-                {formatAddress(item.validator_address)}
-              </BeaconchainLink>
-            {:else}
-              -
-            {/if}
-          </td>
-          <td>
-            <div class="flex">
-              <span
-                class="px-2 py-1 border rounded-lg {!item.state
-                  ? ''
-                  : ['active_slashed', 'exited_slashed'].includes(item.state)
-                  ? 'bg-red-200'
-                  : ['withdrawal_done', 'unknown', 'unstaked'].includes(
-                      item.state
-                    )
-                  ? 'bg-gray-200'
-                  : [
-                      'active_exiting',
-                      'exited_unslashed',
-                      'exit_requested',
-                      'pending_queued',
-                      'deposit_in_progress',
-                      'pending_initialized',
-                      'withdrawal_possible',
-                    ].includes(item.state)
-                  ? 'bg-orange-200'
-                  : item.state === 'active_ongoing'
-                  ? 'bg-green-200'
-                  : ''}">{item.state}</span
-              >
-            </div>
-          </td>
-          <td>
-            {#if wallet}
-              <EtherscanLink href="/address/{wallet}">
-                {formatAddress(wallet)}
-              </EtherscanLink>
-            {:else}
-              -
-            {/if}
-          </td>
-          <td>{formatEth(item.balance ?? "0")} ETH</td>
-          <td>{formatEth(item.rewards ?? "0")} ETH</td>
-          <td>{item.gross_apy?.toFixed(2)}%</td>
-          <td>{format(new Date(item.activated_at ?? 0), "dd-MM-yyyy")}</td>
-          <td
-            class="table-btn hidden group-hover/row:flex h-full w-14 items-center"
-          >
-            <button class="json-btn" on:click={() => handleShowJSON(item)}>
-              json
-            </button>
-          </td>
-        </tr>
-      {:else}
-        <td colspan="10" class="text-center p-4">No stakes found</td>
-      {/each}
-    </tbody>
+  <tbody slot="body" use:pulseLoading={$navigating?.type === "goto"}>
+    {#each data?.data ?? [] as item}
+      {@const wallet = item.withdrawal_credentials
+        ? formatWithdrawalCredentials(item.withdrawal_credentials)
+        : undefined}
+      <tr class="group/row relative">
+        <td>
+          {#if item.validator_address}
+            <BeaconchainLink href="/validator/{item.validator_address}">
+              {formatAddress(item.validator_address)}
+            </BeaconchainLink>
+          {:else}
+            -
+          {/if}
+        </td>
+        <td>
+          <div class="flex">
+            <span
+              class="px-2 py-1 border rounded-lg text-black
+                  {getStateColour(item.state)}">{item.state}</span
+            >
+          </div>
+        </td>
+        <td>
+          {#if wallet}
+            <EtherscanLink href="/address/{wallet}">
+              {formatAddress(wallet)}
+            </EtherscanLink>
+          {:else}
+            -
+          {/if}
+        </td>
+        <td>{formatEth(item.balance ?? "0")} ETH</td>
+        <td>{formatEth(item.rewards ?? "0")} ETH</td>
+        <td>
+          {#if item.gross_apy}
+            {item.gross_apy.toFixed(2)}%
+          {:else}
+            -
+          {/if}
+        </td>
+        <td>{format(new Date(item.activated_at ?? 0), "dd-MM-yyyy")}</td>
+        <td
+          class="table-btn hidden group-hover/row:flex h-full w-14 items-center"
+        >
+          <button class="json-btn" on:click={() => handleShowJSON(item)}>
+            json
+          </button>
+        </td>
+      </tr>
+    {:else}
+      <td colspan="10" class="text-center p-4">No stakes found</td>
+    {/each}
+  </tbody>
 
-    <Paginate
-      slot="pagination"
-      size={data?.pagination?.page_size ?? 0}
-      count={data?.pagination?.total_pages ?? 0}
-      index={data?.pagination?.current_page ?? 0}
-    />
-  </Table>
-</div>
+  <Paginate
+    slot="pagination"
+    size={data?.pagination?.page_size ?? 0}
+    count={data?.pagination?.total_pages ?? 0}
+    index={data?.pagination?.current_page ?? 0}
+  />
+</Table>
 
 <Modal bind:open={isModalOpen}>
   <div slot="title" class="flex justify-between border-b p-2">

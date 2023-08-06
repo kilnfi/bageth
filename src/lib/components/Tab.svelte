@@ -17,7 +17,8 @@
 </script>
 
 <div
-  class="w-full max-w-lg tabs flex items-center gap-x-4 p-2 border rounded-lg relative"
+  class="w-full max-w-lg tabs flex items-center gap-x-4 p-2
+    border rounded-lg relative bg-white text-black dark:bg-black dark:text-white"
   style="--width: {width}%"
 >
   <slot />

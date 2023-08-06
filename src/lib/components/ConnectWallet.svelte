@@ -40,12 +40,16 @@
   {#if address === ""}
     <button
       on:click={connectWallet}
-      class="bg-black text-white text-sm px-2 py-1 rounded-lg"
+      class="bg-black border dark:text-black dark:bg-gray-100
+        text-white text-sm px-2 py-1 rounded-md"
     >
       Connect wallet
     </button>
   {:else}
-    <div class="flex items-center border rounded-lg gap-x-1.5 px-1.5 py-1">
+    <div
+      class="flex items-center border text-black dark:bg-black
+        bg-white dark:text-white rounded-md gap-x-1.5 px-1.5 py-1"
+    >
       <span class="text-sm">{formatAddress(address)}</span>
 
       <CopyPaste on:copy={() => navigator.clipboard.writeText(address)} />

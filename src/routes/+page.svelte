@@ -10,6 +10,7 @@
   import { context } from "$lib/store/context";
   import { onMount } from "svelte";
   import Curl from "$lib/components/Curl.svelte";
+  import Seo from "$lib/components/Seo.svelte";
 
   export let data: PageServerData;
 
@@ -60,6 +61,8 @@
   });
 </script>
 
+<Seo  />
+
 <Tab active={$context.type} {tabs}>
   {#each tabs as t}
     <button on:click={() => ($context.type = t)}>/{t}</button>
@@ -70,10 +73,16 @@
 
 <SearchForm error={data.error} search={$context.search} />
 
-{#if data.type === "rewards"}
-  <Rewards data={data.data} />
-{:else if data.type === "stakes"}
-  <Stakes data={data.data} />
-{:else if data.type === "operations"}
-  <Operations data={data.data} />
-{/if}
+<div
+  class="w-full sm:w-11/12 md:w-10/12 xl:w-8/12 flex flex-col items-center gap-y-10"
+>
+  {#if data.type === "rewards"}
+    <Rewards data={data.data} />
+  {:else if data.type === "stakes"}
+    <!-- spacer div  -->
+    <div />
+    <Stakes data={data.data} />
+  {:else if data.type === "operations"}
+    <Operations data={data.data} />
+  {/if}
+</div>

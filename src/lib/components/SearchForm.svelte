@@ -9,24 +9,17 @@
   export let error = "";
   export let search: string;
 
-  let searchOnPaste = browser
-    ? localStorage.getItem("searchOnPaste") === "true"
-    : true;
-
   function handleSearch() {
     $context.search = search;
     $context.current_page = 1;
     $context.page_size = 10;
   }
-
-  $: if (browser) {
-    localStorage.setItem("searchOnPaste", searchOnPaste.toString());
-  }
 </script>
 
 <form
   on:submit|preventDefault={() => handleSearch()}
-  class="flex flex-col max-w-lg w-full gap-y-3 items-center border p-3 rounded-lg relative"
+  class="flex flex-col max-w-lg w-full gap-y-3 bg-white dark:bg-black
+    items-center border p-3 rounded-lg relative"
 >
   <input
     name="search"
@@ -56,7 +49,8 @@
   <button
     type="submit"
     disabled={$navigating?.type === "goto"}
-    class="bg-black text-white px-3 py-2 w-28 xl:w-32 text rounded-lg
+    class="bg-black text-white dark:bg-white dark:text-black
+      px-3 py-2 w-28 xl:w-32 text rounded-lg
       disabled:bg-gray-400 flex items-center justify-center gap-x-2"
   >
     {#if $navigating?.type === "goto"}
@@ -65,17 +59,6 @@
       Search
     {/if}
   </button>
-
-  <div class="text-sm absolute bottom-0 right-0 p-2">
-    search on paste
-    <button
-      type="button"
-      on:click={() => (searchOnPaste = !searchOnPaste)}
-      class="{searchOnPaste ? 'text-green-600' : 'text-red-600'} underline"
-    >
-      {searchOnPaste ? "on" : "off"}
-    </button>
-  </div>
 </form>
 
 <style lang="postcss" scoped>

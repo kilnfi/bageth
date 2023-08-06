@@ -1,28 +1,34 @@
 <script lang="ts">
   import type { PageServerData } from "../../routes/$types";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import Chart from "chart.js/auto";
   import { formatEther } from "viem";
   import { format } from "date-fns";
+  import darkmode from "$lib/store/darkmode";
 
   export let data: Extract<PageServerData, { type: "rewards" }>["data"];
 
   let canvasRef: HTMLCanvasElement;
   let chart: Chart;
 
-  onMount(() => {
+  let destroyChart = () => {};
+
+  function initChart() {
     const plottedData =
-      data?.fullData?.map((d) => {
-        return {
-          date: format(new Date(d.date!), "dd-MM-yyyy"),
-          consensus_rewards: Number(
-            formatEther(BigInt(d.consensus_rewards ?? "0"))
-          ),
-          execution_rewards: Number(
-            formatEther(BigInt(d.execution_rewards ?? "0"))
-          ),
-        };
-      }) ?? [];
+      data?.fullData?.map((d) => ({
+        date: format(new Date(d.date!), "dd-MM-yyyy"),
+        consensus_rewards: Number(
+          formatEther(BigInt(d.consensus_rewards ?? "0"))
+        ),
+        execution_rewards: Number(
+          formatEther(BigInt(d.execution_rewards ?? "0"))
+        ),
+      })) ?? [];
+
+    const cumulativeRewards = plottedData.reduce((a: number[], e) => {
+      a.push(e.consensus_rewards + e.execution_rewards + (a.at(-1) ?? 0));
+      return a;
+    }, []);
 
     chart = new Chart(canvasRef, {
       type: "bar",
@@ -47,17 +53,36 @@
             hoverBackgroundColor: "#4ade80",
             hoverBorderColor: "#16a34a",
           },
+          {
+            hidden: true,
+            type: "line",
+            pointStyle: "circle",
+            label: "Cumulative",
+            data: cumulativeRewards,
+            borderWidth: 2,
+            backgroundColor: "#fecaca",
+            borderColor: "#fca5a5",
+            hoverBackgroundColor: "#f87171",
+            hoverBorderColor: "#dc2626",
+          },
         ],
       },
       options: {
         responsive: true,
         scales: {
-          x: { stacked: true },
+          x: {
+            stacked: true,
+            grid: { color: $darkmode ? "#737373" : "#d4d4d4" },
+            ticks: { color: !$darkmode ? "#737373" : "#d4d4d4" },
+          },
           y: {
             beginAtZero: true,
             stacked: true,
+            grid: { color: $darkmode ? "#737373" : "#d4d4d4" },
+            ticks: { color: !$darkmode ? "#737373" : "#d4d4d4" },
             title: {
               text: "Income [ETH]",
+              color: $darkmode ? "white" : "black",
               align: "center",
               display: true,
               font: { size: 14 },
@@ -68,13 +93,21 @@
           legend: {
             align: "center",
             position: "bottom",
-            labels: { padding: 20, pointStyle: "circle", usePointStyle: true },
+            labels: {
+              padding: 20,
+              color: $darkmode ? "white" : "black",
+              pointStyle: "circle",
+              usePointStyle: true,
+            },
           },
           tooltip: {
-            mode: "x",
-            backgroundColor: "#000",
+            mode: "index",
+            backgroundColor: $darkmode ? "white" : "black",
+            titleColor: $darkmode ? "black" : "white",
             titleFont: { weight: "normal", size: 16 },
+            footerColor: $darkmode ? "black" : "white",
             footerFont: { weight: "normal", size: 15 },
+            bodyColor: $darkmode ? "black" : "white",
             bodyFont: { weight: "normal", size: 14 },
             usePointStyle: true,
             callbacks: {
@@ -89,8 +122,11 @@
                 return ` ${label}: ${value.toFixed(5)} ETH`;
               },
               footer: (context) => {
-                let amount = context.reduce((a, c) => a + c.parsed.y, 0);
-                return `Total: ${amount.toFixed(5)} ETH`;
+                let rewards = context.reduce(
+                  (a, c) => a + (c.datasetIndex !== 2 ? c.parsed.y : 0),
+                  0
+                );
+                return `Total rewards: ${rewards.toFixed(5)} ETH`;
               },
             },
           },
@@ -98,9 +134,23 @@
       },
     });
 
-    return () => {
+    // set the cleanup function
+    destroyChart = () => {
       if (chart) chart.destroy();
     };
+  }
+
+  onMount(() => {
+    initChart();
+
+    const unsub = darkmode.subscribe(() => {
+      destroyChart();
+      initChart();
+    });
+    return unsub;
+  });
+  onDestroy(() => {
+    destroyChart();
   });
 </script>
 
