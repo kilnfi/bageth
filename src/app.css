@@ -14,7 +14,7 @@
 }
 
 body {
-  @apply min-h-screen flex flex-col bg-white items-center gap-y-4 px-1.5;
+  @apply min-h-screen flex flex-col bg-white dark:bg-black items-center gap-y-4 px-1.5;
 }
 
 @keyframes loading {
@@ -23,6 +23,6 @@ body {
   }
 }
 
-.loading {
+.pulse-loading {
   animation: loading 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

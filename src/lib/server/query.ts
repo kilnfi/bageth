@@ -35,23 +35,24 @@ type BaseQueryParams = {
   search: string;
 };
 
-export type QueryParams = BaseQueryParams &
-  (QueryStakes | QueryRewards | QueryOperations);
+type DiscriminatedQuery = QueryStakes | QueryRewards | QueryOperations;
+
+export type QueryParams = BaseQueryParams & DiscriminatedQuery;
 
 export type QueryDataReturnType<T = any> = Promise<{
   url: string;
   data: T;
 } | null>;
 
-function queryData({}: BaseQueryParams & QueryStakes): QueryDataReturnType<
-  GetResponseType<QueryStakes["endpoint"]>
->;
-function queryData({}: BaseQueryParams & QueryRewards): QueryDataReturnType<
-  GetResponseType<QueryRewards["endpoint"]>
->;
-function queryData({}: BaseQueryParams & QueryOperations): QueryDataReturnType<
-  GetResponseType<QueryOperations["endpoint"]>
->;
+function queryData(
+  params: BaseQueryParams & QueryStakes
+): QueryDataReturnType<GetResponseType<QueryStakes["endpoint"]>>;
+function queryData(
+  params: BaseQueryParams & QueryRewards
+): QueryDataReturnType<GetResponseType<QueryRewards["endpoint"]>>;
+function queryData(
+  params: BaseQueryParams & QueryOperations
+): QueryDataReturnType<GetResponseType<QueryOperations["endpoint"]>>;
 async function queryData({
   network,
   search,
@@ -65,13 +66,13 @@ async function queryData({
       params: { query: { wallets: [search], ...params } },
     });
     // here we check if the data is empty and not undefined
-    if (data?.data?.data?.length !== 0) {
+    if (data?.data?.data !== undefined && data?.data?.data.length !== 0) {
       return { url: data.response.url, data: data.data };
     }
 
     // then try proxies
     const data2 = await fetcher[network].GET(endpoint, {
-      params: { query: { proxies: [search] } },
+      params: { query: { proxies: [search], ...params } },
     });
     if (data2?.data?.data !== undefined) {
       return { url: data2.response.url, data: data2.data };

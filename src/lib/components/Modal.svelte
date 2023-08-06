@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { focusTrap } from "$lib/focusTrap";
+  import { focusTrap } from "$lib/use/focusTrap";
 
   export let open = true;
   export let required = false;
