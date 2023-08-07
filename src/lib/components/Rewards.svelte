@@ -66,8 +66,8 @@
   </thead>
 
   <tbody slot="body" use:pulseLoading={$navigating?.type === "goto"}>
-    {#each data?.data ?? [] as item, idx}
-      <tr class="group/row relative" style="animation-delay: {idx * 1}ms;">
+    {#each data?.data ?? [] as item}
+      <tr class="group/row">
         <td>{format(new Date(item.date ?? 0), "dd-MM-yyyy")}</td>
         <td>
           {#if item.cl_apy} {item.cl_apy.toFixed(2)}% {:else} - {/if}
@@ -84,12 +84,18 @@
             -
           {/if}
         </td>
-        <td
-          class="table-btn hidden group-hover/row:flex h-full w-14 items-center"
-        >
-          <button class="json-btn" on:click={() => handleShowJSON(item)}>
-            json
-          </button>
+        <td class="p-0">
+          <div class="relative hidden group-hover/row:block">
+            <div class="absolute px-2 right-0 top-1/2 -translate-y-1/2">
+              <button
+                class="rounded-lg border border-green-300 bg-green-100
+                  px-2 py-1 text-sm hover:bg-green-200"
+                on:click={() => handleShowJSON(item)}
+              >
+                json
+              </button>
+            </div>
+          </div>
         </td>
       </tr>
     {:else}
@@ -119,9 +125,3 @@
     slot="content"
     class="font-mono overflow-auto bg-gray-100 text-black p-2 rounded my-1">{json}</pre>
 </Modal>
-
-<style lang="postcss" scoped>
-  .json-btn {
-    @apply rounded-lg border border-green-300 bg-green-100 px-2 py-1 text-sm hover:bg-green-200;
-  }
-</style>
