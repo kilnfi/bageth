@@ -16,11 +16,8 @@
   :global(table tr) {
     @apply hover:bg-gray-100;
   }
-  :global(table td:not(.table-btn)) {
+  :global(table td) {
     @apply whitespace-nowrap border-b border-gray-200 px-4 py-5 text-black;
-  }
-  :global(table td.table-btn) {
-    @apply absolute right-0 top-0;
   }
 
   :global(html.dark table th) {
@@ -29,7 +26,7 @@
   :global(html.dark table tr) {
     @apply hover:bg-neutral-900;
   }
-  :global(html.dark table td:not(.table-btn)) {
+  :global(html.dark table td) {
     @apply text-white;
   }
 </style>
