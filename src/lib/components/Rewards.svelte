@@ -45,7 +45,7 @@
     >
       <div
         use:pulseLoading={$navigating?.type === "goto"}
-        class="w-[715px] xl:w-auto"
+        class="w-[715px] lg:w-auto"
       >
         <RewardsChart {data} />
       </div>
@@ -68,7 +68,7 @@
   <tbody slot="body" use:pulseLoading={$navigating?.type === "goto"}>
     {#each data?.data ?? [] as item}
       <tr class="group/row">
-        <td>{format(new Date(item.date ?? 0), "dd-MM-yyyy")}</td>
+        <td>{format(new Date(item.date ?? 0), "yyyy-MM-dd")}</td>
         <td>
           {#if item.cl_apy} {item.cl_apy.toFixed(2)}% {:else} - {/if}
         </td>
@@ -78,18 +78,14 @@
         <td>{formatEth(item.stake_balance ?? "0")} ETH</td>
         <td>{formatEth(item.rewards ?? "0")} ETH</td>
         <td>
-          {#if item.gross_apy}
-            {item.gross_apy?.toFixed(2)}%
-          {:else}
-            -
-          {/if}
+          {#if item.gross_apy} {item.gross_apy?.toFixed(2)}% {:else} - {/if}
         </td>
         <td class="p-0">
           <div class="relative hidden group-hover/row:block">
             <div class="absolute px-2 right-0 top-1/2 -translate-y-1/2">
               <button
                 class="rounded-lg border border-green-300 bg-green-100
-                  px-2 py-1 text-sm hover:bg-green-200"
+                  px-2 py-1 text-sm hover:bg-green-200 text-black"
                 on:click={() => handleShowJSON(item)}
               >
                 json

@@ -1,8 +1,14 @@
 import { page } from "$app/stores";
-import { OPERATIONS_TAB_MAPPING, isKeyOf, validateType } from "$lib/utils";
+import {
+  OPERATIONS_TAB_MAPPING,
+  isKeyOf,
+  validateNetwork,
+  validateType,
+} from "$lib/utils";
 import { get, writable, type StartStopNotifier } from "svelte/store";
 
 export type Context = {
+  network: "mainnet" | "testnet" | undefined;
   search: string;
   type: "stakes" | "rewards" | "operations";
   current_page: number;
@@ -16,8 +22,10 @@ const initContext: StartStopNotifier<Context> = (set) => {
   let p = get(page);
   let type = p.url.searchParams.get("type");
   let tab = p.url.searchParams.get("tab");
+  let network = p.url.searchParams.get("network");
 
   set({
+    network: validateNetwork(network) ? network : undefined,
     search: p.url.searchParams.get("search") || "",
     type: validateType(type) ? type : "stakes",
     current_page: Number(p.url.searchParams.get("current_page")) || 1,
