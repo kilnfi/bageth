@@ -5,7 +5,10 @@
 </script>
 
 <header class="py-2 xl:px-2 w-full xl:fixed flex justify-between items-center">
-  <a href="/" class="flex items-center rounded-md bg-black dark:invert text-white">
+  <a
+    href="/"
+    class="flex items-center rounded-md bg-black dark:border text-white"
+  >
     <img
       src="/favicon.png"
       alt="logo"
