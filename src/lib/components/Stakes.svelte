@@ -80,7 +80,9 @@
     <th><span use:tooltip={{ content: help.rewards }}>Rewards</span></th>
     <th><span use:tooltip={{ content: help.gross_apy }}>GRR</span></th>
     <th>
-      <span use:tooltip={{ content: help.activated_at }}>Activated at</span>
+      <span use:tooltip={{ content: help.activated_at }}>
+        Activated at / Epoch
+      </span>
     </th>
   </thead>
 
@@ -125,13 +127,19 @@
             -
           {/if}
         </td>
-        <td>{format(new Date(item.activated_at ?? 0), "dd-MM-yyyy")}</td>
+        <td class="pr-6">
+          {format(new Date(item.activated_at ?? 0), "yyyy-MM-dd")}
+          /
+          <BeaconchainLink href="/epoch/{item.activated_epoch}">
+            {item.activated_epoch}
+          </BeaconchainLink>
+        </td>
         <td class="p-0">
           <div class="relative hidden group-hover/row:block">
             <div class="absolute px-2 right-0 top-1/2 -translate-y-1/2">
               <button
                 class="rounded-lg border border-green-300 bg-green-100
-                  px-2 py-1 text-sm hover:bg-green-200"
+                  px-2 py-1 text-sm hover:bg-green-200 text-black"
                 on:click={() => handleShowJSON(item)}
               >
                 json

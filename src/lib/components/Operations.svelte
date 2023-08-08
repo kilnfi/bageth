@@ -105,7 +105,7 @@
   <tbody slot="body" use:pulseLoading={$navigating?.type === "goto"}>
     {#each data?.data?.filter((item) => item.type === fullType[$context.tab]) ?? [] as item}
       <tr class="group/row">
-        <td>{format(new Date(item.time ?? 0), "dd-MM-yyyy")}</td>
+        <td>{format(new Date(item.time ?? 0), "yyyy-MM-dd")}</td>
         <td>
           {#if item.validator_address}
             <BeaconchainLink href="/validator/{item.validator_address}">
@@ -195,7 +195,7 @@
             <div class="absolute px-2 right-0 top-1/2 -translate-y-1/2">
               <button
                 class="rounded-lg border border-green-300 bg-green-100
-                  px-2 py-1 text-sm hover:bg-green-200"
+                  px-2 py-1 text-sm hover:bg-green-200 text-black"
                 on:click={() => handleShowJSON(item)}
               >
                 json

@@ -16,7 +16,7 @@
   function initChart() {
     const plottedData =
       data?.fullData?.map((d) => ({
-        date: format(new Date(d.date!), "dd-MM-yyyy"),
+        date: format(new Date(d.date!), "yyyy-MM-dd"),
         consensus_rewards: Number(
           formatEther(BigInt(d.consensus_rewards ?? "0"))
         ),
