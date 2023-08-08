@@ -20,12 +20,19 @@
   $context.search = data.search || "";
 
   onMount(() => {
+    // if network was not set on the server try to read the local storage
+    if ($context.network === undefined) {
+      $context.network =
+        localStorage.getItem("network") === "mainnet" ? "mainnet" : "testnet";
+    }
+
     const unsub = context.subscribe(async (ctx) => {
       let initialUrl = $page.url.toString();
       let hasChangedType = ctx.type !== $page.url.searchParams.get("type");
 
       $page.url.searchParams.set("search", ctx.search);
       $page.url.searchParams.set("type", ctx.type);
+      if (ctx.network) $page.url.searchParams.set("network", ctx.network);
 
       // all pages have pagination
       $page.url.searchParams.set("current_page", ctx.current_page.toString());
@@ -61,7 +68,7 @@
   });
 </script>
 
-<Seo  />
+<Seo />
 
 <Tab active={$context.type} {tabs}>
   {#each tabs as t}

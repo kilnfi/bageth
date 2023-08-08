@@ -1,11 +1,10 @@
 <script lang="ts">
   import { browser } from "$app/environment";
-  import network from "$lib/store/network";
-  import { get } from "svelte/store";
   import { createWalletClient, custom, type WalletClient } from "viem";
   import { goerli, mainnet } from "viem/chains";
   import CopyPaste from "./CopyPaste.svelte";
   import { formatAddress } from "$lib/utils";
+  import { context } from "$lib/store/context";
 
   let client: WalletClient | null;
   let address = "";
@@ -13,7 +12,7 @@
   if (browser) {
     try {
       client = createWalletClient({
-        chain: get(network) === "testnet" ? goerli : mainnet,
+        chain: $context.network === "testnet" ? goerli : mainnet,
         transport: custom((window as any).ethereum),
       });
     } catch {
