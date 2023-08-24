@@ -17,10 +17,11 @@ export const load = (async ({ url, setHeaders }) => {
     return { search, error: "Invalid Network or Type" };
   }
 
-  // cache the page for 1 hour for better performance
-  setHeaders({
-    "cache-control": "public, max-age=3600",
-  });
+  // disable for now
+  // // cache the page for 1 hour for better performance
+  // setHeaders({
+  //   "cache-control": "public, max-age=3600",
+  // });
 
   if (type === "stakes") {
     const current_page = Number(url.searchParams.get("current_page")) || 1;
