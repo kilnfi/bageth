@@ -54,6 +54,7 @@
 
   const help = {
     balance: "Current balance on the Ethereum consensus layer",
+    validator_index: "Index of the validator in the consensus layer",
     rewards: "Sum of consensus and execution rewards earned by this stake",
     state: "State of the Ethereum stake",
     activated_at: "Date of activation on the Ethereum consensus layer",
@@ -68,6 +69,9 @@
     <th>
       <span use:tooltip={{ content: help.validator_address }}> Validator </span>
     </th>
+    <th>
+      <span use:tooltip={{ content: help.validator_index }}> Index </span>
+    </th>
     <th><span use:tooltip={{ content: help.state }}>Status</span></th>
     <th>
       <span use:tooltip={{ content: help.withdrawal_credentials }}>
@@ -75,7 +79,7 @@
       </span>
     </th>
     <th>
-      <span use:tooltip={{ content: help.balance }}> Staked balance </span>
+      <span use:tooltip={{ content: help.balance }}> Balance </span>
     </th>
     <th><span use:tooltip={{ content: help.rewards }}>Rewards</span></th>
     <th><span use:tooltip={{ content: help.gross_apy }}>GRR</span></th>
@@ -102,11 +106,23 @@
           {/if}
         </td>
         <td>
+          {#if item.validator_index}
+            <BeaconchainLink href="/validator/{item.validator_index}">
+              {item.validator_index}
+            </BeaconchainLink>
+          {:else}
+            -
+          {/if}
+        </td>
+        <td>
           <div class="flex">
             <span
-              class="px-2 py-1 border rounded-lg text-black
-                  {getStateColour(item.state)}">{item.state}</span
+              class="px-2 py-1 border rounded-lg text-black {getStateColour(
+                item.state
+              )}"
             >
+              {item.state}
+            </span>
           </div>
         </td>
         <td>

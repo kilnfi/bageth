@@ -2,8 +2,7 @@
   import { isAddress } from "viem";
   import { navigating } from "$app/stores";
   import Spinner from "./Spinner.svelte";
-  import { browser } from "$app/environment";
-  import { isBLS, isIndex } from "$lib/utils";
+  import { isBLS, isIndex, isIndexRange } from "$lib/utils";
   import { context } from "$lib/store/context";
 
   export let error = "";
@@ -37,7 +36,9 @@
   />
 
   <ul class="flex items-center gap-2">
-    <li class:valid={isIndex(search)}>validator index</li>
+    <li class:valid={isIndex(search) || isIndexRange(search)}>
+      validator index{isIndexRange(search) ? " range" : ""}
+    </li>
     <li class:valid={isAddress(search)}>wallet address/proxy</li>
     <li class:valid={isBLS(search)}>validator public key</li>
   </ul>

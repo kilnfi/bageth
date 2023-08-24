@@ -2,7 +2,7 @@ import { isAddress } from "viem";
 import fetcher from "$lib/server/fetcher";
 import type { FetchOptions, FetchResponse, FilterKeys } from "openapi-fetch";
 import type { paths } from "$lib/api";
-import { isBLS, isIndex } from "$lib/utils";
+import { isBLS, isIndex, isIndexRange } from "$lib/utils";
 
 type ApiRoutes = "/v1/eth/stakes" | "/v1/eth/rewards" | "/v1/eth/operations";
 type Network = "mainnet" | "testnet";
@@ -93,6 +93,22 @@ async function queryData({
   if (isIndex(search)) {
     const data = await fetcher[network].GET(endpoint, {
       params: { query: { validator_indexes: [Number(search)], ...params } },
+    });
+    if (data?.data?.data !== undefined) {
+      return { url: data.response.url, data: data.data };
+    }
+  }
+
+  // validator index range
+  if (isIndexRange(search)) {
+    const range = search.split("..");
+    const start = Number(range[0]);
+    const end = Number(range[1]);
+    if (start > end) return null;
+    const indexRange = [...Array(end - start + 1)].map((_, i) => i + start);
+
+    const data = await fetcher[network].GET(endpoint, {
+      params: { query: { validator_indexes: indexRange, ...params } },
     });
     if (data?.data?.data !== undefined) {
       return { url: data.response.url, data: data.data };
