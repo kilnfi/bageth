@@ -1,5 +1,5 @@
 import createClient from "openapi-fetch";
-import type { paths } from "../api";
+import type { paths } from "../types/api";
 import {
   KILN_MAINNET_API_KEY,
   KILN_BASE_MAINNET,

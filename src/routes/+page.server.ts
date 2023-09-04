@@ -4,7 +4,7 @@ import { getOperationType, validateNetwork, validateType } from "$lib/utils";
 import queryData from "$lib/server/query";
 import paginate from "$lib/server/paginate";
 
-export const load = (async ({ url, setHeaders }) => {
+export const load = (async ({ url }) => {
   const search = url.searchParams.get("search");
   const network = url.searchParams.get("network") || "testnet";
   const type = url.searchParams.get("type") || "stakes";

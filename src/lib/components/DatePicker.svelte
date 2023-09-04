@@ -61,8 +61,12 @@
   }
 </script>
 
-<div class="flex flex-col gap-y-3 border bg-white dark:bg-black rounded-lg p-3">
-  <div class="flex gap-x-3 items-center justify-center">
+<div
+  class="w-full flex flex-wrap justify-center gap-3 border bg-white dark:bg-black rounded-lg p-3"
+>
+  <div class="flex gap-3 items-center flex-wrap">
+    <span class="text-lg font-bold">From</span>
+
     <input
       type="date"
       value={start}
@@ -87,14 +91,10 @@
     />
   </div>
 
-  <div class="flex items-start gap-3">
-    <span
-      class="bg-gray-200 border border-l-0 -ms-3 px-2 rounded-tr-lg rounded-br-lg"
-    >
-      last:
-    </span>
+  <div class="flex items-center gap-3 flex-wrap">
+    <span class="text-lg font-bold">Or last</span>
 
-    <div class="flex flex-wrap gap-2 overflow-x-auto">
+    <div class="flex gap-2 flex-wrap">
       <button class:active={active === "week"} on:click={handleLastWeek}>
         week
       </button>
@@ -123,7 +123,7 @@
       outline-none focus:ring-2 focus:ring-black focus:ring-opacity-30;
   }
   button {
-    @apply rounded-lg border border-gray-200 bg-gray-100 px-2 py-0.5 text-sm;
+    @apply rounded-lg border border-gray-200 bg-gray-100 px-2 py-1;
   }
   button.active {
     @apply bg-gray-200;

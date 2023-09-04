@@ -4,18 +4,22 @@
 
 A set of tools on Ethereum featuring Kiln's API
 
+Currently includes:
+
+- Stake explorer
+
 ## Developing
 
 Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 Run the development server:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ## Building
@@ -23,10 +27,10 @@ npm run dev
 To create a production version of your app:
 
 ```bash
-npm run build
+pnpm build
 
 # preview with
-npm run preview
+pnpm preview
 ```
 
 Made with ❤️ by [Kiln](https://kiln.fi)
