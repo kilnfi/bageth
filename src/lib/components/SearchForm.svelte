@@ -17,27 +17,28 @@
 
 <form
   on:submit|preventDefault={() => handleSearch()}
-  class="flex flex-col max-w-lg w-full gap-y-3 bg-white dark:bg-black
+  class="flex flex-col max-w-6xl w-full gap-y-3 bg-white dark:bg-black
     items-center border p-3 rounded-lg relative"
 >
   <input
     name="search"
     placeholder="search..."
     bind:value={search}
-    on:paste={() => {
-      setTimeout(() => {
-        handleSearch();
-      }, 100);
-    }}
+    on:paste={() => setTimeout(() => handleSearch(), 100)}
     class="border-2 border-black rounded-lg px-4 py-2
       text-lg font-mono w-full outline-none
       focus:ring-2 focus:ring-black focus:ring-opacity-30"
     type="text"
   />
 
-  <ul class="flex items-center gap-2">
+  <ul class="grid grid-cols-2 lg:grid-cols-4 gap-2">
     <li class:valid={isIndex(search) || isIndexRange(search)}>
-      validator index{isIndexRange(search) ? " range" : ""}
+      validator index
+    </li>
+    <li class:valid={isIndexRange(search)}>
+      range format: <code class="px-1.5 py-0.5 bg-gray-50 rounded border">
+        start..end
+      </code>
     </li>
     <li class:valid={isAddress(search)}>wallet address/proxy</li>
     <li class:valid={isBLS(search)}>validator public key</li>

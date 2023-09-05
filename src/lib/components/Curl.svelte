@@ -10,7 +10,7 @@
 </script>
 
 {#if url}
-  <div class="flex -mb-4 flex-col items-center w-full max-w-lg">
+  <div class="flex -mb-4 flex-col items-center w-full max-w-6xl">
     <button
       on:click={() => (show = !show)}
       class="px-2 py-0.5 w-20 border border-b-0 rounded-tr-lg rounded-tl-lg bg-blue-50"

@@ -32,9 +32,7 @@
   };
 </script>
 
-<div class="self-center">
-  <DatePicker />
-</div>
+<DatePicker />
 
 <!-- rerender the chart only when the range changes,
        but not when we change page -->

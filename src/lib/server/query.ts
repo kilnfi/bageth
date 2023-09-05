@@ -1,7 +1,7 @@
 import { isAddress } from "viem";
 import fetcher from "$lib/server/fetcher";
 import type { FetchOptions, FetchResponse, FilterKeys } from "openapi-fetch";
-import type { paths } from "$lib/api";
+import type { paths } from "$lib/types/api";
 import { isBLS, isIndex, isIndexRange } from "$lib/utils";
 
 type ApiRoutes = "/v1/eth/stakes" | "/v1/eth/rewards" | "/v1/eth/operations";
@@ -11,7 +11,7 @@ type GetQueryParams<T extends ApiRoutes> = FetchOptions<
   FilterKeys<paths[T], "get">
 >["params"]["query"];
 
-type GetResponseType<T extends ApiRoutes> = FetchResponse<
+type GetResponse<T extends ApiRoutes> = FetchResponse<
   FilterKeys<paths[T], "get">
 >["data"];
 
@@ -46,13 +46,13 @@ export type QueryDataReturnType<T = any> = Promise<{
 
 function queryData(
   params: BaseQueryParams & QueryStakes
-): QueryDataReturnType<GetResponseType<QueryStakes["endpoint"]>>;
+): QueryDataReturnType<GetResponse<QueryStakes["endpoint"]>>;
 function queryData(
   params: BaseQueryParams & QueryRewards
-): QueryDataReturnType<GetResponseType<QueryRewards["endpoint"]>>;
+): QueryDataReturnType<GetResponse<QueryRewards["endpoint"]>>;
 function queryData(
   params: BaseQueryParams & QueryOperations
-): QueryDataReturnType<GetResponseType<QueryOperations["endpoint"]>>;
+): QueryDataReturnType<GetResponse<QueryOperations["endpoint"]>>;
 async function queryData({
   network,
   search,
@@ -104,8 +104,17 @@ async function queryData({
     const range = search.split("..");
     const start = Number(range[0]);
     const end = Number(range[1]);
-    if (start > end) return null;
-    const indexRange = [...Array(end - start + 1)].map((_, i) => i + start);
+
+    let indexRange;
+    try {
+      const size = end - start + 1;
+      if (size > 100_000) {
+        return null;
+      }
+      indexRange = [...Array(size)].map((_, i) => i + start);
+    } catch {
+      return null;
+    }
 
     const data = await fetcher[network].GET(endpoint, {
       params: { query: { validator_indexes: indexRange, ...params } },
