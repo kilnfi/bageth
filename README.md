@@ -2,7 +2,9 @@
 
 # Bageth
 
-A set of tools on Ethereum featuring Kiln's API
+A set of tools on Ethereum featuring Kiln's API.
+
+<img src="./static/header.png" />
 
 Currently includes:
 
