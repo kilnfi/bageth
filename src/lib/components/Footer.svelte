@@ -16,9 +16,9 @@
     />
   </svg>
 
-  by nakamotards and powered by
+  by <a href="https://www.nakamotards.com/" class="underline" target="_blank">nakamotards</a> and powered by
 
-  <a href="https://kiln.fi/" class="underline" target="_blank">Kiln</a>
+  <a href="https://docs.api.mainnet.kiln.fi/" class="underline" target="_blank">Kiln Connect API</a>
 
   <svg
     xmlns="http://www.w3.org/2000/svg"
