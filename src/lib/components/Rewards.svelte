@@ -32,14 +32,14 @@
   };
 </script>
 
-<DatePicker />
+<DatePicker class="max-w-4xl" />
 
 <!-- rerender the chart only when the range changes,
        but not when we change page -->
 {#key JSON.stringify(data.fullData)}
   {#if data.fullData.length > 0}
     <div
-      class="overflow-x-auto w-full border p-4 rounded-lg bg-white dark:bg-black"
+      class="overflow-x-auto w-full max-w-4xl border p-4 rounded-lg bg-white dark:bg-black"
     >
       <div
         use:pulseLoading={$navigating?.type === "goto"}
@@ -51,7 +51,7 @@
   {/if}
 {/key}
 
-<Table>
+<Table class="max-w-7xl">
   <thead slot="head">
     <th><span use:tooltip={{ content: help.date }}>Date</span></th>
     <th><span use:tooltip={{ content: help.cl_apy }}>CL APY</span></th>

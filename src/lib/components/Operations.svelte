@@ -60,7 +60,7 @@
   {/each}
 </Tab>
 
-<Table>
+<Table class="max-w-7xl">
   <thead slot="head">
     <th><span use:tooltip={{ content: help.date }}>Date</span></th>
     <th>

@@ -2,7 +2,7 @@ import { isAddress } from "viem";
 import fetcher from "$lib/server/fetcher";
 import type { FetchOptions, FetchResponse, FilterKeys } from "openapi-fetch";
 import type { paths } from "$lib/types/api";
-import { isBLS, isIndex, isIndexRange } from "$lib/utils";
+import { createRange, isBLS, isIndex, isIndexRange } from "$lib/utils";
 
 type ApiRoutes = "/v1/eth/stakes" | "/v1/eth/rewards" | "/v1/eth/operations";
 type Network = "mainnet" | "testnet";
@@ -62,57 +62,52 @@ async function queryData({
   // try address (wallet or proxy)
   if (isAddress(search)) {
     // first try wallets
-    const data = await fetcher[network].GET(endpoint, {
+    const reqWallet = await fetcher[network].GET(endpoint, {
       params: { query: { wallets: [search], ...params } },
     });
-    // here we check if the data is empty and not undefined
-    if (data?.data?.data !== undefined && data?.data?.data.length !== 0) {
-      return { url: data.response.url, data: data.data };
+    if (
+      // here we check if the data is empty and not undefined
+      reqWallet?.data?.data !== undefined &&
+      reqWallet?.data?.data.length !== 0
+    ) {
+      return { url: reqWallet.response.url, data: reqWallet.data };
     }
 
     // then try proxies
-    const data2 = await fetcher[network].GET(endpoint, {
+    const reqProxy = await fetcher[network].GET(endpoint, {
       params: { query: { proxies: [search], ...params } },
     });
-    if (data2?.data?.data !== undefined) {
-      return { url: data2.response.url, data: data2.data };
+    if (reqProxy?.data?.data !== undefined) {
+      return { url: reqProxy.response.url, data: reqProxy.data };
     }
   }
 
   // try validator pubkey
   if (isBLS(search)) {
-    const data = await fetcher[network].GET(endpoint, {
+    const reqBls = await fetcher[network].GET(endpoint, {
       params: { query: { validators: [search], ...params } },
     });
-    if (data?.data?.data !== undefined) {
-      return { url: data.response.url, data: data.data };
+    if (reqBls?.data?.data !== undefined) {
+      return { url: reqBls.response.url, data: reqBls.data };
     }
   }
 
   // try validator index
   if (isIndex(search)) {
-    const data = await fetcher[network].GET(endpoint, {
+    const reqIndex = await fetcher[network].GET(endpoint, {
       params: { query: { validator_indexes: [Number(search)], ...params } },
     });
-    if (data?.data?.data !== undefined) {
-      return { url: data.response.url, data: data.data };
+    if (reqIndex?.data?.data !== undefined) {
+      return { url: reqIndex.response.url, data: reqIndex.data };
     }
   }
 
   // validator index range
   if (isIndexRange(search)) {
     const range = search.split("..");
-    const start = Number(range[0]);
-    const end = Number(range[1]);
+    const indexRange = createRange(Number(range[0]), Number(range[1]));
 
-    let indexRange;
-    try {
-      const size = end - start + 1;
-      if (size > 100_000) {
-        return null;
-      }
-      indexRange = [...Array(size)].map((_, i) => i + start);
-    } catch {
+    if (indexRange === null) {
       return null;
     }
 

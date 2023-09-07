@@ -64,7 +64,7 @@
   };
 </script>
 
-<Table>
+<Table class="max-w-7xl">
   <thead slot="head">
     <th>
       <span use:tooltip={{ content: help.validator_address }}> Validator </span>
@@ -144,11 +144,17 @@
           {/if}
         </td>
         <td class="pr-6">
-          {format(new Date(item.activated_at ?? 0), "yyyy-MM-dd")}
-          /
-          <BeaconchainLink href="/epoch/{item.activated_epoch}">
-            {item.activated_epoch}
-          </BeaconchainLink>
+          {#if item.activated_at}
+            {format(new Date(item.activated_at ?? 0), "yyyy-MM-dd")}
+          {:else}
+            -
+          {/if}
+          {#if item.activated_epoch}
+            /
+            <BeaconchainLink href="/epoch/{item.activated_epoch}">
+              {item.activated_epoch}
+            </BeaconchainLink>
+          {/if}
         </td>
         <td class="p-0">
           <div class="relative hidden group-hover/row:block">
