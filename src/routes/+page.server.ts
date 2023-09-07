@@ -32,8 +32,8 @@ export const load = (async ({ url }) => {
   }
 
   if (type === "rewards") {
-    const start_date = url.searchParams.get("start_date") ?? format(subMonths(new Date(), 1), "yyyy-MM-dd");
-    const end_date = url.searchParams.get("end_date") ?? format(new Date(), "yyyy-MM-dd");
+    const start_date = url.searchParams.get("start_date") || format(subMonths(new Date(), 1), "yyyy-MM-dd");
+    const end_date = url.searchParams.get("end_date") || format(new Date(), "yyyy-MM-dd");
     const data = await queryData({
       network,
       search,
