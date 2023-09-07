@@ -11,8 +11,6 @@
   import Paginate from "./Paginate.svelte";
   import { navigating } from "$app/stores";
   import pulseLoading from "$lib/use/pulseLoading";
-  import RewardsLineChart from "./RewardsLineChart.svelte";
-  import RewardsCumulativeChart from "./RewardsCumulativeChart.svelte";
 
   export let data: Extract<PageServerData, { type: "rewards" }>["data"];
 
@@ -42,18 +40,10 @@
   {#if data.fullData.length > 0}
     <div
       use:pulseLoading={$navigating?.type === "goto"}
-      class="overflow-x-auto w-full grid gap-4 border p-4 rounded-lg bg-white dark:bg-black
-        max-w-4xl grid-cols-1
-        2xl:max-w-[92vw] 2xl:grid-cols-2"
+      class="overflow-x-auto w-full border p-4 rounded-lg bg-white dark:bg-black max-w-4xl"
     >
-      <!-- <div class="w-[715px] lg:w-auto">
+      <div class="w-[715px] lg:w-auto">
         <RewardsBarChart {data} />
-      </div> -->
-      <div class="w-[715px] lg:w-auto">
-        <RewardsLineChart {data} />
-      </div>
-      <div class="w-[715px] lg:w-auto">
-        <RewardsCumulativeChart {data} />
       </div>
     </div>
   {/if}

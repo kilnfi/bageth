@@ -21,6 +21,11 @@
         execution_rewards: Number(formatEther(BigInt(d.execution_rewards ?? "0"))),
       })) ?? [];
 
+    const cumulativeRewards = plottedData.reduce((a: number[], e) => {
+      a.push(e.consensus_rewards + e.execution_rewards + (a.at(-1) ?? 0));
+      return a;
+    }, []);
+
     chart = new Chart(canvasRef, {
       type: "bar",
       data: {
@@ -44,10 +49,34 @@
             hoverBackgroundColor: "#4ade80",
             hoverBorderColor: "#16a34a",
           },
+          {
+            hidden: true,
+            type: "line",
+            data: cumulativeRewards,
+            label: "Cumulative rewards",
+            tension: 0.2,
+            borderWidth: 2,
+            backgroundColor: (ctx: any) => {
+              const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.chartArea?.height ?? 0);
+              gradient.addColorStop(0, "#fecaca");
+              gradient.addColorStop(1, "#FFFFFF00");
+              return gradient;
+            },
+            fill: true,
+            pointBackgroundColor: "#fecaca",
+            borderColor: "#fca5a5",
+            hoverBorderColor: "#fca5a5",
+            pointRadius: 0,
+            pointHitRadius: 20,
+            pointHoverRadius: 6,
+            pointHoverBorderColor: "#fca5a5",
+            pointHoverBorderWidth: 2,
+            pointHoverBackgroundColor: "#FFF",
+          },
         ],
       },
       options: {
-        hover: { intersect: false },
+        hover: { intersect: false, axis: "x" },
         responsive: true,
         scales: {
           x: {
@@ -78,6 +107,7 @@
               color: $darkmode ? "white" : "black",
               pointStyle: "circle",
               usePointStyle: true,
+              font: { size: 16, weight: "normal" },
             },
           },
           tooltip: {
