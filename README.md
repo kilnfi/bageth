@@ -2,7 +2,7 @@
 
 # Bageth
 
-A set of tools on Ethereum featuring Kiln's API.
+Ethereum Explorer for the Beaconchain
 
 <img src="./static/header.png" />
 
