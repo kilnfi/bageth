@@ -17,12 +17,8 @@
     const plottedData =
       data?.fullData?.map((d) => ({
         date: format(new Date(d.date!), "yyyy-MM-dd"),
-        consensus_rewards: Number(
-          formatEther(BigInt(d.consensus_rewards ?? "0"))
-        ),
-        execution_rewards: Number(
-          formatEther(BigInt(d.execution_rewards ?? "0"))
-        ),
+        consensus_rewards: Number(formatEther(BigInt(d.consensus_rewards ?? "0"))),
+        execution_rewards: Number(formatEther(BigInt(d.execution_rewards ?? "0"))),
       })) ?? [];
 
     const cumulativeRewards = plottedData.reduce((a: number[], e) => {
@@ -31,39 +27,31 @@
     }, []);
 
     chart = new Chart(canvasRef, {
-      type: "bar",
+      type: "line",
       data: {
         labels: plottedData.map((d) => d.date),
         datasets: [
           {
-            label: "Consensus rewards",
-            data: plottedData.map((e) => e.consensus_rewards),
+            type: "line",
+            data: cumulativeRewards,
+            tension: 0.4,
             borderWidth: 2,
-            backgroundColor: "#bfdbfe",
-            borderColor: "#60a5fa",
-            hoverBackgroundColor: "#60a5fa",
-            hoverBorderColor: "#2563eb",
-          },
-          {
-            label: "Execution rewards",
-            data: plottedData.map((e) => e.execution_rewards),
-            borderWidth: 2,
-            backgroundColor: "#bbf7d0",
-            borderColor: "#4ade80",
+            backgroundColor: (ctx) => {
+              const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.chartArea?.height ?? 0);
+              gradient.addColorStop(0, "#fecaca");
+              gradient.addColorStop(1, "#FFFFFF00");
+              return gradient;
+            },
+            fill: true,
+            borderColor: "#fca5a5",
             hoverBackgroundColor: "#4ade80",
             hoverBorderColor: "#16a34a",
-          },
-          {
-            hidden: true,
-            type: "line",
-            pointStyle: "circle",
-            label: "Cumulative",
-            data: cumulativeRewards,
-            borderWidth: 2,
-            backgroundColor: "#fecaca",
-            borderColor: "#fca5a5",
-            hoverBackgroundColor: "#f87171",
-            hoverBorderColor: "#dc2626",
+            pointRadius: 0,
+            pointHitRadius: 20,
+            pointHoverRadius: 6,
+            pointHoverBorderColor: "#fca5a5",
+            pointHoverBorderWidth: 2,
+            pointHoverBackgroundColor: "#FFF",
           },
         ],
       },
@@ -89,18 +77,17 @@
             },
           },
         },
+        hover: { intersect: false },
         plugins: {
-          legend: {
-            align: "center",
+          legend: { display: false },
+          title: {
+            text: "Cumulative rewards evolution",
+            display: true,
+            font: { size: 18, weight: "normal" },
             position: "bottom",
-            labels: {
-              padding: 20,
-              color: $darkmode ? "white" : "black",
-              pointStyle: "circle",
-              usePointStyle: true,
-            },
           },
           tooltip: {
+            intersect: false,
             mode: "index",
             backgroundColor: $darkmode ? "white" : "black",
             titleColor: $darkmode ? "black" : "white",
@@ -117,16 +104,8 @@
                 return `${date} (${rawDate})`;
               },
               label: (context) => {
-                let label = context.dataset.label;
                 let value = context.parsed.y;
-                return ` ${label}: ${value.toFixed(5)} ETH`;
-              },
-              footer: (context) => {
-                let rewards = context.reduce(
-                  (a, c) => a + (c.datasetIndex !== 2 ? c.parsed.y : 0),
-                  0
-                );
-                return `Total rewards: ${rewards.toFixed(5)} ETH`;
+                return ` ${value.toFixed(5)} ETH`;
               },
             },
           },
@@ -149,6 +128,7 @@
     });
     return unsub;
   });
+
   onDestroy(() => {
     destroyChart();
   });

@@ -7,7 +7,7 @@
   import Operations from "$lib/components/Operations.svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
-  import { context } from "$lib/store/context";
+  import { applyStateMachine, context } from "$lib/store/context";
   import { onMount } from "svelte";
   import Curl from "$lib/components/Curl.svelte";
   import Seo from "$lib/components/Seo.svelte";
@@ -22,44 +22,16 @@
   onMount(() => {
     // if network was not set on the server try to read the local storage
     if ($context.network === undefined) {
-      $context.network =
-        localStorage.getItem("network") === "mainnet" ? "mainnet" : "testnet";
+      $context.network = localStorage.getItem("network") === "mainnet" ? "mainnet" : "testnet";
     }
 
     const unsub = context.subscribe(async (ctx) => {
       let initialUrl = $page.url.toString();
-      let hasChangedType = ctx.type !== $page.url.searchParams.get("type");
 
-      $page.url.searchParams.set("search", ctx.search);
-      $page.url.searchParams.set("type", ctx.type);
-      if (ctx.network) $page.url.searchParams.set("network", ctx.network);
-
-      // all pages have pagination
-      $page.url.searchParams.set("current_page", ctx.current_page.toString());
-      $page.url.searchParams.set("page_size", ctx.page_size.toString());
-
-      if (ctx.type === "rewards") {
-        $page.url.searchParams.set("start_date", ctx.start_date);
-        $page.url.searchParams.set("end_date", ctx.end_date);
-      }
-
-      if (ctx.type === "operations") {
-        $page.url.searchParams.set("tab", ctx.tab);
-      }
-
-      // reset pagination
-      if (hasChangedType) {
-        $page.url.searchParams.delete("current_page");
-        $page.url.searchParams.delete("page_size");
-        $page.url.searchParams.delete("start_date");
-        $page.url.searchParams.delete("end_date");
-        $page.url.searchParams.delete("tab");
-      }
+      applyStateMachine($page, ctx);
 
       // Prevent unnecessary navigation
-      if (initialUrl === $page.url.toString()) {
-        return;
-      }
+      if (initialUrl === $page.url.toString()) return;
 
       goto($page.url.toString(), { invalidateAll: true, noScroll: true });
     });

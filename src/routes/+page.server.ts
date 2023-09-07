@@ -17,15 +17,11 @@ export const load = (async ({ url }) => {
     return { search, error: "Invalid Network or Type" };
   }
 
-  // disable for now
-  // // cache the page for 1 hour for better performance
-  // setHeaders({
-  //   "cache-control": "public, max-age=3600",
-  // });
+  // all the pages use pagination
+  const current_page = Number(url.searchParams.get("current_page")) || 1;
+  const page_size = Number(url.searchParams.get("page_size")) || 10;
 
   if (type === "stakes") {
-    const current_page = Number(url.searchParams.get("current_page")) || 1;
-    const page_size = Number(url.searchParams.get("page_size")) || 10;
     const data = await queryData({
       network,
       search,
@@ -36,13 +32,8 @@ export const load = (async ({ url }) => {
   }
 
   if (type === "rewards") {
-    const current_page = Number(url.searchParams.get("current_page")) || 1;
-    const page_size = Number(url.searchParams.get("page_size")) || 10;
-    const start_date =
-      url.searchParams.get("start_date") ||
-      format(subMonths(new Date(), 1), "yyyy-MM-dd");
-    const end_date =
-      url.searchParams.get("end_date") || format(new Date(), "yyyy-MM-dd");
+    const start_date = url.searchParams.get("start_date") ?? format(subMonths(new Date(), 1), "yyyy-MM-dd");
+    const end_date = url.searchParams.get("end_date") ?? format(new Date(), "yyyy-MM-dd");
     const data = await queryData({
       network,
       search,
@@ -64,8 +55,6 @@ export const load = (async ({ url }) => {
   }
 
   if (type === "operations") {
-    const current_page = Number(url.searchParams.get("current_page")) || 1;
-    const page_size = Number(url.searchParams.get("page_size")) || 10;
     const tab = getOperationType(url.searchParams.get("tab"));
     const data = await queryData({
       network,

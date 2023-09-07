@@ -7,10 +7,7 @@
 <a
   target="_blank"
   class="underline"
-  href={new URL(
-    href,
-    `https://${$context.network === "testnet" ? "prater." : ""}beaconcha.in`
-  ).toString()}
+  href={new URL(href, `https://${$context.network === "testnet" ? "prater." : ""}beaconcha.in`).toString()}
 >
   <slot />
 </a>

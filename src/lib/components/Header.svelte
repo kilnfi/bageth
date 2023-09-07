@@ -4,7 +4,7 @@
   import NetworkSelector from "./NetworkSelector.svelte";
 </script>
 
-<header class="gap-y-4 mt-2 max-w-4xl flex flex-col w-full">
+<header class="gap-y-3 mt-3 max-w-4xl flex flex-col w-full">
   <div class="flex justify-between items-center">
     <div>
       <a
@@ -14,8 +14,8 @@
         <img
           src="/favicon.png"
           alt="logo"
-          width="45"
-          height="45"
+          width="32"
+          height="32"
           class="rounded-md"
         />
         <span class="px-1.5 py-0.5">bageth.xyz</span>

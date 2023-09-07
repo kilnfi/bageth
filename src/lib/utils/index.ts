@@ -14,7 +14,23 @@ export function isIndex(index: string) {
 
 export function isIndexRange(index: string) {
   const range = index.split("..");
-  return range.length === 2 && range.every((x) => isIndex(x))
+  return range.length === 2 && range.every((x) => isIndex(x));
+}
+
+export function createRange(
+  start: number,
+  end: number,
+  max = 1_000
+): number[] | null {
+  try {
+    const size = end - start + 1;
+
+    if (size > max) return null;
+
+    return [...Array(size)].map((_, i) => i + start);
+  } catch {
+    return null;
+  }
 }
 
 export function validateNetwork(
