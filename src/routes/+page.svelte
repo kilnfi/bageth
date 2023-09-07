@@ -72,7 +72,7 @@
 
 <Tab active={$context.type} {tabs}>
   {#each tabs as t}
-    <button on:click={() => ($context.type = t)}>/{t}</button>
+    <button on:click={() => ($context.type = t)}>{t}</button>
   {/each}
 </Tab>
 
