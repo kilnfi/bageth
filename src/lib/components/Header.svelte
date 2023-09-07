@@ -4,7 +4,7 @@
   import NetworkSelector from "./NetworkSelector.svelte";
 </script>
 
-<header class="py-2 max-w-6xl w-full flex justify-between items-center">
+<header class="py-2 max-w-4xl w-full flex justify-between items-center">
   <div>
     <a
       href="/"
@@ -31,7 +31,7 @@
 
 </header>
 
-<div class="max-w-6xl w-full">
+<div class="max-w-4xl">
   <a href="/">
     <img src="header.png" alt="header" class="rounded border-none" />
   </a>

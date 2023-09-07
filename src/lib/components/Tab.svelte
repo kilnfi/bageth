@@ -17,7 +17,7 @@
 </script>
 
 <div
-  class="w-full max-w-6xl tabs flex items-center gap-x-4 p-2
+  class="w-full max-w-4xl tabs flex items-center gap-x-4 p-2
     border rounded-lg relative bg-white text-black dark:bg-black dark:text-white"
   style="--width: {width}%"
 >

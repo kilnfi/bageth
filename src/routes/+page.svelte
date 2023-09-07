@@ -81,7 +81,7 @@
 <SearchForm error={data.error} search={$context.search} />
 
 <div
-  class="w-full max-w-6xl flex flex-col items-center gap-y-10"
+  class="w-full max-w-4xl flex flex-col items-center gap-y-10"
 >
   {#if data.type === "rewards"}
     <Rewards data={data.data} />
