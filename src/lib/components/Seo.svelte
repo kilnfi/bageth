@@ -9,7 +9,7 @@
   const META: Meta[] = [
     {
       property: "description",
-      content: "A set of tools on Ethereum featuring Kiln's API",
+      content: "Ethereum explorer of the beaconchain",
     },
     {
       property: "og:title",
@@ -17,7 +17,7 @@
     },
     {
       property: "og:description",
-      content: "A set of tools on Ethereum featuring Kiln's API",
+      content: "Ethereum explorer of the beaconchain",
     },
     {
       property: "og:image",
@@ -37,7 +37,7 @@
     },
     {
       property: "twitter:description",
-      content: "A set of tools on Ethereum featuring Kiln's API",
+      content: "Ethereum explorer of the beaconchain",
     },
     {
       property: "twitter:card",
