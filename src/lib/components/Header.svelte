@@ -32,6 +32,6 @@
   </div>
 
   <a href="/">
-    <img src="header.png" alt="header" class="rounded border-none" />
+    <img src="header.jpg" alt="header" class="rounded border-none" />
   </a>
 </header>
