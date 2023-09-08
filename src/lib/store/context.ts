@@ -1,10 +1,6 @@
 import { page } from "$app/stores";
-import {
-  OPERATIONS_TAB_MAPPING,
-  isKeyOf,
-  validateNetwork,
-  validateType,
-} from "$lib/utils";
+import { OPERATIONS_TAB_MAPPING, isKeyOf, validateNetwork, validateType } from "$lib/utils";
+import type { Page } from "@sveltejs/kit";
 import { get, writable, type StartStopNotifier } from "svelte/store";
 
 export type Context = {
@@ -16,6 +12,36 @@ export type Context = {
   start_date: string;
   end_date: string;
   tab: "withdrawals" | "deposit" | "rewards";
+};
+
+export const applyStateMachine = ($page: Page, ctx: Context) => {
+  let hasChangedType = ctx.type !== $page.url.searchParams.get("type");
+
+  $page.url.searchParams.set("search", ctx.search);
+  $page.url.searchParams.set("type", ctx.type);
+  if (ctx.network) $page.url.searchParams.set("network", ctx.network);
+
+  // all pages have pagination
+  $page.url.searchParams.set("current_page", ctx.current_page.toString());
+  $page.url.searchParams.set("page_size", ctx.page_size.toString());
+
+  if (ctx.type === "rewards") {
+    $page.url.searchParams.set("start_date", ctx.start_date);
+    $page.url.searchParams.set("end_date", ctx.end_date);
+  }
+
+  if (ctx.type === "operations") {
+    $page.url.searchParams.set("tab", ctx.tab);
+  }
+
+  // reset pagination
+  if (hasChangedType) {
+    $page.url.searchParams.delete("current_page");
+    $page.url.searchParams.delete("page_size");
+    $page.url.searchParams.delete("start_date");
+    $page.url.searchParams.delete("end_date");
+    $page.url.searchParams.delete("tab");
+  }
 };
 
 const initContext: StartStopNotifier<Context> = (set) => {

@@ -1,4 +1,9 @@
-<div class="w-full flex flex-col gap-y-4">
+<script lang="ts">
+  let clazz = "";
+  export { clazz as class };
+</script>
+
+<div class="w-full flex flex-col gap-y-4 {clazz}">
   <div class="max-w-full overflow-x-auto">
     <table class="table w-full">
       <slot name="head" />

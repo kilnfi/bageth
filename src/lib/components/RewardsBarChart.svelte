@@ -17,12 +17,8 @@
     const plottedData =
       data?.fullData?.map((d) => ({
         date: format(new Date(d.date!), "yyyy-MM-dd"),
-        consensus_rewards: Number(
-          formatEther(BigInt(d.consensus_rewards ?? "0"))
-        ),
-        execution_rewards: Number(
-          formatEther(BigInt(d.execution_rewards ?? "0"))
-        ),
+        consensus_rewards: Number(formatEther(BigInt(d.consensus_rewards ?? "0"))),
+        execution_rewards: Number(formatEther(BigInt(d.execution_rewards ?? "0"))),
       })) ?? [];
 
     const cumulativeRewards = plottedData.reduce((a: number[], e) => {
@@ -56,18 +52,31 @@
           {
             hidden: true,
             type: "line",
-            pointStyle: "circle",
-            label: "Cumulative",
             data: cumulativeRewards,
+            label: "Cumulative rewards",
+            tension: 0.2,
             borderWidth: 2,
-            backgroundColor: "#fecaca",
+            backgroundColor: (ctx: any) => {
+              const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.chartArea?.height ?? 0);
+              gradient.addColorStop(0, "#fecaca");
+              gradient.addColorStop(1, "#FFFFFF00");
+              return gradient;
+            },
+            fill: true,
+            pointBackgroundColor: "#fecaca",
             borderColor: "#fca5a5",
-            hoverBackgroundColor: "#f87171",
-            hoverBorderColor: "#dc2626",
+            hoverBorderColor: "#fca5a5",
+            pointRadius: 0,
+            pointHitRadius: 20,
+            pointHoverRadius: 6,
+            pointHoverBorderColor: "#fca5a5",
+            pointHoverBorderWidth: 2,
+            pointHoverBackgroundColor: "#FFF",
           },
         ],
       },
       options: {
+        hover: { intersect: false, axis: "x" },
         responsive: true,
         scales: {
           x: {
@@ -98,10 +107,12 @@
               color: $darkmode ? "white" : "black",
               pointStyle: "circle",
               usePointStyle: true,
+              font: { size: 16, weight: "normal" },
             },
           },
           tooltip: {
             mode: "index",
+            intersect: false,
             backgroundColor: $darkmode ? "white" : "black",
             titleColor: $darkmode ? "black" : "white",
             titleFont: { weight: "normal", size: 16 },
@@ -122,10 +133,7 @@
                 return ` ${label}: ${value.toFixed(5)} ETH`;
               },
               footer: (context) => {
-                let rewards = context.reduce(
-                  (a, c) => a + (c.datasetIndex !== 2 ? c.parsed.y : 0),
-                  0
-                );
+                let rewards = context.reduce((a, c) => a + (c.datasetIndex !== 2 ? c.parsed.y : 0), 0);
                 return `Total rewards: ${rewards.toFixed(5)} ETH`;
               },
             },
@@ -149,6 +157,7 @@
     });
     return unsub;
   });
+
   onDestroy(() => {
     destroyChart();
   });

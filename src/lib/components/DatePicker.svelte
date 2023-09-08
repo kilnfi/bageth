@@ -2,6 +2,9 @@
   import { context } from "$lib/store/context";
   import { format, subMonths, subQuarters, subWeeks, subYears } from "date-fns";
 
+  let clazz = "";
+  export { clazz as class };
+
   let start = $context.start_date;
   let end = $context.end_date;
   let active: "" | "week" | "month" | "quarter" | "semester" | "year" = "";
@@ -62,7 +65,8 @@
 </script>
 
 <div
-  class="w-full flex flex-wrap justify-center gap-3 border bg-white dark:bg-black rounded-lg p-3"
+  class="flex flex-wrap justify-center gap-3
+    border bg-white dark:bg-black rounded-lg p-3 w-full {clazz}"
 >
   <div class="flex gap-3 items-center flex-wrap">
     <span class="text-lg font-bold">From</span>

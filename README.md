@@ -4,7 +4,7 @@
 
 Ethereum Explorer for the Beaconchain
 
-<img src="./static/header.png" />
+<img src="./static/header.jpg" />
 
 Currently includes:
 

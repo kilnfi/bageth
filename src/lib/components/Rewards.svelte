@@ -1,6 +1,6 @@
 <script lang="ts">
   import CopyPaste from "./CopyPaste.svelte";
-  import RewardsChart from "./RewardsChart.svelte";
+  import RewardsBarChart from "./RewardsBarChart.svelte";
   import DatePicker from "./DatePicker.svelte";
   import type { PageServerData } from "../../routes/$types";
   import { format } from "date-fns";
@@ -32,26 +32,24 @@
   };
 </script>
 
-<DatePicker />
+<DatePicker class="max-w-4xl" />
 
 <!-- rerender the chart only when the range changes,
        but not when we change page -->
 {#key JSON.stringify(data.fullData)}
   {#if data.fullData.length > 0}
     <div
-      class="overflow-x-auto w-full border p-4 rounded-lg bg-white dark:bg-black"
+      use:pulseLoading={$navigating?.type === "goto"}
+      class="overflow-x-auto w-full border p-4 rounded-lg bg-white dark:bg-black max-w-4xl"
     >
-      <div
-        use:pulseLoading={$navigating?.type === "goto"}
-        class="w-[715px] lg:w-auto"
-      >
-        <RewardsChart {data} />
+      <div class="w-[715px] lg:w-auto">
+        <RewardsBarChart {data} />
       </div>
     </div>
   {/if}
 {/key}
 
-<Table>
+<Table class="max-w-7xl">
   <thead slot="head">
     <th><span use:tooltip={{ content: help.date }}>Date</span></th>
     <th><span use:tooltip={{ content: help.cl_apy }}>CL APY</span></th>
@@ -109,13 +107,8 @@
   <div slot="title" class="flex justify-between border-b p-2">
     <h2 class="">JSON</h2>
 
-    <CopyPaste
-      class="text-black"
-      on:copy={() => navigator.clipboard.writeText(json)}
-    />
+    <CopyPaste class="text-black" on:copy={() => navigator.clipboard.writeText(json)} />
   </div>
 
-  <pre
-    slot="content"
-    class="font-mono overflow-auto bg-gray-100 text-black p-2 rounded my-1">{json}</pre>
+  <pre slot="content" class="font-mono overflow-auto bg-gray-100 text-black p-2 rounded my-1">{json}</pre>
 </Modal>
