@@ -4,7 +4,7 @@
   import NetworkSelector from "./NetworkSelector.svelte";
 </script>
 
-<header class="gap-y-3 mt-3 max-w-4xl flex flex-col w-full">
+<header class="gap-y-3 mt-3 max-w-5xl flex flex-col w-full">
   <div class="flex justify-between items-center">
     <div>
       <a href="/" class="flex items-center rounded-md bg-black dark:border text-white">

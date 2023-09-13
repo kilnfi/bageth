@@ -32,7 +32,7 @@
   };
 </script>
 
-<DatePicker class="max-w-4xl" />
+<DatePicker class="max-w-5xl" />
 
 <!-- rerender the chart only when the range changes,
        but not when we change page -->
@@ -40,7 +40,7 @@
   {#if data.fullData.length > 0}
     <div
       use:pulseLoading={$navigating?.type === "goto"}
-      class="overflow-x-auto w-full border p-4 rounded-lg bg-white dark:bg-black max-w-4xl"
+      class="overflow-x-auto w-full border p-4 rounded-lg bg-white dark:bg-black max-w-5xl"
     >
       <div class="w-[715px] lg:w-auto">
         <RewardsBarChart {data} />

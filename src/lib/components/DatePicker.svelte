@@ -25,42 +25,27 @@
 
   function handleLastWeek() {
     active = "week";
-    handleRange(
-      format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
-      format(new Date(), "yyyy-MM-dd")
-    );
+    handleRange(format(subWeeks(new Date(), 1), "yyyy-MM-dd"), format(new Date(), "yyyy-MM-dd"));
   }
 
   function handleLastMonth() {
     active = "month";
-    handleRange(
-      format(subMonths(new Date(), 1), "yyyy-MM-dd"),
-      format(new Date(), "yyyy-MM-dd")
-    );
+    handleRange(format(subMonths(new Date(), 1), "yyyy-MM-dd"), format(new Date(), "yyyy-MM-dd"));
   }
 
   function handleLastQuarter() {
     active = "quarter";
-    handleRange(
-      format(subQuarters(new Date(), 1), "yyyy-MM-dd"),
-      format(new Date(), "yyyy-MM-dd")
-    );
+    handleRange(format(subQuarters(new Date(), 1), "yyyy-MM-dd"), format(new Date(), "yyyy-MM-dd"));
   }
 
   function handleLastSemester() {
     active = "semester";
-    handleRange(
-      format(subMonths(new Date(), 6), "yyyy-MM-dd"),
-      format(new Date(), "yyyy-MM-dd")
-    );
+    handleRange(format(subMonths(new Date(), 6), "yyyy-MM-dd"), format(new Date(), "yyyy-MM-dd"));
   }
 
   function handleLastYear() {
     active = "year";
-    handleRange(
-      format(subYears(new Date(), 1), "yyyy-MM-dd"),
-      format(new Date(), "yyyy-MM-dd")
-    );
+    handleRange(format(subYears(new Date(), 1), "yyyy-MM-dd"), format(new Date(), "yyyy-MM-dd"));
   }
 </script>
 
@@ -99,32 +84,22 @@
     <span class="text-lg font-bold">Or last</span>
 
     <div class="flex gap-2 flex-wrap">
-      <button class:active={active === "week"} on:click={handleLastWeek}>
-        week
-      </button>
-      <button class:active={active === "month"} on:click={handleLastMonth}>
-        month
-      </button>
-      <button class:active={active === "quarter"} on:click={handleLastQuarter}>
-        quarter
-      </button>
-      <button
-        class:active={active === "semester"}
-        on:click={handleLastSemester}
-      >
-        semester
-      </button>
-      <button class:active={active === "year"} on:click={handleLastYear}>
-        year
-      </button>
+      <button class:active={active === "week"} on:click={handleLastWeek}> week </button>
+      <button class:active={active === "month"} on:click={handleLastMonth}> month </button>
+      <button class:active={active === "quarter"} on:click={handleLastQuarter}> quarter </button>
+      <button class:active={active === "semester"} on:click={handleLastSemester}> semester </button>
+      <button class:active={active === "year"} on:click={handleLastYear}> year </button>
     </div>
   </div>
 </div>
 
 <style lang="postcss" scoped>
   input[type="date"] {
-    @apply items-center rounded-lg border bg-gray-50 px-2 py-1
-      outline-none focus:ring-2 focus:ring-black focus:ring-opacity-30;
+    @apply border rounded-lg
+      px-2 py-1
+      outline-none
+      bg-gray-50
+      focus:ring-2 focus:ring-black focus:ring-opacity-30;
   }
   button {
     @apply rounded-lg border border-gray-200 bg-gray-100 px-2 py-1;

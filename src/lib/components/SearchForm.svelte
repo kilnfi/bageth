@@ -17,7 +17,7 @@
 
 <form
   on:submit|preventDefault={() => handleSearch()}
-  class="flex flex-col max-w-4xl w-full gap-y-3 bg-white dark:bg-black
+  class="flex flex-col max-w-5xl w-full gap-y-3 bg-white dark:bg-black
     items-center border p-3 rounded-lg relative"
 >
   <input

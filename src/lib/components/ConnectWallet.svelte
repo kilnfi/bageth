@@ -39,15 +39,25 @@
   {#if address === ""}
     <button
       on:click={connectWallet}
-      class="bg-black border dark:text-black dark:bg-gray-100
-        text-white text-sm px-2 py-1 rounded-md"
+      class="
+        px-2 py-1
+        border rounded-md
+        text-white dark:text-black
+        bg-black dark:bg-gray-100
+        text-sm
+      "
     >
       Connect wallet
     </button>
   {:else}
     <div
-      class="flex items-center border text-black dark:bg-black
-        bg-white dark:text-white rounded-md gap-x-1.5 px-1.5 py-1"
+      class="
+        px-1.5 py-1
+        flex items-center gap-x-1.5
+        border rounded-md
+        text-black dark:text-white
+        bg-white dark:bg-black
+      "
     >
       <span class="text-sm">{formatAddress(address)}</span>
 
