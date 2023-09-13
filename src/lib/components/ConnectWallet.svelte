@@ -1,18 +1,24 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { createWalletClient, custom, type WalletClient } from "viem";
-  import { goerli, mainnet } from "viem/chains";
+  import { goerli, mainnet, type Chain } from "viem/chains";
   import CopyPaste from "./CopyPaste.svelte";
   import { formatAddress } from "$lib/utils";
-  import { context } from "$lib/store/context";
+  import network, { type Network } from "$lib/store/network";
 
   let client: WalletClient | null;
   let address = "";
 
   if (browser) {
+    const CHAINS: Record<Network, Chain> = {
+      mainnet: mainnet,
+      goerli: goerli,
+      holesky: undefined as any,
+    };
+
     try {
       client = createWalletClient({
-        chain: $context.network === "testnet" ? goerli : mainnet,
+        chain: CHAINS[$network],
         transport: custom((window as any).ethereum),
       });
     } catch {

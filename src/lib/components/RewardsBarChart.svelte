@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { PageServerData } from "../../routes/$types";
+  import type { PageServerData } from "../../routes/(search)/rewards/$types";
   import { onDestroy, onMount } from "svelte";
   import Chart from "chart.js/auto";
   import { formatEther } from "viem";
   import { format } from "date-fns";
   import darkmode from "$lib/store/darkmode";
 
-  export let data: Extract<PageServerData, { type: "rewards" }>["data"];
+  export let data: NonNullable<PageServerData["data"]>["fullData"];
 
   let canvasRef: HTMLCanvasElement;
   let chart: Chart;
@@ -15,7 +15,7 @@
 
   function initChart() {
     const plottedData =
-      data?.fullData?.map((d) => ({
+      data.map((d) => ({
         date: format(new Date(d.date!), "yyyy-MM-dd"),
         consensus_rewards: Number(formatEther(BigInt(d.consensus_rewards ?? "0"))),
         execution_rewards: Number(formatEther(BigInt(d.execution_rewards ?? "0"))),

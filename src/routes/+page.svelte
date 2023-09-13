@@ -1,65 +1,21 @@
 <script lang="ts">
-  import SearchForm from "$lib/components/SearchForm.svelte";
-  import Tab from "$lib/components/Tab.svelte";
-  import Stakes from "$lib/components/Stakes.svelte";
-  import Rewards from "$lib/components/Rewards.svelte";
-  import type { PageServerData } from "./$types";
-  import Operations from "$lib/components/Operations.svelte";
-  import { page } from "$app/stores";
-  import { goto } from "$app/navigation";
-  import { applyStateMachine, context } from "$lib/store/context";
-  import { onMount } from "svelte";
-  import Curl from "$lib/components/Curl.svelte";
-  import Seo from "$lib/components/Seo.svelte";
-
-  export let data: PageServerData;
-
-  const tabs = ["stakes", "rewards", "operations"] as const;
-
-  $context.type = data.type ?? "stakes";
-  $context.search = data.search || "";
-
-  onMount(() => {
-    // if network was not set on the server try to read the local storage
-    if ($context.network === undefined) {
-      $context.network = localStorage.getItem("network") === "mainnet" ? "mainnet" : "testnet";
-    }
-
-    const unsub = context.subscribe(async (ctx) => {
-      let initialUrl = $page.url.toString();
-
-      applyStateMachine($page, ctx);
-
-      // Prevent unnecessary navigation
-      if (initialUrl === $page.url.toString()) return;
-
-      goto($page.url.toString(), { invalidateAll: true, noScroll: true });
-    });
-
-    return unsub;
-  });
+  let KNOWN_KILN_VALIDATOR = "0xd6e31f36c3ed652eb79a2db89c99fc5b67366997";
 </script>
 
-<Seo />
+<div class="max-w-5xl">
+  <img src="header.jpg" alt="header" class="rounded border-none" />
+</div>
 
-<Tab active={$context.type} {tabs}>
-  {#each tabs as t}
-    <button on:click={() => ($context.type = t)}>{t}</button>
-  {/each}
-</Tab>
+<div class="flex flex-col gap-y-4 my-4 dark:text-white">
+  <h1 class="font-bold text-2xl">What is Bageth.xyz?</h1>
 
-<Curl url={data.url} />
+  <p class="max-w-5xl">
+    Bageth.xyz serves as a user-friendly front-end interface for Kiln Connect, our all-in-one SDK for staking. This
+    innovative tool empowers stakers to easily run queries about their validators providing a reliable source of
+    information. Queries can be run based on <b>validator index</b>, <b>public key</b>, <b>wallet addresses</b> and
+    <b>proxies</b>, providing a comprehensive, real-time overview of your staking infrastructure, all within your
+    browser.
+  </p>
 
-<SearchForm error={data.error} search={$context.search} />
-
-<div class="w-full flex flex-col items-center gap-y-10">
-  {#if data.type === "rewards"}
-    <Rewards data={data.data} />
-  {:else if data.type === "stakes"}
-    <!-- spacer div  -->
-    <div />
-    <Stakes data={data.data} />
-  {:else if data.type === "operations"}
-    <Operations data={data.data} />
-  {/if}
+  <a href="/mainnet/stakes?search={KNOWN_KILN_VALIDATOR}" class="font-bold text-xl hover:underline"> Try it out! 😎 </a>
 </div>

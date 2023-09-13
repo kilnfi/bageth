@@ -1,68 +1,33 @@
 import { isAddress } from "viem";
-import fetcher from "$lib/server/fetcher";
-import type { FetchOptions, FetchResponse, FilterKeys } from "openapi-fetch";
+import type { newFetcher } from "$lib/server/fetcher";
 import type { paths } from "$lib/types/api";
-import { createRange, isBLS, isIndex, isIndexRange } from "$lib/utils";
+import { createRange } from "$lib/utils";
+import { isBLS, isIndex, isIndexRange } from "$lib/utils/validation";
 
 type ApiRoutes = "/v1/eth/stakes" | "/v1/eth/rewards" | "/v1/eth/operations";
 type Network = "mainnet" | "testnet";
 
-type GetQueryParams<T extends ApiRoutes> = FetchOptions<
-  FilterKeys<paths[T], "get">
->["params"]["query"];
-
-type GetResponse<T extends ApiRoutes> = FetchResponse<
-  FilterKeys<paths[T], "get">
->["data"];
-
-type QueryStakes = {
-  endpoint: "/v1/eth/stakes";
-  params?: GetQueryParams<"/v1/eth/stakes">;
-};
-
-type QueryRewards = {
-  endpoint: "/v1/eth/rewards";
-  params?: GetQueryParams<"/v1/eth/rewards">;
-};
-
-type QueryOperations = {
-  endpoint: "/v1/eth/operations";
-  params?: GetQueryParams<"/v1/eth/operations">;
-};
-
-type BaseQueryParams = {
-  network: Network;
+type QueryParams<T extends ApiRoutes> = {
+  fetcher: ReturnType<typeof newFetcher>;
   search: string;
+  endpoint: T;
+  params?: paths[T]["get"]["parameters"]["query"];
 };
 
-type DiscriminatedQuery = QueryStakes | QueryRewards | QueryOperations;
-
-export type QueryParams = BaseQueryParams & DiscriminatedQuery;
-
-export type QueryDataReturnType<T = any> = Promise<{
+type ReturnData<T extends ApiRoutes> = Promise<{
   url: string;
-  data: T;
+  data: paths[T]["get"]["responses"][200]["content"]["application/json; charset=utf-8"];
 } | null>;
 
-function queryData(
-  params: BaseQueryParams & QueryStakes
-): QueryDataReturnType<GetResponse<QueryStakes["endpoint"]>>;
-function queryData(
-  params: BaseQueryParams & QueryRewards
-): QueryDataReturnType<GetResponse<QueryRewards["endpoint"]>>;
-function queryData(
-  params: BaseQueryParams & QueryOperations
-): QueryDataReturnType<GetResponse<QueryOperations["endpoint"]>>;
-async function queryData({
-  network,
-  search,
-  endpoint,
-  params,
-}: QueryParams): QueryDataReturnType {
+function queryData({}: QueryParams<"/v1/eth/stakes">): ReturnData<"/v1/eth/stakes">;
+function queryData({}: QueryParams<"/v1/eth/rewards">): ReturnData<"/v1/eth/rewards">;
+function queryData({}: QueryParams<"/v1/eth/operations">): ReturnData<"/v1/eth/operations">;
+
+async function queryData({ fetcher, search, endpoint, params }: QueryParams<ApiRoutes>): ReturnData<ApiRoutes> {
   // try address (wallet or proxy)
   if (isAddress(search)) {
     // first try wallets
-    const reqWallet = await fetcher[network].GET(endpoint, {
+    const reqWallet = await fetcher.GET(endpoint, {
       params: { query: { wallets: [search], ...params } },
     });
     if (
@@ -74,7 +39,7 @@ async function queryData({
     }
 
     // then try proxies
-    const reqProxy = await fetcher[network].GET(endpoint, {
+    const reqProxy = await fetcher.GET(endpoint, {
       params: { query: { proxies: [search], ...params } },
     });
     if (reqProxy?.data?.data !== undefined) {
@@ -84,7 +49,7 @@ async function queryData({
 
   // try validator pubkey
   if (isBLS(search)) {
-    const reqBls = await fetcher[network].GET(endpoint, {
+    const reqBls = await fetcher.GET(endpoint, {
       params: { query: { validators: [search], ...params } },
     });
     if (reqBls?.data?.data !== undefined) {
@@ -94,7 +59,7 @@ async function queryData({
 
   // try validator index
   if (isIndex(search)) {
-    const reqIndex = await fetcher[network].GET(endpoint, {
+    const reqIndex = await fetcher.GET(endpoint, {
       params: { query: { validator_indexes: [Number(search)], ...params } },
     });
     if (reqIndex?.data?.data !== undefined) {
@@ -111,7 +76,7 @@ async function queryData({
       return null;
     }
 
-    const data = await fetcher[network].GET(endpoint, {
+    const data = await fetcher.GET(endpoint, {
       params: { query: { validator_indexes: indexRange, ...params } },
     });
     if (data?.data?.data !== undefined) {

@@ -1,66 +1,75 @@
 <script lang="ts">
   import { isAddress } from "viem";
-  import { navigating } from "$app/stores";
   import Spinner from "./Spinner.svelte";
-  import { isBLS, isIndex, isIndexRange } from "$lib/utils";
-  import { context } from "$lib/store/context";
+  import { isBLS, isIndex, isIndexRange } from "$lib/utils/validation";
+  import { slide } from "svelte/transition";
+  import network from "$lib/store/network";
 
-  export let error = "";
-  export let search: string;
+  export let loading: boolean;
 
-  function handleSearch() {
-    $context.search = search;
-    $context.current_page = 1;
-    $context.page_size = 10;
-  }
+  export let search = "";
+  let ref: HTMLFormElement;
 </script>
 
 <form
-  on:submit|preventDefault={() => handleSearch()}
-  class="flex flex-col max-w-5xl w-full gap-y-3 bg-white dark:bg-black
-    items-center border p-3 rounded-lg relative"
+  bind:this={ref}
+  class="
+    max-w-5xl w-full
+    p-3 relative
+    flex flex-col gap-y-3
+    bg-white dark:bg-black
+    border rounded-lg
+  "
 >
-  <input
-    name="search"
-    placeholder="search..."
-    bind:value={search}
-    on:paste={() => setTimeout(() => handleSearch(), 100)}
-    class="border-2 border-black rounded-lg px-4 py-2
-      text-lg font-mono w-full outline-none
-      focus:ring-2 focus:ring-black focus:ring-opacity-30"
-    type="text"
-  />
+  <input type="hidden" name="network" value={$network} />
+
+  <div class="w-full relative">
+    <input
+      name="search"
+      placeholder="search..."
+      bind:value={search}
+      on:paste={() => setTimeout(() => ref.requestSubmit(), 100)}
+      class="
+        border-2 border-black rounded-lg
+        w-full px-4 py-2
+        text-lg font-mono outline-none
+        focus:ring-2 focus:ring-black focus:ring-opacity-30
+      "
+      type="text"
+    />
+
+    {#if search.length > 0}
+      <button
+        in:slide={{ axis: "x", duration: 100 }}
+        out:slide={{ axis: "x", duration: 100 }}
+        type="submit"
+        disabled={loading}
+        class="
+          p-1 w-28 xl:w-32
+          absolute right-2 top-1/2 -translate-y-1/2
+          flex items-center justify-center gap-x-2
+          bg-black disabled:bg-gray-400
+          text-white
+          text rounded-lg
+        "
+      >
+        {#if loading}
+          <Spinner /> Loading
+        {:else}
+          Search
+        {/if}
+      </button>
+    {/if}
+  </div>
 
   <ul class="grid grid-cols-2 lg:grid-cols-4 gap-2">
-    <li class:valid={isIndex(search) || isIndexRange(search)}>
-      validator index
-    </li>
+    <li class:valid={isIndex(search) || isIndexRange(search)}>validator index</li>
     <li class:valid={isIndexRange(search)}>
-      range format: <code class="px-1.5 py-0.5 bg-gray-50 rounded border">
-        start..end
-      </code>
+      range format: <code class="px-1.5 py-0.5 bg-gray-50 rounded border"> start..end </code>
     </li>
-    <li class:valid={isAddress(search)}>wallet address/proxy</li>
+    <li class:valid={isAddress(search)}>wallet/proxy address</li>
     <li class:valid={isBLS(search)}>validator public key</li>
   </ul>
-
-  {#if error}
-    <p class="text-red-600">{error}</p>
-  {/if}
-
-  <button
-    type="submit"
-    disabled={$navigating?.type === "goto"}
-    class="bg-black text-white dark:bg-white dark:text-black
-      px-3 py-2 w-28 xl:w-32 text rounded-lg
-      disabled:bg-gray-400 flex items-center justify-center gap-x-2"
-  >
-    {#if $navigating?.type === "goto"}
-      <Spinner /> Loading
-    {:else}
-      Search
-    {/if}
-  </button>
 </form>
 
 <style lang="postcss" scoped>

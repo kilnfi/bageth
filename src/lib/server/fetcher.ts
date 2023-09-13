@@ -3,19 +3,32 @@ import type { paths } from "../types/api";
 import {
   KILN_MAINNET_API_KEY,
   KILN_BASE_MAINNET,
-  KILN_BASE_TESTNET,
-  KILN_TESTNET_API_KEY,
+  KILN_BASE_GOERLI,
+  KILN_BASE_HOLESKY,
+  KILN_GOERLI_API_KEY,
+  KILN_HOLESKY_API_KEY,
 } from "$env/static/private";
+import type { Network } from "$lib/store/network";
 
-const fetcher = {
-  mainnet: createClient<paths>({
-    baseUrl: KILN_BASE_MAINNET,
-    headers: { Authorization: `Bearer ${KILN_MAINNET_API_KEY}` },
-  }),
-  testnet: createClient<paths>({
-    baseUrl: KILN_BASE_TESTNET,
-    headers: { Authorization: `Bearer ${KILN_TESTNET_API_KEY}` },
-  }),
+const BASE_URL: Record<Network, string> = {
+  goerli: KILN_BASE_GOERLI,
+  holesky: KILN_BASE_HOLESKY,
+  mainnet: KILN_BASE_MAINNET,
 };
 
-export default fetcher;
+const API_TOKENS: Record<Network, string> = {
+  goerli: KILN_GOERLI_API_KEY,
+  holesky: KILN_HOLESKY_API_KEY,
+  mainnet: KILN_MAINNET_API_KEY,
+};
+
+export const newFetcher = (
+  network: Network,
+  fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) => Promise<Response>
+) => {
+  return createClient<paths>({
+    baseUrl: BASE_URL[network],
+    headers: { Authorization: `Bearer ${API_TOKENS[network]}` },
+    fetch: fetch,
+  });
+};

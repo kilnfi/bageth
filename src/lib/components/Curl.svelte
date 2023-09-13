@@ -12,7 +12,7 @@
 {#if url}
   <div
     class="
-      w-full max-w-5xl -mb-4
+      w-full max-w-5xl -mt-4
       flex flex-col items-center
     "
   >
@@ -20,21 +20,22 @@
       on:click={() => (show = !show)}
       class="
         px-2 py-0.5 w-20
-        border border-b-0 rounded-tr-lg rounded-tl-lg
+        border border-t-0 rounded-br-lg rounded-bl-lg
+        font-mono text-sm
         bg-blue-50
       "
     >
-      {!show ? "show" : "hide"} url
+      {!show ? "curl" : "hide"}
     </button>
 
     {#if show}
-      <div class="mb-2 w-full relative" in:slide={{ duration: 200 }} out:slide={{ duration: 200 }}>
+      <div class="mt-2 w-full relative" in:slide={{ duration: 200 }} out:slide={{ duration: 200 }}>
         <CopyPaste
           class="absolute top-1.5 right-1.5 bg-white px-2 py-1 border rounded-lg"
           on:copy={() => navigator.clipboard.writeText(curl)}
         />
 
-        <pre class="bg-gray-50 border rounded-lg p-4 overflow-x-auto">{curl}</pre>
+        <pre class="bg-gray-50 border whitespace-pre-wrap rounded-lg p-4 overflow-x-auto">{curl}</pre>
       </div>
     {/if}
   </div>

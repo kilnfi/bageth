@@ -3,8 +3,8 @@
 
   export let open = true;
   export let required = false;
-  let className = "";
-  export { className as class };
+  let clazz = "";
+  export { clazz as class };
 </script>
 
 {#if open}
@@ -19,8 +19,14 @@
   <div
     use:focusTrap={open}
     role="dialog"
-    class="fixed z-50 flex flex-col gap-y-3 bg-white shadow-2xl
-      p-3 rounded-lg border top-[50%] max-w-[80vw] -translate-y-1/2 {className}"
+    class="
+      z-50 p-3
+      fixed top-[50%] max-w-[80vw] -translate-y-1/2
+      flex flex-col gap-y-3
+      bg-white shadow-2xl
+      rounded-lg border
+      {clazz}
+    "
   >
     <slot name="title" />
 
@@ -28,12 +34,7 @@
 
     <slot name="footer">
       <div class="flex justify-center">
-        <button
-          on:click={() => (open = false)}
-          class="px-2 py-1 rounded-lg bg-black text-white w-20"
-        >
-          close
-        </button>
+        <button on:click={() => (open = false)} class="px-2 py-1 rounded-lg bg-black text-white w-20"> close </button>
       </div>
     </slot>
   </div>

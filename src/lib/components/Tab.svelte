@@ -17,20 +17,28 @@
 </script>
 
 <div
-  class="w-full max-w-5xl tabs flex items-center gap-x-4 p-2
-    border rounded-lg relative bg-white text-black dark:bg-black dark:text-white"
+  class="
+    w-full max-w-5xl p-1 relative
+    flex items-center gap-x-4
+    border rounded-lg
+    bg-white dark:bg-black
+    text-black dark:text-white
+  "
   style="--width: {width}%"
 >
-  <slot />
+  {#each tabs as tab}
+    <div class="w-[--width] rounded-lg px-3 py-2 text-center">
+      <slot name="tab" {tab} />
+    </div>
+  {/each}
 
   <span
-    style="width: calc({width}% - 1rem); left: calc({$tabPos}% + 0.5rem);"
-    class="h-[calc(100%-1rem)] rounded-lg absolute top-[0.5rem] bg-white mix-blend-difference"
+    style="width: calc({width}% - 0.5rem); left: calc({$tabPos}% + 0.25rem);"
+    class="
+      h-[calc(100%-0.5rem)]
+      absolute top-[0.25rem]
+      rounded-lg
+      bg-white mix-blend-difference
+    "
   />
 </div>
-
-<style lang="postcss" scoped>
-  :global(.tabs button) {
-    @apply w-[--width] rounded-lg px-3 py-2 text-center;
-  }
-</style>
