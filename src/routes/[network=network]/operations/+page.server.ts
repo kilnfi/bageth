@@ -4,6 +4,7 @@ import { parseOperationType } from "$lib/utils/validation";
 import { newFetcher } from "$lib/server/fetcher";
 import paginate from "$lib/server/paginate";
 import type { Network } from "$lib/store/network";
+import { error } from "@sveltejs/kit";
 
 export const load = (async ({ url, fetch, params }) => {
   const network = params.network as Network;
@@ -29,5 +30,5 @@ export const load = (async ({ url, fetch, params }) => {
     };
   }
 
-  return { error: `Error: "${search}" is not a valid Address, BLS or Index` };
+  throw error(404, `Error: "${search}" is not a valid Address, BLS or Index`);
 }) satisfies PageServerLoad;

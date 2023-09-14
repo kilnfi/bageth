@@ -2,7 +2,7 @@ import type { PageServerLoad } from "./$types";
 import queryData from "$lib/server/query";
 import { newFetcher } from "$lib/server/fetcher";
 import type { Network } from "$lib/store/network";
-import { isBLS } from "$lib/utils/validation";
+import { error } from "@sveltejs/kit";
 
 export const load = (async ({ url, fetch, params }) => {
   const network = params.network as Network;
@@ -22,5 +22,5 @@ export const load = (async ({ url, fetch, params }) => {
 
   if (data !== null) return data;
 
-  return { error: `Error: "${search}" is not a valid Address, BLS or Index` };
+  throw error(404, `Error: "${search}" is not a valid Address, BLS or Index`);
 }) satisfies PageServerLoad;

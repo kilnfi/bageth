@@ -11,7 +11,6 @@
   import pulseLoading from "$lib/use/pulseLoading";
   import tooltip from "$lib/use/tooltip";
   import { formatAddress, formatDate, formatEth, formatWithdrawalCredentials } from "$lib/utils";
-  import { isBLS } from "$lib/utils/validation";
   import type { PageServerData } from "./$types";
 
   export let data: PageServerData;
@@ -66,17 +65,7 @@
 
 <Curl url={data.url} />
 
-{#if data.error}
-  <p
-    class="
-      px-3 py-2 my-4
-      text-red-600 bg-red-50
-      border rounded border-red-500
-    "
-  >
-    {data.error}
-  </p>
-{:else if data.data?.data?.length === 1}
+{#if data.data?.data?.length === 1}
   {@const stake = data.data.data[0]}
   {@const wallet = stake.withdrawal_credentials ? formatWithdrawalCredentials(stake.withdrawal_credentials) : "-"}
 
