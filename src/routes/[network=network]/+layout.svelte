@@ -1,20 +1,12 @@
 <script lang="ts">
-  import { beforeNavigate, goto, onNavigate } from "$app/navigation";
+  import { beforeNavigate, goto } from "$app/navigation";
   import { navigating, page } from "$app/stores";
   import SearchForm from "$lib/components/SearchForm.svelte";
-  import Tabs from "$lib/components/Tabs.svelte";
-  import network from "$lib/store/network";
 
   const tabs = ["stakes", "rewards", "operations"] as const;
 
-  let active = tabs.find((e) => $page.route.id?.endsWith(e)) ?? tabs[0];
-
   $: search = $page.url.searchParams.get("search") ?? "";
   $: loading = $navigating?.type === "form";
-
-  onNavigate((url) => {
-    active = tabs.find((e) => url.to?.route.id?.endsWith(e)) ?? tabs[0];
-  });
 
   beforeNavigate(({ from, to, cancel }) => {
     if (!to || !from) return;
