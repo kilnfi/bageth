@@ -6,7 +6,7 @@
   import pulseLoading from "$lib/use/pulseLoading";
   import type { PageServerData } from "./$types";
   import { goto } from "$app/navigation";
-  import Tab from "$lib/components/Tab.svelte";
+  import Tab from "$lib/components/Tabs.svelte";
   import { parseOperationType } from "$lib/utils/validation";
   import Table from "$lib/components/Table.svelte";
   import ExternalLink from "$lib/components/ExternalLink.svelte";
@@ -48,9 +48,11 @@
   }
 </script>
 
-<Tab active={activeTab} {tabs}>
-  <button slot="tab" let:tab on:click={() => handleChangeTab(tab)}>{tab}</button>
-</Tab>
+<div class="max-w-5xl w-full p-1.5 border rounded-lg">
+  <Tab active={activeTab} {tabs}>
+    <button slot="tab" let:tab on:click={() => handleChangeTab(tab)} class="p-1.5 w-full truncate">{tab}</button>
+  </Tab>
+</div>
 
 <Table class="max-w-5xl">
   <thead slot="head">
