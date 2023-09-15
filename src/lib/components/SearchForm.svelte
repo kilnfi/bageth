@@ -47,7 +47,7 @@
     <div
       class="
         absolute right-2 top-1/2 -translate-y-1/2
-        flex items-center gap-x-2
+        flex items-center gap-x-2 bg-white pl-1.5
       "
     >
       <button

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PageServerData } from "../../routes/(search)/rewards/$types";
+  import type { PageServerData } from "../../routes/[network=network]/rewards/$types";
   import { onDestroy, onMount } from "svelte";
   import Chart from "chart.js/auto";
   import { formatEther } from "viem";
