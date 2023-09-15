@@ -1,18 +1,33 @@
 <script lang="ts">
-  import { context } from "$lib/store/context";
+  import { onMount } from "svelte";
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
+  import network, { NETWORKS } from "$lib/store/network";
 
-  function onChangeNetwork() {
-    let newNetwork: "mainnet" | "testnet" =
-      $context.network === "mainnet" ? "testnet" : "mainnet";
-    $context.network = newNetwork;
-    localStorage.setItem("network", newNetwork);
-  }
+  onMount(() => {
+    const unsub = network.subscribe((value) => {
+      console.log("network", value);
+      let url = new URL($page.url);
+      url.pathname = url.pathname.replace(/^\/\w+/, `/${value}`);
+      if (url.toString() !== $page.url.toString()) {
+        goto(url, { noScroll: true, invalidateAll: true });
+      }
+    });
+
+    return unsub;
+  });
 </script>
 
-<button
-  class="bg-black w-24 text-white border dark:bg-white dark:text-black
-    px-1.5 py-0.5 rounded-md"
-  on:click={onChangeNetwork}
+<select
+  class="
+    px-1.5 py-1
+    bg-black dark:bg-white
+    text-white dark:text-black
+    border rounded-md
+  "
+  bind:value={$network}
 >
-  {$context.network === "mainnet" ? "[mainnet]" : "[goerli]"}
-</button>
+  {#each NETWORKS as net}
+    <option value={net}>{net}</option>
+  {/each}
+</select>

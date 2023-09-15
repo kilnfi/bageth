@@ -1,16 +1,14 @@
 <footer
-  class="mt-auto p-2 flex flex-wrap text-center
+  class="
+    mt-auto p-2
+    flex flex-wrap items-center justify-center gap-x-1
+    text-center text-sm
     text-black dark:text-white
-    items-center justify-center text-sm gap-x-1"
+  "
 >
   made with
 
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    class="w-5 h-5 text-[#FF6521]"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-[#FF6521]">
     <path
       d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"
     />
@@ -20,12 +18,7 @@
 
   <a href="https://docs.api.mainnet.kiln.fi/" class="underline" target="_blank">Kiln Connect API</a>
 
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 38 38"
-    fill="none"
-    class="w-5 h-5"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" fill="none" class="w-5 h-5">
     <path
       d="M18.1623 10.8522C18.3729 10.6355 18.6629 10.5031 18.9848 10.5031C19.3066 10.5031 19.5927 10.6315 19.7994 10.8442L24.9093 16.0042C25.3225 16.4215 25.9941 16.4215 26.4073 16.0042L30.4722 11.8994C30.8854 11.4821 30.8854 10.804 30.4722 10.3867L21.957 1.77597C20.3199 0.122853 17.6616 0.122853 16.0245 1.77597L7.50134 10.3827C7.08809 10.8 7.08809 11.4781 7.50134 11.8954L11.5662 16.0002C11.9795 16.4175 12.651 16.4175 13.0643 16.0002L18.1662 10.8482L18.1623 10.8522Z"
       fill="#FF6521"

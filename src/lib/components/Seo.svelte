@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { context } from "$lib/store/context";
-
   type Meta = {
     property: string;
     content: string;
@@ -45,7 +43,7 @@
     },
   ];
 
-  $: title = `Bageth${$context.search !== "" ? " - " + $context.search : ""}`;
+  const title = "Bageth";
 </script>
 
 <svelte:head>

@@ -28,7 +28,12 @@
 
 <button
   on:click={handleChangeTheme}
-  class="bg-white text-black dark:bg-black dark:text-white px-2 py-1 rounded-lg border"
+  class="
+    px-2 py-1
+    bg-white dark:bg-black
+    text-black dark:text-white
+    rounded-lg border
+  "
 >
   {#if $darkmode}
     <svg
