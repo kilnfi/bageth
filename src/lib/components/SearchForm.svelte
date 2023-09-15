@@ -3,9 +3,15 @@
   import Spinner from "./Spinner.svelte";
   import { isBLS, isIndex, isIndexRange } from "$lib/utils/validation";
   import { slide } from "svelte/transition";
-  import network from "$lib/store/network";
+  import network, { type Network } from "$lib/store/network";
 
   export let loading: boolean;
+
+  const RANDOM_SEARCH: Record<Network, number> = {
+    goerli: 500_000,
+    mainnet: 800_000,
+    holesky: 1_400_000,
+  };
 
   export let search = "";
   let ref: HTMLFormElement;
@@ -48,7 +54,7 @@
         type="button"
         class="w-8 h-8"
         on:click={() => {
-          let start = Math.floor(Math.random() * 800_000);
+          let start = Math.floor(Math.random() * RANDOM_SEARCH[$network]);
           let end = start + Math.floor(Math.random() * 100) + 10;
           search = `${start}..${end}`;
           setTimeout(() => ref.requestSubmit(), 100);
