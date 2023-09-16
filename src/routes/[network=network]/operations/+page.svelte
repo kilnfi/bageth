@@ -13,6 +13,7 @@
   import Paginate from "$lib/components/Paginate.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import CopyPaste from "$lib/components/CopyPaste.svelte";
+  import Curl from "$lib/components/Curl.svelte";
 
   export let data: PageServerData;
 
@@ -53,6 +54,8 @@
     <button slot="tab" let:tab on:click={() => handleChangeTab(tab)} class="p-1.5 w-full truncate">{tab}</button>
   </Tab>
 </div>
+
+<Curl url={data.url} />
 
 <Table class="max-w-5xl">
   <thead slot="head">
