@@ -5,14 +5,24 @@
   export let url = "";
 
   let show = false;
-  let U = new URL(url);
-  let baseUrl = `${U.protocol}//${U.hostname}${U.pathname}`;
+  let curl = "";
+  let baseUrl = "";
+  let U: URL | null = null;
 
-  $: curl = `curl --location '${url}' \\
+  $: {
+    curl = `curl --location '${url}' \\
      --header 'Authorization: Bearer {api_token}'`;
+    try {
+      U = new URL(url);
+      baseUrl = `${U.protocol}//${U.hostname}${U.pathname}`;
+    } catch {
+      U = null;
+      baseUrl = "";
+    }
+  }
 </script>
 
-{#if url}
+{#if url && U}
   <div
     class="
       w-full max-w-5xl -mt-4
