@@ -9,7 +9,7 @@
   export let start = "";
   export let end = "";
 
-  let active: "" | "week" | "month" | "quarter" | "semester" | "year" = "";
+  let active: "" | "week" | "month" | "quarter" | "semester" | "year" | "all" = "";
 
   function handleRange(newStart: string, newEnd: string) {
     if (newStart < newEnd) {
@@ -35,6 +35,12 @@
   function handleLastMonth() {
     active = "month";
     handleRange(format(subMonths(new Date(), 1), "yyyy-MM-dd"), format(new Date(), "yyyy-MM-dd"));
+  }
+
+  function handleAll() {
+    active = "all";
+    // there was no staking yet in 2020
+    handleRange("2020-01-01", format(new Date(), "yyyy-MM-dd"));
   }
 
   function handleLastQuarter() {
@@ -63,7 +69,7 @@
   "
 >
   <div class="flex gap-3 items-center flex-wrap">
-    <span class="text-lg font-bold dark:text-white">From</span>
+    <span class="font-bold dark:text-white">From</span>
 
     <input
       type="date"
@@ -75,7 +81,7 @@
       }}
     />
 
-    <span class="text-lg font-bold dark:text-white">to</span>
+    <span class="font-bold dark:text-white">to</span>
 
     <input
       type="date"
@@ -90,7 +96,7 @@
   </div>
 
   <div class="flex items-center gap-3 flex-wrap">
-    <span class="text-lg font-bold dark:text-white">Or last</span>
+    <span class="font-bold dark:text-white">Or last</span>
 
     <div class="flex gap-2 flex-wrap">
       <button class:active={active === "week"} on:click={handleLastWeek}> week </button>
@@ -98,6 +104,7 @@
       <button class:active={active === "quarter"} on:click={handleLastQuarter}> quarter </button>
       <button class:active={active === "semester"} on:click={handleLastSemester}> semester </button>
       <button class:active={active === "year"} on:click={handleLastYear}> year </button>
+      <button class:active={active === "all"} on:click={handleAll}> all </button>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import network from "$lib/store/network";
+  import network, { type Network } from "$lib/store/network";
 
   export let href = "";
   export let variant: "beaconcha.in" | "etherscan.io" = "beaconcha.in";
@@ -11,9 +11,19 @@
 
   $: {
     if (variant === "beaconcha.in") {
-      baseUrl = `https://${$network === "goerli" ? "prater." : ""}beaconcha.in`;
+      const subdomains: Record<Network, string> = {
+        holesky: "holesky.",
+        goerli: "prater.",
+        mainnet: "",
+      };
+      baseUrl = `https://${subdomains[$network]}beaconcha.in`;
     } else if (variant === "etherscan.io") {
-      baseUrl = `https://${$network === "goerli" ? "goerli." : ""}etherscan.io`;
+      const subdomains: Record<Network, string> = {
+        goerli: "goerli.",
+        holesky: "holesky.",
+        mainnet: "",
+      };
+      baseUrl = `https://${subdomains[$network]}etherscan.io`;
     }
   }
 </script>

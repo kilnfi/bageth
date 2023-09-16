@@ -2,10 +2,11 @@
   import { navigating } from "$app/stores";
   import CopyPaste from "$lib/components/CopyPaste.svelte";
   import Curl from "$lib/components/Curl.svelte";
+  import DatePicker from "$lib/components/DatePicker.svelte";
   import ExternalLink from "$lib/components/ExternalLink.svelte";
-  import Kpi from "$lib/components/Kpi.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import Paginate from "$lib/components/Paginate.svelte";
+  import RewardsBarChart from "$lib/components/RewardsBarChart.svelte";
   import Table from "$lib/components/Table.svelte";
   import network from "$lib/store/network";
   import pulseLoading from "$lib/use/pulseLoading";
@@ -19,22 +20,22 @@
   let json = "";
 
   const STATE_COLORS: Record<string, string> = {
-    active_slashed: "bg-red-200",
-    exited_slashed: "bg-red-200",
+    active_slashed: "bg-red-200 border-red-400",
+    exited_slashed: "bg-red-200 border-red-400",
 
-    withdrawal_done: "bg-gray-200",
-    unknown: "bg-gray-200",
-    unstaked: "bg-gray-200",
+    withdrawal_done: "bg-gray-200 border-gray-400",
+    unknown: "bg-gray-200 border-gray-400",
+    unstaked: "bg-gray-200 border-gray-400",
 
-    active_exiting: "bg-orange-200",
-    exited_unslashed: "bg-orange-200",
-    exit_requested: "bg-orange-200",
-    pending_queued: "bg-orange-200",
-    deposit_in_progress: "bg-orange-200",
-    pending_initialized: "bg-orange-200",
-    withdrawal_possible: "bg-orange-200",
+    active_exiting: "bg-orange-200 border-orange-400",
+    exited_unslashed: "bg-orange-200 border-orange-400",
+    exit_requested: "bg-orange-200 border-orange-400",
+    pending_queued: "bg-orange-200 border-orange-400",
+    deposit_in_progress: "bg-orange-200 border-orange-400",
+    pending_initialized: "bg-orange-200 border-orange-400",
+    withdrawal_possible: "bg-orange-200 border-orange-400",
 
-    active_ongoing: "bg-green-200",
+    active_ongoing: "bg-green-200 border-green-400",
   };
 
   const help = {
@@ -67,82 +68,201 @@
 
 {#if data.data?.data?.length === 1}
   {@const stake = data.data.data[0]}
-  {@const wallet = stake.withdrawal_credentials ? formatWithdrawalCredentials(stake.withdrawal_credentials) : "-"}
+  {@const wallet = stake.withdrawal_credentials ? formatWithdrawalCredentials(stake.withdrawal_credentials) : undefined}
 
   <h2
     class="
-      flex gap-x-2
-      w-full max-w-5xl p-3
+      grid sm:grid-cols-[1fr_auto_1fr] gap-8
+      w-full max-w-5xl px-4 py-3
       border rounded-lg
       dark:text-white
     "
   >
     {#if stake.validator_address}
-      <div use:tooltip={{ content: help.validator_address }}>
-        <ExternalLink variant="beaconcha.in" href="/validator/{stake.validator_address}">
-          {formatAddress(stake.validator_address, 20)}
-        </ExternalLink>
-      </div>
+      <div class="flex flex-col gap-0.5">
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.validator_address }}>Stake</span>
 
-      <CopyPaste on:copy={() => navigator.clipboard.writeText(stake.validator_address ?? "")} />
+        <div class="flex items-center gap-2">
+          <ExternalLink variant="beaconcha.in" href="/validator/{stake.validator_address}" class="text-lg break-all">
+            {formatAddress(stake.validator_address, 16)}
+          </ExternalLink>
+
+          <CopyPaste on:copy={() => navigator.clipboard.writeText(stake.validator_address ?? "")} />
+        </div>
+      </div>
     {/if}
 
+    <div class="hidden sm:block h-full w-[1px] bg-gray-200" />
+
     {#if stake.validator_index}
-      <span>-</span>
-      <div use:tooltip={{ content: help.validator_index }}>
-        <ExternalLink variant="beaconcha.in" href="/validator/{stake.validator_index}">
-          {`(${stake.validator_index})`}
-        </ExternalLink>
+      <div class="flex flex-col gap-0.5">
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.validator_index }}>Index</span>
+
+        <div class="flex items-center gap-2">
+          <ExternalLink variant="beaconcha.in" href="/validator/{stake.validator_index}">
+            {stake.validator_index}
+          </ExternalLink>
+
+          <CopyPaste on:copy={() => navigator.clipboard.writeText(stake.validator_index?.toString() ?? "")} />
+        </div>
       </div>
     {/if}
   </h2>
 
-  <div class="max-w-5xl w-full grid grid-cols-3 gap-3">
-    <Kpi
-      title="Activated at"
-      info={help.activated_at}
-      value={stake.activated_at ? new Date(stake.activated_at).toLocaleString() : "-"}
-    />
-    <Kpi title="Activated epoch" info={help.activated_epoch} value={stake.activated_epoch?.toString() ?? "-"} />
-    <Kpi title="Balance" info={help.balance} value={stake.balance ? `${formatEth(stake.balance, 10)} ETH` : "-"} />
-    <Kpi title="Wallet" info={help.withdrawal_credentials} value={wallet} />
-    <Kpi
-      title="Delegated at"
-      info={help.delegated_at}
-      value={stake.delegated_at ? new Date(stake.delegated_at).toLocaleString() : "-"}
-    />
-    <Kpi title="Delegated block" info={help.delegated_block} value={stake.delegated_block?.toString() ?? "-"} />
-    <Kpi title="Rewards" info={help.rewards} value={stake.rewards ? `${formatEth(stake.rewards, 10)} ETH` : "-"} />
-    <Kpi
-      title="Consensus rewards"
-      info={help.consensus_rewards}
-      value={stake.consensus_rewards ? `${formatEth(stake.consensus_rewards, 10)} ETH` : "-"}
-    />
-    <Kpi
-      title="Execution rewards"
-      info={help.execution_rewards}
-      value={stake.execution_rewards ? `${formatEth(stake.execution_rewards, 10)} ETH` : "-"}
-    />
-    <Kpi title="Deposit tx sender" info={help.deposit_tx_sender} value={stake.deposit_tx_sender ?? "-"} />
-    <Kpi
-      title="Effective balance"
-      info={help.effective_balance}
-      value={stake.effective_balance ? `${formatEth(stake.effective_balance, 10)} ETH` : "-"}
-    />
-    <Kpi
-      title="Execution fee recipient"
-      info={help.execution_fee_recipient}
-      value={stake.execution_fee_recipient ?? "-"}
-    />
-    <Kpi
-      title="Updated at"
-      info={help.updated_at}
-      value={stake.updated_at ? new Date(stake.updated_at).toLocaleString() : "-"}
-    />
-    <Kpi title="State" info={help.state} value={stake.state} />
+  <div class="grid md:grid-cols-2 w-full max-w-5xl gap-4 [&>*]:overflow-auto">
+    <div class="flex flex-col gap-8 p-5 border rounded-lg">
+      <div class="flex flex-col gap-y-0.5 items-start">
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.rewards }}>Rewards</span>
+        <span class="text-3xl font-mono dark:text-white whitespace-nowrap">
+          {stake.rewards ? `${formatEth(stake.rewards, 17)} ETH` : "-"}
+        </span>
+      </div>
+
+      <div class="flex gap-5">
+        <div class="relative pt-4 px-3 pb-2 border rounded-lg">
+          <span
+            class="absolute text-sm top-[-14px] left-2.5 px-1 rounded-lg border bg-blue-200 border-blue-400"
+            use:tooltip={{ content: help.consensus_rewards }}
+          >
+            consensus rewards
+          </span>
+          <span class="text-lg font-mono whitespace-nowrap text-gray-500 dark:text-gray-100">
+            {stake.consensus_rewards ? `${formatEth(stake.consensus_rewards, 10)} ETH` : "-"}
+          </span>
+        </div>
+
+        <div class="relative pt-4 px-3 pb-2 border rounded-lg">
+          <span
+            class="absolute text-sm top-[-14px] left-2.5 px-1 rounded-lg border bg-green-200 border-green-400"
+            use:tooltip={{ content: help.execution_rewards }}
+          >
+            execution rewards
+          </span>
+          <span class="text-lg font-mono whitespace-nowrap text-gray-500 dark:text-gray-100">
+            {stake.execution_rewards ? `${formatEth(stake.execution_rewards, 10)} ETH` : "-"}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="border flex flex-col gap-3 p-5 rounded-lg">
+      <div class="flex flex-col gap-y-0.5 items-start">
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.state }}>Status</span>
+        <span
+          class="
+            text-2xl font-mono text-gray-600
+            px-4 py-2
+            rounded-2xl border-2 {STATE_COLORS[stake.state ?? '']}
+          "
+        >
+          {stake.state}
+        </span>
+      </div>
+
+      <div class="flex flex-col gap-y-1.5 items-start">
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.updated_at }}>Updated at</span>
+        <span class="text-xl font-mono text-gray-600 dark:text-white">
+          {stake.updated_at ? new Date(stake.updated_at).toLocaleString() : "-"}
+        </span>
+      </div>
+    </div>
   </div>
+
+  <div class="grid md:grid-cols-2 w-full max-w-5xl gap-4 [&>*]:overflow-auto">
+    <Table>
+      <tbody slot="body">
+        <tr>
+          <td class="border-r" use:tooltip={{ content: help.activated_at }}>Activated at</td>
+          <td>{stake.activated_at ? new Date(stake.activated_at).toLocaleString() : "-"}</td>
+        </tr>
+        <tr>
+          <td class="border-r" use:tooltip={{ content: help.activated_epoch }}>Activated epoch</td>
+          <td>
+            {#if stake.activated_epoch}
+              <ExternalLink variant="beaconcha.in" href="/epoch/{stake.activated_epoch}">
+                {stake.activated_epoch}
+              </ExternalLink>
+            {:else}
+              -
+            {/if}
+          </td>
+        </tr>
+        <tr>
+          <td class="border-r" use:tooltip={{ content: help.delegated_at }}>Delegated at</td>
+          <td>{stake.delegated_at ? new Date(stake.delegated_at).toLocaleString() : "-"}</td>
+        </tr>
+        <tr>
+          <td class="border-r" use:tooltip={{ content: help.delegated_block }}>Delegated block</td>
+          <td>
+            {#if stake.delegated_block}
+              <ExternalLink variant="beaconcha.in" href="/block/{stake.delegated_block}">
+                {stake.delegated_block}
+              </ExternalLink>
+            {:else}
+              -
+            {/if}
+          </td>
+        </tr>
+      </tbody>
+    </Table>
+
+    <Table>
+      <tbody slot="body">
+        <tr>
+          <td class="border-r" use:tooltip={{ content: help.balance }}>Balance</td>
+          <td>{stake.balance ? `${formatEth(stake.balance, 10)} ETH` : "-"}</td>
+        </tr>
+        <tr>
+          <td class="border-r" use:tooltip={{ content: help.effective_balance }}>Effective balance</td>
+          <td>{stake.effective_balance ? `${formatEth(stake.effective_balance, 10)} ETH` : "-"}</td>
+        </tr>
+        <tr>
+          <td class="border-r" use:tooltip={{ content: help.withdrawal_credentials }}>Withdrawal credentials</td>
+          <td>
+            {#if wallet}
+              <ExternalLink variant="etherscan.io" href="/address/{wallet}">
+                {formatAddress(wallet, 12)}
+              </ExternalLink>
+            {:else}
+              -
+            {/if}
+          </td>
+        </tr>
+        <tr>
+          <td class="border-r" use:tooltip={{ content: help.execution_fee_recipient }}>Execution fee recipient</td>
+          <td>
+            {#if stake.execution_fee_recipient}
+              <ExternalLink variant="etherscan.io" href="/address/{stake.execution_fee_recipient}">
+                {formatAddress(stake.execution_fee_recipient, 12)}
+              </ExternalLink>
+            {:else}
+              -
+            {/if}
+          </td>
+        </tr>
+      </tbody>
+    </Table>
+  </div>
+
+  {#if data.rewards?.length !== 0}
+    <DatePicker />
+
+    {#key data.rewards}
+      <div
+        class="
+          overflow-x-auto w-full max-w-5xl p-4
+          bg-white dark:bg-black
+          border rounded-lg mb-10
+        "
+      >
+        <div class="w-[715px] lg:w-auto">
+          <RewardsBarChart data={data.rewards ?? []} />
+        </div>
+      </div>
+    {/key}
+  {/if}
 {:else}
-  <Table class="max-w-5xl rounded">
+  <Table class="max-w-5xl">
     <thead slot="head">
       <tr>
         <th><span use:tooltip={{ content: help.validator_address }}>Validator</span></th>
