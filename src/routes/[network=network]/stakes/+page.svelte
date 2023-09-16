@@ -2,6 +2,7 @@
   import { navigating } from "$app/stores";
   import CopyPaste from "$lib/components/CopyPaste.svelte";
   import Curl from "$lib/components/Curl.svelte";
+  import DatePicker from "$lib/components/DatePicker.svelte";
   import ExternalLink from "$lib/components/ExternalLink.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import Paginate from "$lib/components/Paginate.svelte";
@@ -79,7 +80,7 @@
   >
     {#if stake.validator_address}
       <div class="flex flex-col gap-0.5">
-        <span class="text-gray-500" use:tooltip={{ content: help.validator_address }}>Stake</span>
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.validator_address }}>Stake</span>
 
         <div class="flex items-center gap-2">
           <ExternalLink variant="beaconcha.in" href="/validator/{stake.validator_address}" class="text-lg break-all">
@@ -95,7 +96,7 @@
 
     {#if stake.validator_index}
       <div class="flex flex-col gap-0.5">
-        <span class="text-gray-500" use:tooltip={{ content: help.validator_index }}>Index</span>
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.validator_index }}>Index</span>
 
         <div class="flex items-center gap-2">
           <ExternalLink variant="beaconcha.in" href="/validator/{stake.validator_index}">
@@ -109,10 +110,12 @@
   </h2>
 
   <div class="grid md:grid-cols-2 w-full max-w-5xl gap-4 [&>*]:overflow-auto">
-    <div class="flex flex-col gap-10 p-5 border rounded-lg">
+    <div class="flex flex-col gap-8 p-5 border rounded-lg">
       <div class="flex flex-col gap-y-0.5 items-start">
-        <span class="text-gray-500" use:tooltip={{ content: help.rewards }}>Rewards</span>
-        <span class="text-3xl font-mono">{stake.rewards ? `${formatEth(stake.rewards, 17)} ETH` : "-"}</span>
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.rewards }}>Rewards</span>
+        <span class="text-3xl font-mono dark:text-white whitespace-nowrap">
+          {stake.rewards ? `${formatEth(stake.rewards, 17)} ETH` : "-"}
+        </span>
       </div>
 
       <div class="flex gap-5">
@@ -123,7 +126,7 @@
           >
             consensus rewards
           </span>
-          <span class="text-lg font-mono text-gray-500">
+          <span class="text-lg font-mono whitespace-nowrap text-gray-500 dark:text-gray-100">
             {stake.consensus_rewards ? `${formatEth(stake.consensus_rewards, 10)} ETH` : "-"}
           </span>
         </div>
@@ -135,23 +138,30 @@
           >
             execution rewards
           </span>
-          <span class="text-lg font-mono text-gray-500">
+          <span class="text-lg font-mono whitespace-nowrap text-gray-500 dark:text-gray-100">
             {stake.execution_rewards ? `${formatEth(stake.execution_rewards, 10)} ETH` : "-"}
           </span>
         </div>
       </div>
     </div>
 
-    <div class="border flex flex-col gap-5 p-5 rounded-lg">
+    <div class="border flex flex-col gap-3 p-5 rounded-lg">
       <div class="flex flex-col gap-y-0.5 items-start">
-        <span class="text-gray-500" use:tooltip={{ content: help.state }}>Status</span>
-        <span class="text-2xl font-mono text-gray-600 px-4 py-2 rounded-2xl border-2 {STATE_COLORS[stake.state ?? '']}">
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.state }}>Status</span>
+        <span
+          class="
+            text-2xl font-mono text-gray-600
+            px-4 py-2
+            rounded-2xl border-2 {STATE_COLORS[stake.state ?? '']}
+          "
+        >
           {stake.state}
         </span>
       </div>
+
       <div class="flex flex-col gap-y-1.5 items-start">
-        <span class="text-gray-500" use:tooltip={{ content: help.updated_at }}>Updated at</span>
-        <span class="text-xl font-mono text-gray-600">
+        <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.updated_at }}>Updated at</span>
+        <span class="text-xl font-mono text-gray-600 dark:text-white">
           {stake.updated_at ? new Date(stake.updated_at).toLocaleString() : "-"}
         </span>
       </div>
@@ -235,17 +245,21 @@
   </div>
 
   {#if data.rewards?.length !== 0}
-    <div
-      class="
-        overflow-x-auto w-full max-w-5xl p-4
-        bg-white dark:bg-black
-        border rounded-lg mb-10
-      "
-    >
-      <div class="w-[715px] lg:w-auto">
-        <RewardsBarChart data={data.rewards ?? []} />
+    <DatePicker />
+
+    {#key data.rewards}
+      <div
+        class="
+          overflow-x-auto w-full max-w-5xl p-4
+          bg-white dark:bg-black
+          border rounded-lg mb-10
+        "
+      >
+        <div class="w-[715px] lg:w-auto">
+          <RewardsBarChart data={data.rewards ?? []} />
+        </div>
       </div>
-    </div>
+    {/key}
   {/if}
 {:else}
   <Table class="max-w-5xl">

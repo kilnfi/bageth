@@ -5,6 +5,7 @@
   import { formatEther } from "viem";
   import { format } from "date-fns";
   import darkmode from "$lib/store/darkmode";
+  import { browser } from "$app/environment";
 
   export let data: NonNullable<PageServerData["data"]>["fullData"];
 
@@ -76,7 +77,6 @@
         ],
       },
       options: {
-        hover: { intersect: false, axis: "x" },
         responsive: true,
         scales: {
           x: {
@@ -99,6 +99,20 @@
           },
         },
         plugins: {
+          zoom: {
+            zoom: {
+              pinch: { enabled: true },
+              drag: {
+                enabled: true,
+                backgroundColor: $darkmode ? "#ffffffaa" : "#000000aa",
+              },
+              mode: "x",
+              wheel: {
+                enabled: true,
+                speed: 0.01,
+              },
+            },
+          },
           legend: {
             align: "center",
             position: "bottom",
@@ -112,7 +126,6 @@
           },
           tooltip: {
             mode: "index",
-            intersect: false,
             backgroundColor: $darkmode ? "white" : "black",
             titleColor: $darkmode ? "black" : "white",
             titleFont: { weight: "normal", size: 16 },
@@ -146,6 +159,12 @@
     destroyChart = () => {
       if (chart) chart.destroy();
     };
+  }
+
+  if (browser) {
+    import("chartjs-plugin-zoom").then((mod) => {
+      Chart.register(mod.default);
+    });
   }
 
   onMount(() => {

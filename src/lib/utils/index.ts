@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { formatEther } from "viem";
 
 export function createRange(start: number, end: number, max = 1_000): number[] | null {
@@ -27,6 +27,10 @@ export function formatEth(eth: string, decimals = 4) {
 
 export function formatDate(date: string | Date) {
   return format(date instanceof Date ? date : new Date(date), "yyyy-MM-dd");
+}
+
+export function parseDate(date: string) {
+  return parse(date, "yyyy-MM-dd", new Date());
 }
 
 export function reverseObject(object: Record<string, string>) {
