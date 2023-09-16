@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import network from "$lib/store/network";
-  import { tick } from "svelte";
   import Tabs from "./Tabs.svelte";
 
   const links = ["stakes", "rewards", "operations"] as const;
@@ -33,8 +32,7 @@
       activeColor = "#FFF";
     }}
     on:mouseenter={() => {
-      if (active !== tab) activeColor = "#1a1a1a";
-      else activeColor = "#FFF";
+      activeColor = "#FFF";
       hovering = tab;
     }}
     class="py-1 px-3 w-full dark:text-white"

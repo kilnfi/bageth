@@ -4,9 +4,12 @@
 
   export let url = "";
 
+  let show = false;
+  let U = new URL(url);
+  let baseUrl = `${U.protocol}//${U.hostname}${U.pathname}`;
+
   $: curl = `curl --location '${url}' \\
      --header 'Authorization: Bearer {api_token}'`;
-  let show = false;
 </script>
 
 {#if url}
@@ -29,13 +32,36 @@
     </button>
 
     {#if show}
-      <div class="mt-2 w-full relative" in:slide={{ duration: 200 }} out:slide={{ duration: 200 }}>
+      <div
+        class="
+          mt-2 p-4
+          w-full relative
+          flex flex-col gap-4
+          bg-gray-50 border rounded-lg
+        "
+        in:slide={{ duration: 200 }}
+        out:slide={{ duration: 200 }}
+      >
         <CopyPaste
           class="absolute top-1.5 right-1.5 bg-white px-2 py-1 border rounded-lg"
           on:copy={() => navigator.clipboard.writeText(curl)}
         />
 
-        <pre class="bg-gray-50 border whitespace-pre-wrap rounded-lg p-4 overflow-x-auto">{curl}</pre>
+        <pre class="overflow-hidden hover:overflow-x-auto">{curl}</pre>
+
+        <div class="w-full h-[1px] bg-gray-200" />
+
+        <div class="font-mono flex flex-col gap-2">
+          <div class="text-lg truncate">{baseUrl}</div>
+
+          <div class="grid grid-cols-[auto_auto_1fr] gap-x-3 gap-y-1.5 pl-4">
+            {#each U.searchParams as param}
+              <span class="text-gray-700"> {param[0]} </span>
+              <span class="text-gray-400"> = </span>
+              <span class="overflow-x-hidden hover:overflow-x-auto"> {param[1]} </span>
+            {/each}
+          </div>
+        </div>
       </div>
     {/if}
   </div>
