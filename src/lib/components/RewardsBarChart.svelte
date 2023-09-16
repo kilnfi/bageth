@@ -14,6 +14,8 @@
 
   let destroyChart = () => {};
 
+  const IS_MACOS = browser && navigator.userAgent.includes("Mac OS X");
+
   function initChart() {
     const plottedData =
       data.map((d) => ({
@@ -108,6 +110,7 @@
               },
               mode: "x",
               wheel: {
+                modifierKey: IS_MACOS ? "meta" : "ctrl",
                 enabled: true,
                 speed: 0.01,
               },
@@ -183,3 +186,25 @@
 </script>
 
 <canvas bind:this={canvasRef} />
+
+<div
+  class="
+    mt-4
+    text-gray-800 text-sm
+    flex items-center justify-center gap-2
+  "
+>
+  Press
+  <kbd class="px-1 py-0.5 border border-gray-300 rounded bg-gray-50">
+    {#if IS_MACOS}
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-4 h-4" viewBox="0 0 16 16">
+        <path
+          d="M3.5 2A1.5 1.5 0 0 1 5 3.5V5H3.5a1.5 1.5 0 1 1 0-3zM6 5V3.5A2.5 2.5 0 1 0 3.5 6H5v4H3.5A2.5 2.5 0 1 0 6 12.5V11h4v1.5a2.5 2.5 0 1 0 2.5-2.5H11V6h1.5A2.5 2.5 0 1 0 10 3.5V5H6zm4 1v4H6V6h4zm1-1V3.5A1.5 1.5 0 1 1 12.5 5H11zm0 6h1.5a1.5 1.5 0 1 1-1.5 1.5V11zm-6 0v1.5A1.5 1.5 0 1 1 3.5 11H5z"
+        />
+      </svg>
+    {:else}
+      ctrl
+    {/if}
+  </kbd>
+  and scroll to zoom.
+</div>
