@@ -72,14 +72,14 @@
 
   <h2
     class="
-      grid sm:grid-cols-[1fr_auto_1fr] gap-8
+      grid sm:grid-cols-[1fr_auto_1fr] gap-4 sm:gap-8
       w-full max-w-5xl px-4 py-3
       border rounded-lg
       dark:text-white
     "
   >
     {#if stake.validator_address}
-      <div class="flex flex-col gap-0.5">
+      <div class="flex flex-col gap-0.5 items-start">
         <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.validator_address }}>Stake</span>
 
         <div class="flex items-center gap-2">
@@ -92,10 +92,10 @@
       </div>
     {/if}
 
-    <div class="hidden sm:block h-full w-[1px] bg-gray-200" />
+    <div class="h-[1px] w-full sm:h-full sm:w-[1px] bg-gray-200" />
 
     {#if stake.validator_index}
-      <div class="flex flex-col gap-0.5">
+      <div class="flex flex-col gap-0.5 items-start">
         <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.validator_index }}>Index</span>
 
         <div class="flex items-center gap-2">
@@ -161,7 +161,7 @@
 
       <div class="flex flex-col gap-y-1.5 items-start">
         <span class="text-gray-500 dark:text-gray-300" use:tooltip={{ content: help.updated_at }}>Updated at</span>
-        <span class="text-xl font-mono text-gray-600 dark:text-white">
+        <span class="text-xl font-mono text-gray-700 dark:text-white">
           {stake.updated_at ? new Date(stake.updated_at).toLocaleString() : "-"}
         </span>
       </div>
@@ -244,23 +244,35 @@
     </Table>
   </div>
 
-  {#if data.rewards?.length !== 0}
-    <DatePicker />
+  <DatePicker />
 
-    {#key data.rewards}
-      <div
-        class="
-          overflow-x-auto w-full max-w-5xl p-4
-          bg-white dark:bg-black
-          border rounded-lg mb-10
-        "
-      >
-        <div class="w-[715px] lg:w-auto">
-          <RewardsBarChart data={data.rewards ?? []} />
-        </div>
+  {#key JSON.stringify(data.rewards)}
+    <div
+      class="
+        overflow-x-auto
+        relative w-full max-w-5xl p-4
+        bg-white dark:bg-black
+        border rounded-lg mb-10
+      "
+      use:pulseLoading={Boolean($navigating)}
+    >
+      <div class="w-[715px] lg:w-auto">
+        <RewardsBarChart data={data.rewards ?? []} />
       </div>
-    {/key}
-  {/if}
+
+      {#if data.rewards?.length === 0}
+        <div
+          class="
+            absolute top-0 left-0 w-full h-full
+            flex justify-center items-center
+            bg-white/60 backdrop-blur-sm
+          "
+        >
+          <p class="text-center px-6 py-3 bg-white rounded-lg border">No rewards found</p>
+        </div>
+      {/if}
+    </div>
+  {/key}
 {:else}
   <Table class="max-w-5xl">
     <thead slot="head">

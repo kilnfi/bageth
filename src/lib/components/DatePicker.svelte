@@ -1,24 +1,20 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import { format, subMonths, subQuarters, subWeeks, subYears } from "date-fns";
+  import { formatDate, parseDate } from "$lib/utils";
+  import { addDays, format, subMonths, subQuarters, subWeeks, subYears } from "date-fns";
 
   let clazz = "";
   export { clazz as class };
 
-  export let start = "";
-  export let end = "";
+  export let start = formatDate(subMonths(new Date(), 1));
+  export let end = formatDate(new Date());
 
   let active: "" | "week" | "month" | "quarter" | "semester" | "year" | "all" = "";
 
   function handleRange(newStart: string, newEnd: string) {
-    if (newStart < newEnd) {
-      start = newStart;
-      end = newEnd;
-    } else {
-      start = newEnd;
-      end = newEnd;
-    }
+    start = newStart;
+    end = newEnd;
 
     let url = new URL($page.url);
     url.searchParams.delete("current_page");
@@ -61,44 +57,50 @@
 
 <div
   class="
-    w-full max-w-5xl p-2
-    flex flex-wrap justify-center gap-3
+    w-full max-w-5xl px-4 py-2
+    grid sm:grid-cols-[auto_auto_1fr] gap-3
     border rounded-lg
     bg-white dark:bg-black
     {clazz}
   "
 >
-  <div class="flex gap-3 items-center flex-wrap">
-    <span class="font-bold dark:text-white">From</span>
+  <div class="flex gap-3 flex-wrap">
+    <div class="flex items-center gap-3">
+      <span class="dark:text-white">From</span>
 
-    <input
-      type="date"
-      value={start}
-      max={end}
-      on:change={(e) => {
-        active = "";
-        handleRange(e.currentTarget.value, end);
-      }}
-    />
+      <input
+        type="date"
+        value={start}
+        max={end}
+        on:change={(e) => {
+          active = "";
+          handleRange(e.currentTarget.value, end);
+        }}
+      />
+    </div>
 
-    <span class="font-bold dark:text-white">to</span>
+    <div class="flex items-center gap-3">
+      <span class="dark:text-white">To</span>
 
-    <input
-      type="date"
-      value={end}
-      min={start}
-      max={format(new Date(), "yyyy-MM-dd")}
-      on:change={(e) => {
-        active = "";
-        handleRange(start, e.currentTarget.value);
-      }}
-    />
+      <input
+        type="date"
+        value={end}
+        min={formatDate(addDays(parseDate(start), 1))}
+        max={formatDate(new Date())}
+        on:change={(e) => {
+          active = "";
+          handleRange(start, e.currentTarget.value);
+        }}
+      />
+    </div>
   </div>
 
-  <div class="flex items-center gap-3 flex-wrap">
-    <span class="font-bold dark:text-white">Or last</span>
+  <div class="h-[1px] w-full sm:h-full sm:w-[1px] bg-gray-200" />
 
-    <div class="flex gap-2 flex-wrap">
+  <div class="flex items-center gap-3">
+    <span class="dark:text-white">Preset</span>
+
+    <div class="flex w-full gap-2 max-sm:flex-wrap">
       <button class:active={active === "week"} on:click={handleLastWeek}> week </button>
       <button class:active={active === "month"} on:click={handleLastMonth}> month </button>
       <button class:active={active === "quarter"} on:click={handleLastQuarter}> quarter </button>
@@ -118,7 +120,7 @@
       focus:ring-2 focus:ring-black focus:ring-opacity-30;
   }
   button {
-    @apply rounded-lg border border-gray-200 bg-gray-100 px-2 py-1;
+    @apply sm:w-full rounded-lg border border-gray-200 bg-gray-100 px-2 py-1;
   }
   button.active {
     @apply bg-gray-200;
