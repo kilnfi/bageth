@@ -15,10 +15,18 @@
 
   export let search = "";
   let ref: HTMLFormElement;
+
+  function searchRandom() {
+    const start = Math.floor(Math.random() * RANDOM_SEARCH[$network]);
+    const end = start + Math.floor(Math.random() * 100) + 10;
+    search = `${start}..${end}`;
+    setTimeout(() => ref.requestSubmit(), 100);
+  }
 </script>
 
 <form
   bind:this={ref}
+  data-sveltekit-keepfocus
   class="
     max-w-5xl w-full
     p-3 relative
@@ -50,16 +58,7 @@
         flex items-center gap-x-2 bg-white pl-1.5
       "
     >
-      <button
-        type="button"
-        class="w-8 h-8"
-        on:click={() => {
-          let start = Math.floor(Math.random() * RANDOM_SEARCH[$network]);
-          let end = start + Math.floor(Math.random() * 100) + 10;
-          search = `${start}..${end}`;
-          setTimeout(() => ref.requestSubmit(), 100);
-        }}
-      >
+      <button type="button" class="w-8 h-8" on:click={searchRandom}>
         <svg
           stroke="currentColor"
           fill="currentColor"
