@@ -1,8 +1,12 @@
 <script lang="ts">
   import darkmode from "$lib/store/darkmode";
   import { onMount } from "svelte";
+  import { slide } from "svelte/transition";
+
+  let transitioning = false;
 
   function handleChangeTheme() {
+    if (transitioning) return;
     $darkmode = !$darkmode;
     localStorage.setItem("dark", $darkmode.toString());
   }
@@ -37,6 +41,14 @@
 >
   {#if $darkmode}
     <svg
+      in:slide={{ axis: "y" }}
+      out:slide={{ axis: "y" }}
+      on:introstart={() =>
+        // this is to prevent spam clicking the button and having glitches
+        (transitioning = true)}
+      on:introend={() => (transitioning = false)}
+      on:outrostart={() => (transitioning = true)}
+      on:outroend={() => (transitioning = false)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -52,6 +64,8 @@
     </svg>
   {:else}
     <svg
+      out:slide={{ axis: "y" }}
+      in:slide={{ axis: "y" }}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
