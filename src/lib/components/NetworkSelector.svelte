@@ -7,7 +7,7 @@
 <div class="relative">
   <select
     class="
-      pl-2 pr-2.5 py-0.5 appearance-none
+      pl-2 pr-2.5 py-0.5 appearance-none w-24
       bg-black dark:bg-white
       text-white dark:text-black
       border rounded-md
