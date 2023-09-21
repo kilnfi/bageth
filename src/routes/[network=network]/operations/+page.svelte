@@ -13,7 +13,7 @@
   import Paginate from "$lib/components/Paginate.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import CopyPaste from "$lib/components/CopyPaste.svelte";
-  import Curl from "$lib/components/Curl.svelte";
+  import type { Page } from "@sveltejs/kit";
 
   export let data: PageServerData;
 
@@ -40,22 +40,20 @@
     isModalOpen = true;
   }
 
-  function handleChangeTab(tab: (typeof tabs)[number]) {
+  function getTabLink(page: Page, tab: (typeof tabs)[number]) {
     // reset page when changing tab
     let url = new URL($page.url);
     url.searchParams.set("tab", tab);
     url.searchParams.delete("current_page");
-    goto(url.toString(), { noScroll: true });
+    return url.toString();
   }
 </script>
 
 <div class="max-w-5xl w-full p-1.5 border rounded-lg">
   <Tab active={activeTab} {tabs}>
-    <button slot="tab" let:tab on:click={() => handleChangeTab(tab)} class="p-1.5 w-full truncate">{tab}</button>
+    <a slot="tab" let:tab href={getTabLink($page, tab)} class="p-1.5 w-full truncate">{tab}</a>
   </Tab>
 </div>
-
-<Curl url={data.url} />
 
 <Table class="max-w-5xl">
   <thead slot="head">
