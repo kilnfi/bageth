@@ -64,8 +64,6 @@
   }
 </script>
 
-<Curl url={data.url} />
-
 {#if data.data?.data?.length === 1}
   {@const stake = data.data.data[0]}
   {@const wallet = stake.withdrawal_credentials ? formatWithdrawalCredentials(stake.withdrawal_credentials) : undefined}

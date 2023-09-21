@@ -1,5 +1,6 @@
 <script lang="ts">
   import { navigating, page } from "$app/stores";
+  import Curl from "$lib/components/Curl.svelte";
   import SearchForm from "$lib/components/SearchForm.svelte";
   import persistedSearchParams from "$lib/store/persistedSearchParams";
 
@@ -16,5 +17,7 @@
 </script>
 
 <SearchForm {loading} {search} />
+
+<Curl url={$page.data.url} />
 
 <slot />
