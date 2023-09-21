@@ -33,6 +33,6 @@ export function parseDate(date: string) {
   return parse(date, "yyyy-MM-dd", new Date());
 }
 
-export function reverseObject(object: Record<string, string>) {
+export function reverseObject<T extends PropertyKey, K extends PropertyKey>(object: Record<T, K>): Record<K, T> {
   return Object.fromEntries(Object.entries(object).map(([key, value]) => [value, key]));
 }
