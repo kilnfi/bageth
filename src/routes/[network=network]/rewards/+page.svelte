@@ -11,7 +11,6 @@
   import Paginate from "$lib/components/Paginate.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import CopyPaste from "$lib/components/CopyPaste.svelte";
-  import Curl from "$lib/components/Curl.svelte";
 
   export let data: PageServerData;
 
@@ -34,8 +33,6 @@
 </script>
 
 <DatePicker class="max-w-5xl" />
-
-<Curl url={data.url} />
 
 <!--
     rerender the chart only when the range changes,

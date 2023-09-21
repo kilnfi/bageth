@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import network from "$lib/store/network";
+  import persistedSearchParams from "$lib/store/persistedSearchParams";
   import Tabs from "./Tabs.svelte";
 
   const links = ["stakes", "rewards", "operations"] as const;
@@ -27,7 +28,7 @@
   <a
     slot="tab"
     let:tab
-    href="/{$network}/{tab}"
+    href="/{$network}/{tab}?{$persistedSearchParams.toString()}"
     on:click={() => {
       activeColor = "#FFF";
     }}

@@ -15,7 +15,7 @@ const network = derived(
       }
     }
   },
-  "goerli" as Network
+  "mainnet" as Network
 );
 
 export default network;

@@ -33,7 +33,10 @@ export const load = (async ({ url, fetch, params }) => {
       endpoint: "/v1/eth/rewards",
       params: { start_date, end_date },
     });
-    return { ...data, rewards: rewards?.data.data };
+
+    if (rewards !== null) {
+      return { ...data, rewards: rewards.data.data };
+    }
   }
 
   if (data !== null) return data;
