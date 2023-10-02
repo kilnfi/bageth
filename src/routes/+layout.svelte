@@ -9,10 +9,11 @@
   import Seo from "$lib/components/Seo.svelte";
   import nProgress from "nprogress";
   import { afterNavigate, beforeNavigate } from "$app/navigation";
+  import { onMount } from "svelte";
 
-  nProgress.configure({ showSpinner: false });
-  beforeNavigate(() => nProgress.start());
+  onMount(() => nProgress.configure({ showSpinner: false }));
   afterNavigate(() => nProgress.done());
+  beforeNavigate(() => nProgress.start());
 </script>
 
 <Seo />
