@@ -8,12 +8,8 @@ export type Network = (typeof NETWORKS)[number];
 const network = derived(
   page,
   ($page, set) => {
-    for (const network of NETWORKS) {
-      if ($page.url.pathname.startsWith(`/${network}`)) {
-        set(network);
-        break;
-      }
-    }
+    let network = NETWORKS.find((network) => $page.url.pathname.startsWith(`/${network}`));
+    if (network) set(network);
   },
   "mainnet" as Network
 );
