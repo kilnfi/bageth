@@ -9,6 +9,7 @@ import {
   KILN_HOLESKY_API_KEY,
 } from "$env/static/private";
 import type { Network } from "$lib/store/network";
+import type { PageServerLoadEvent } from "../../routes/[network=network]/$types";
 
 const BASE_URL: Record<Network, string> = {
   goerli: KILN_BASE_GOERLI,
@@ -22,13 +23,12 @@ const API_TOKENS: Record<Network, string> = {
   mainnet: KILN_MAINNET_API_KEY,
 };
 
-export const newFetcher = (
-  network: Network,
-  fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) => Promise<Response>
-) => {
+export const createServerClient = (network: Network, fetcher: PageServerLoadEvent["fetch"]) => {
   return createClient<paths>({
     baseUrl: BASE_URL[network],
     headers: { Authorization: `Bearer ${API_TOKENS[network]}` },
-    fetch: fetch,
+    fetch: fetcher,
   });
 };
+
+export type Fetcher = ReturnType<typeof createServerClient>;

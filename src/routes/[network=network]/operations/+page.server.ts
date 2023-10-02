@@ -1,7 +1,7 @@
 import type { PageServerLoad } from "./$types";
-import queryData from "$lib/server/query";
+import { queryOperations } from "$lib/server/query";
 import { parseOperationType } from "$lib/utils/validation";
-import { newFetcher } from "$lib/server/fetcher";
+import { createServerClient } from "$lib/server/fetcher";
 import paginate from "$lib/server/paginate";
 import type { Network } from "$lib/store/network";
 import { error } from "@sveltejs/kit";
@@ -15,12 +15,8 @@ export const load = (async ({ url, fetch, params }) => {
 
   if (!search) return;
 
-  const fetcher = newFetcher(network, fetch);
-  const data = await queryData({
-    fetcher,
-    search,
-    endpoint: "/v1/eth/operations",
-  });
+  const fetcher = createServerClient(network, fetch);
+  const data = await queryOperations({ fetcher, search });
 
   if (data !== null && data.data?.data) {
     const filteredData = data.data.data.filter((o) => o.type === tab);

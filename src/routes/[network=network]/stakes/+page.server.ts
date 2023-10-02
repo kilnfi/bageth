@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
-import queryData from "$lib/server/query";
-import { newFetcher } from "$lib/server/fetcher";
+import { queryRewards, queryStakes } from "$lib/server/query";
+import { createServerClient } from "$lib/server/fetcher";
 import type { Network } from "$lib/store/network";
 import { error } from "@sveltejs/kit";
 import { isBLS } from "$lib/utils/validation";
@@ -15,24 +15,14 @@ export const load = (async ({ url, fetch, params }) => {
 
   if (!search) return;
 
-  const fetcher = newFetcher(network, fetch);
-  const data = await queryData({
-    fetcher,
-    search,
-    endpoint: "/v1/eth/stakes",
-    params: { current_page, page_size },
-  });
+  const fetcher = createServerClient(network, fetch);
+  const data = await queryStakes({ fetcher, search, params: { current_page, page_size } });
 
   if (isBLS(search) && data && data.data.data?.length === 1) {
     const start_date = url.searchParams.get("start_date") || formatDate(subMonths(new Date(), 1));
     const end_date = url.searchParams.get("end_date") || formatDate(new Date());
 
-    const rewards = await queryData({
-      fetcher,
-      search,
-      endpoint: "/v1/eth/rewards",
-      params: { start_date, end_date },
-    });
+    const rewards = await queryRewards({ fetcher, search, params: { start_date, end_date } });
 
     if (rewards !== null) {
       return { ...data, rewards: rewards.data.data };
