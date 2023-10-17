@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
-import queryData from "$lib/server/query";
-import { newFetcher } from "$lib/server/fetcher";
+import { queryRewards } from "$lib/server/query";
+import { createServerClient } from "$lib/server/fetcher";
 import { formatDate } from "$lib/utils";
 import { subMonths } from "date-fns";
 import paginate from "$lib/server/paginate";
@@ -17,13 +17,8 @@ export const load = (async ({ url, fetch, params }) => {
 
   if (!search) return;
 
-  const fetcher = newFetcher(network, fetch);
-  const data = await queryData({
-    fetcher,
-    search,
-    endpoint: "/v1/eth/rewards",
-    params: { start_date, end_date },
-  });
+  const fetcher = createServerClient(network, fetch);
+  const data = await queryRewards({ fetcher, search, params: { start_date, end_date } });
 
   if (data !== null && data.data?.data) {
     return {

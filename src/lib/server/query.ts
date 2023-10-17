@@ -1,29 +1,33 @@
 import { isAddress } from "viem";
-import type { newFetcher } from "$lib/server/fetcher";
+import type { Fetcher } from "$lib/server/fetcher";
 import type { paths } from "$lib/types/api";
 import { createRange } from "$lib/utils";
 import { isBLS, isIndex, isIndexRange } from "$lib/utils/validation";
 
 type ApiRoutes = "/v1/eth/stakes" | "/v1/eth/rewards" | "/v1/eth/operations";
-type Network = "mainnet" | "testnet";
 
-type QueryParams<T extends ApiRoutes> = {
-  fetcher: ReturnType<typeof newFetcher>;
+type Params<T extends ApiRoutes = ApiRoutes> = {
+  fetcher: Fetcher;
   search: string;
-  endpoint: T;
   params?: paths[T]["get"]["parameters"]["query"];
 };
 
-type ReturnData<T extends ApiRoutes> = Promise<{
+type Response<T extends ApiRoutes = ApiRoutes> = Promise<{
   url: string;
   data: paths[T]["get"]["responses"][200]["content"]["application/json; charset=utf-8"];
 } | null>;
 
-function queryData({}: QueryParams<"/v1/eth/stakes">): ReturnData<"/v1/eth/stakes">;
-function queryData({}: QueryParams<"/v1/eth/rewards">): ReturnData<"/v1/eth/rewards">;
-function queryData({}: QueryParams<"/v1/eth/operations">): ReturnData<"/v1/eth/operations">;
+export function queryStakes(p: Params<"/v1/eth/stakes">) {
+  return internal_query("/v1/eth/stakes", p) as Response<"/v1/eth/stakes">;
+}
+export function queryRewards(p: Params<"/v1/eth/rewards">) {
+  return internal_query("/v1/eth/rewards", p) as Response<"/v1/eth/rewards">;
+}
+export function queryOperations(p: Params<"/v1/eth/operations">) {
+  return internal_query("/v1/eth/operations", p) as Response<"/v1/eth/operations">;
+}
 
-async function queryData({ fetcher, search, endpoint, params }: QueryParams<ApiRoutes>): ReturnData<ApiRoutes> {
+async function internal_query(endpoint: ApiRoutes, { fetcher, search, params }: Params): Response {
   // try address (wallet or proxy)
   if (isAddress(search)) {
     // first try wallets
@@ -86,5 +90,3 @@ async function queryData({ fetcher, search, endpoint, params }: QueryParams<ApiR
 
   return null;
 }
-
-export default queryData;

@@ -2,14 +2,14 @@
   import { navigating, page } from "$app/stores";
   import Curl from "$lib/components/Curl.svelte";
   import SearchForm from "$lib/components/SearchForm.svelte";
-  import persistedSearchParams from "$lib/store/persistedSearchParams";
+  import globalSearch from "$lib/store/globalSearch";
 
   $: search = $page.url.searchParams.get("search") ?? "";
   $: loading = $navigating?.type === "form";
 
   $: {
     // persist the search for all routes
-    persistedSearchParams.update((u) => {
+    globalSearch.update((u) => {
       u.set("search", search);
       return u;
     });
