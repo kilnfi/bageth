@@ -18,7 +18,7 @@ export const load = (async ({ url, fetch, params }) => {
   const fetcher = createServerClient(network, fetch);
   const data = await queryStakes({ fetcher, search, params: { current_page, page_size } });
 
-  if (isBLS(search) && data && data.data.data?.length === 1) {
+  if (data && data.data.data?.length === 1) {
     const start_date = url.searchParams.get("start_date") || formatDate(subMonths(new Date(), 1));
     const end_date = url.searchParams.get("end_date") || formatDate(new Date());
 
