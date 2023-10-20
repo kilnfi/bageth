@@ -19,7 +19,9 @@ export const load = (async ({ url, fetch, params }) => {
   const data = await queryOperations({ fetcher, search });
 
   if (data !== null && data.data?.data) {
-    const filteredData = data.data.data.filter((o) => o.type === tab);
+    const filteredData = data.data.data
+      .filter((o) => o.type === tab)
+      .sort((a, b) => new Date(b.time!).getTime() - new Date(a.time!).getTime());
     return {
       url: data.url,
       data: paginate(filteredData, current_page, page_size),
