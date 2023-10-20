@@ -1,7 +1,7 @@
 import type { PageServerLoad } from "./$types";
 import { queryRewards } from "$lib/server/query";
 import { createServerClient } from "$lib/server/fetcher";
-import { formatDate } from "$lib/utils";
+import { formatDate, parseDate } from "$lib/utils";
 import { subMonths } from "date-fns";
 import paginate from "$lib/server/paginate";
 import type { Network } from "$lib/store/network";
@@ -21,12 +21,19 @@ export const load = (async ({ url, fetch, params }) => {
   const data = await queryRewards({ fetcher, search, params: { start_date, end_date } });
 
   if (data !== null && data.data?.data) {
+    const rewards = data.data?.data;
+
     return {
       url: data.url,
       data: {
         // needed for the graph
-        fullData: data.data.data,
-        ...paginate(data.data?.data, current_page, page_size),
+        fullData: rewards,
+        ...paginate(
+          // sort rewards in descending order
+          rewards.sort((a, b) => parseDate(b.date!).getTime() - parseDate(a.date!).getTime()),
+          current_page,
+          page_size
+        ),
       },
     };
   }
