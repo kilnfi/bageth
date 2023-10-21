@@ -30,7 +30,7 @@ export const load = (async ({ url, fetch, params }) => {
         fullData: rewards,
         ...paginate(
           // sort rewards in descending order
-          rewards.toSorted((a, b) => parseDate(b.date!).getTime() - parseDate(a.date!).getTime()),
+          [...rewards].sort((a, b) => parseDate(b.date!).getTime() - parseDate(a.date!).getTime()),
           current_page,
           page_size
         ),
