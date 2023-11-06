@@ -2,7 +2,7 @@
   "name": "bageth",
   "version": "0.0.1",
   "private": true,
-  "license": "BUSL-1.1",
+  "license": "MIT",
   "scripts": {
     "dev": "NODE_OPTIONS='--max-http-header-size=1000000' vite dev",
     "build": "vite build",
