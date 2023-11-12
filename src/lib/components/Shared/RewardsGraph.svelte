@@ -32,8 +32,17 @@
     },
     legend: {
       inactiveColor: "#9ca3af4F",
-      textStyle: { color: "#9ca3af", fontFamily: "Space grotesk", fontSize: 14 },
-      data: ["Concensus rewards", "Execution rewards", "GRR"],
+      textStyle: { color: "#9ca3af", fontSize: 14 },
+      data: [
+        { icon: "circle", name: "Concensus rewards" },
+        { icon: "circle", name: "Execution rewards" },
+        { icon: "circle", name: "GRR" },
+      ],
+      selected: {
+        "Concensus rewards": true,
+        "Execution rewards": true,
+        GRR: false,
+      },
     },
     title: {
       textStyle: { color: "#9ca3af", fontFamily: "Space grotesk", fontWeight: "normal" },
@@ -98,8 +107,10 @@
       },
       {
         name: "GRR",
-        type: "scatter",
-        symbol: "roundRect",
+        type: "line",
+        symbol: "circle",
+        symbolSize: 10,
+        showSymbol: false,
         z: 1,
         yAxisIndex: 1,
         itemStyle: { color: "#A17C3A" },

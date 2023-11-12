@@ -3,8 +3,6 @@
 
   export let open = true;
   export let required = false;
-  let clazz = "";
-  export { clazz as class };
 </script>
 
 <svelte:window
@@ -36,8 +34,7 @@
       max-w-[calc(100%-32px)] xl:max-w-6xl -translate-y-1/2 w-full
       flex flex-col gap-y-3
       bg-dark shadow-2xl
-      rounded-lg border border-dark-light
-      {clazz}"
+      rounded-lg border border-dark-light"
   >
     <slot name="title" />
 

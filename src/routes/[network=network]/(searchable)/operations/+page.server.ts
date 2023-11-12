@@ -3,11 +3,10 @@ import { queryOperations } from "$lib/server/query";
 import { parseOperationType } from "$lib/utils/validation";
 import { createServerClient } from "$lib/server/fetcher";
 import paginate from "$lib/server/paginate";
-import type { Network } from "$lib/store/network";
 import { error } from "@sveltejs/kit";
 
 export const load = (async ({ url, fetch, params }) => {
-  const network = params.network as Network;
+  const network = params.network;
   const search = url.searchParams.get("search");
   const current_page = Number(url.searchParams.get("current_page")) || 1;
   const page_size = Number(url.searchParams.get("page_size")) || 10;
