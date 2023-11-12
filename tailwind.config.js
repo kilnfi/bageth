@@ -1,9 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: "class",
   content: ["./src/**/*.{html,js,svelte,ts}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        neue: ['"Neue Machina"'],
+        space: ['"Space Grotesk"'],
+      },
+      colors: {
+        dark: "#232120",
+        darker: "#131313",
+        "dark-light": "#434343",
+        "dark-lighter": "#B9B9B9",
+      },
+    },
   },
   plugins: [],
 };

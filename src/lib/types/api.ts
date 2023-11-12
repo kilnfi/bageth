@@ -3,7 +3,6 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
   "/v1/eth/stakes": {
     /**
@@ -48,9 +47,29 @@ export interface paths {
   "/v1/eth/keys": {
     /**
      * Validation Keys
-     * @description Create Ethereum validation keys on Kiln's infrastructure.
+     * @description Create Ethereum native validation keys on Kiln's infrastructure.
      */
     post: operations["postEthKeys"];
+  };
+  "/v1/eth/onchain/v1/keys": {
+    /**
+     * Validation On-Chain V1 Keys
+     * @description Create Ethereum validation keys for the Kiln On-Chain V1
+     * smart-contract suite. This route is for Ethereum operators
+     * only of the Kiln On-Chain V1 smart-contract. Use `/v1/eth/keys`
+     * if you want to use classic native staking.
+     */
+    post: operations["postEthOnChainKeys"];
+  };
+  "/v1/eth/onchain/v2/keys": {
+    /**
+     * Validation On-Chain V2 Keys
+     * @description Create Ethereum validation keys for the Kiln On-Chain V2
+     * smart-contract suite. This route is for Ethereum operators
+     * only of the Kiln On-Chain V2 (vSuite) smart-contract. Use `/v1/eth/keys` if
+     * you want to use classic native staking.
+     */
+    post: operations["postEthVSuiteKeys"];
   };
   "/v1/eth/transaction/stake": {
     /**
@@ -79,6 +98,20 @@ export interface paths {
      * @description Get the status of an Ethereum transaction
      */
     get: operations["getEthTxStatus"];
+  };
+  "/v1/eth/transaction/exit-request": {
+    /**
+     * Request Exit
+     * @description Generates an Ethereum EIP 1559 request-exit transaction
+     */
+    post: operations["postEthRequestExitTx"];
+  };
+  "/v1/eth/transaction/decode": {
+    /**
+     * Transaction Decoding
+     * @description Decode a transaction
+     */
+    get: operations["getEthTxDecoding"];
   };
   "/v1/eth/reports": {
     /**
@@ -163,6 +196,13 @@ export interface paths {
      * @description Get the status of a Tezos transaction
      */
     get: operations["getXtzTxStatus"];
+  };
+  "/v1/xtz/transaction/decode": {
+    /**
+     * Transaction Decoding
+     * @description Decode a Tezos transaction
+     */
+    get: operations["getXtzTxDecoding"];
   };
   "/v1/sol/stakes": {
     /**
@@ -260,10 +300,17 @@ export interface paths {
      */
     get: operations["getSolTxStatus"];
   };
+  "/v1/sol/transaction/decode": {
+    /**
+     * Transaction Decoding
+     * @description Decode a transaction
+     */
+    get: operations["getSolTxDecoding"];
+  };
   "/v1/atom/stakes": {
     /**
      * Stakes
-     * @description Get the status of ATOM stakes. Units are in uATOM (10⁻⁶ ATOM). Only stakes active after [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available.
+     * @description Retrieve the status of ATOM stakes, expressed in uATOM (10⁻⁶ ATOM). All stakes that have been active since [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available. For stakes without a specific delegation timestamp, the API computes the status based on the first available reward snapshot to provide a comprehensive overview.
      */
     get: operations["getAtomStakes"];
     /**
@@ -275,9 +322,16 @@ export interface paths {
   "/v1/atom/rewards": {
     /**
      * Rewards
-     * @description Get historical rewards by day of ATOM stakes. Units are in uATOM (10⁻⁶ ATOM). Only daily breakdowns starting 13/04/2022 ([Theta v7](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary)) are available.
+     * @description Get historical rewards by day of ATOM stakes. Units are in uATOM (10⁻⁶ ATOM). Only daily breakdowns after 13/04/2022 ([Theta v7](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary)) are available.
      */
     get: operations["getAtomRewards"];
+  };
+  "/v1/atom/operations": {
+    /**
+     * Operations
+     * @description Get the operations of ATOM stakes. Units are in uATOM (10⁻⁶ ATOM). All operations after [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available.
+     */
+    get: operations["getAtomOperations"];
   };
   "/v1/atom/network-stats": {
     /**
@@ -314,6 +368,13 @@ export interface paths {
      */
     post: operations["postAtomUnstakeTx"];
   };
+  "/v1/atom/transaction/redelegate": {
+    /**
+     * Redelegate Transaction
+     * @description Generates a redelegate transaction on Cosmos to move a stake from a validator to another without going through the 21 days unbonding period.
+     */
+    post: operations["postAtomRedelegateTx"];
+  };
   "/v1/atom/transaction/prepare": {
     /**
      * Prepare Transaction
@@ -334,6 +395,109 @@ export interface paths {
      * @description Get the status of a transaction
      */
     get: operations["getAtomTxStatus"];
+  };
+  "/v1/atom/transaction/decode": {
+    /**
+     * Transaction Decoding
+     * @description Decode a transaction
+     */
+    get: operations["getAtomTxDecoding"];
+  };
+  "/v1/osmo/stakes": {
+    /**
+     * Stakes
+     * @description Get the status of OSMO stakes. Units are in uOSMO (10⁻⁶ OSMO). All stakes active after [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available.
+     */
+    get: operations["getOsmoStakes"];
+    /**
+     * Create stakes
+     * @description Link an OSMO stake to a Kiln account
+     */
+    post: operations["postOsmoStakes"];
+  };
+  "/v1/osmo/rewards": {
+    /**
+     * Rewards
+     * @description Get historical rewards by day of OSMO stakes. Units are in uOSMO (10⁻⁶ OSMO). Only daily breakdowns after 13/04/2022 ([Theta v7](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary)) are available.
+     */
+    get: operations["getOsmoRewards"];
+  };
+  "/v1/osmo/operations": {
+    /**
+     * Operations
+     * @description Get the operations of OSMO stakes. Units are in uOSMO (10⁻⁶ OSMO). All operations after [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available.
+     */
+    get: operations["getOsmoOperations"];
+  };
+  "/v1/osmo/network-stats": {
+    /**
+     * Network Stats
+     * @description Get some network statistics on Cosmos
+     */
+    get: operations["getOsmoNetworkStats"];
+  };
+  "/v1/osmo/reports": {
+    /**
+     * Reports
+     * @description Get reports on Cosmos staking
+     */
+    get: operations["getOsmoReports"];
+  };
+  "/v1/osmo/transaction/stake": {
+    /**
+     * Stake Transaction
+     * @description Generates a delegate transaction on Cosmos
+     */
+    post: operations["postOsmoStakeTx"];
+  };
+  "/v1/osmo/transaction/withdraw-rewards": {
+    /**
+     * Withdraw Rewards Transaction
+     * @description Generates a withdraw rewards transaction on Cosmos
+     */
+    post: operations["postOsmoWithdrawRewardsTx"];
+  };
+  "/v1/osmo/transaction/unstake": {
+    /**
+     * Unstake Transaction
+     * @description Generates an undelegate transaction on Cosmos
+     */
+    post: operations["postOsmoUnstakeTx"];
+  };
+  "/v1/osmo/transaction/redelegate": {
+    /**
+     * Redelegate Transaction
+     * @description Generates a redelegate transaction on Cosmos to move a stake from a validator to another without going through the 21 days unbonding period.
+     */
+    post: operations["postOsmoRedelegateTx"];
+  };
+  "/v1/osmo/transaction/prepare": {
+    /**
+     * Prepare Transaction
+     * @description Prepare an unsigned transaction for broadcast by adding signatures to it
+     */
+    post: operations["postOsmoPrepareTx"];
+  };
+  "/v1/osmo/transaction/broadcast": {
+    /**
+     * Broadcast Transaction
+     * @description Broadcast a signed transaction to the Cosmos network
+     */
+    post: operations["postOsmoBroadcastTx"];
+  };
+  "/v1/osmo/transaction/status": {
+    /**
+     * Transaction Status
+     * @description Get the status of a transaction
+     */
+    get: operations["getOsmoTxStatus"];
+  };
+  "/v1/osmo/transaction/decode": {
+    /**
+     * Transaction Decoding
+     * @description Decode a transaction
+     */
+    get: operations["getOsmoTxDecoding"];
   };
   "/v1/accounts": {
     /**
@@ -378,12 +542,33 @@ export interface paths {
      */
     get: operations["getOrganizationPortfolio"];
   };
+  "/v1/ada/stakes": {
+    /**
+     * Stakes
+     * @description Get the status of Cardano stakes
+     */
+    get: operations["getAdaStakes"];
+  };
+  "/v1/ada/rewards": {
+    /**
+     * Rewards
+     * @description Get historical rewards by day of ADA stakes
+     */
+    get: operations["getAdARewards"];
+  };
   "/v1/ada/reports": {
     /**
      * Reports
      * @description Get reports on Cardano staking
      */
     get: operations["getAdaReports"];
+  };
+  "/v1/ada/network-stats": {
+    /**
+     * Network Stats
+     * @description Get some network statistics on ADA staking
+     */
+    get: operations["getAdaNetworkStats"];
   };
   "/v1/ada/transaction/stake": {
     /**
@@ -426,6 +611,41 @@ export interface paths {
      * @description Get the status of a transaction
      */
     get: operations["getAdaTxStatus"];
+  };
+  "/v1/ada/transaction/decode": {
+    /**
+     * Transaction Decoding
+     * @description Decode a transaction
+     */
+    get: operations["getAdaTxDecoding"];
+  };
+  "/v1/matic/stakes": {
+    /**
+     * Stakes
+     * @description Get the status of Matic stakes
+     */
+    get: operations["getMaticStakes"];
+  };
+  "/v1/matic/rewards": {
+    /**
+     * Rewards
+     * @description Get historical rewards by day of Matic stakes
+     */
+    get: operations["getMaticRewards"];
+  };
+  "/v1/matic/operations": {
+    /**
+     * Operations
+     * @description Get the operations of Polygon stakes
+     */
+    get: operations["getMaticOperations"];
+  };
+  "/v1/matic/network-stats": {
+    /**
+     * Network Stats
+     * @description Get some network statistics on Matic staking
+     */
+    get: operations["getMaticNetworkStats"];
   };
   "/v1/matic/transaction/approve": {
     /**
@@ -490,6 +710,13 @@ export interface paths {
      */
     get: operations["getMaticTxStatus"];
   };
+  "/v1/matic/transaction/decode": {
+    /**
+     * Transaction Decoding
+     * @description Decode a transaction of the Ethereum network
+     */
+    get: operations["getMaticTxDecoding"];
+  };
   "/v1/near/stakes": {
     /**
      * Stakes
@@ -509,6 +736,13 @@ export interface paths {
      */
     get: operations["getNearRewards"];
   };
+  "/v1/near/operations": {
+    /**
+     * Operations
+     * @description Get the operations of NEAR stakes
+     */
+    get: operations["getNearOperations"];
+  };
   "/v1/near/reports": {
     /**
      * Reports
@@ -522,6 +756,174 @@ export interface paths {
      * @description Get stats on NEAR network
      */
     get: operations["getNEARNetworkStats"];
+  };
+  "/v1/near/transaction/decode": {
+    /**
+     * Transaction Decoding
+     * @description Decode a transaction
+     */
+    get: operations["getNearTxDecoding"];
+  };
+  "/v1/egld/network-stats": {
+    /**
+     * Network Stats
+     * @description Get stats on MutiversX network
+     */
+    get: operations["getEgldNetworkStats"];
+  };
+  "/v1/dot/transaction/bond": {
+    /**
+     * Bond Transaction
+     * @description Generates a bond transaction on Polkadot
+     */
+    post: operations["postDotBondTx"];
+  };
+  "/v1/dot/transaction/bond-extra": {
+    /**
+     * Bond extra Transaction
+     * @description Generates a bond extra transaction on Polkadot
+     */
+    post: operations["postDotBondExtraTx"];
+  };
+  "/v1/dot/transaction/rebond": {
+    /**
+     * Rebond Transaction
+     * @description Generates a rebond transaction on Polkadot (to be used to rebond unbonding token)
+     */
+    post: operations["postDotRebondTx"];
+  };
+  "/v1/dot/transaction/unbond": {
+    /**
+     * Unbond Transaction
+     * @description Generates an unbond transaction on Polkadot
+     */
+    post: operations["postDotUnbondTx"];
+  };
+  "/v1/dot/transaction/nominate": {
+    /**
+     * Nominate Transaction
+     * @description Generates a nominate transaction on Polkadot
+     */
+    post: operations["postDotNominateTx"];
+  };
+  "/v1/dot/transaction/withdraw-unbonded": {
+    /**
+     * Withdraw unbonded Transaction
+     * @description Generates a withdraw unbonded transaction on Polkadot
+     */
+    post: operations["postDotWithdrawUnbondedTx"];
+  };
+  "/v1/dot/transaction/chill": {
+    /**
+     * Chill Transaction
+     * @description Generates a chill transaction on Polkadot
+     */
+    post: operations["postDotChillTx"];
+  };
+  "/v1/dot/transaction/set-payee": {
+    /**
+     * Set payee Transaction
+     * @description Generates a set payee transaction on Polkadot
+     */
+    post: operations["postDotSetPayeeTx"];
+  };
+  "/v1/dot/transaction/join-pool": {
+    /**
+     * Join pool Transaction
+     * @description Generates a join pool transaction on Polkadot
+     */
+    post: operations["postDotJoinPoolTx"];
+  };
+  "/v1/dot/transaction/bond-extra-pool": {
+    /**
+     * Bond extra to pool Transaction
+     * @description Generates a bond extra to pool transaction on Polkadot
+     */
+    post: operations["postDotBondExtraToPoolTx"];
+  };
+  "/v1/dot/transaction/bond-rewards-pool": {
+    /**
+     * Bond rewards to pool Transaction
+     * @description Generates a bond rewards to pool transaction on Polkadot
+     */
+    post: operations["postDotBondRewardsToPoolTx"];
+  };
+  "/v1/dot/transaction/claim-payout-pool": {
+    /**
+     * Claim payout from pool Transaction
+     * @description Generates a claim payout (rewards) from pool transaction on Polkadot
+     */
+    post: operations["postDotClaimPayoutFromPoolTx"];
+  };
+  "/v1/dot/transaction/unbond-pool": {
+    /**
+     * Unbond from pool Transaction
+     * @description Generates an unbond from pool transaction on Polkadot
+     */
+    post: operations["postDotUnbondFromPoolTx"];
+  };
+  "/v1/dot/transaction/withdraw-unbonded-pool": {
+    /**
+     * Withdraw unbonded from pool Transaction
+     * @description Generates a withdraw unbonded from pool transaction on Polkadot
+     */
+    post: operations["postDotWithdrawUnbondedFromPoolTx"];
+  };
+  "/v1/dot/transaction/status": {
+    /**
+     * Transaction Status
+     * @description Get the status of a transaction
+     */
+    get: operations["getDotTxStatus"];
+  };
+  "/v1/dot/transaction/decode": {
+    /**
+     * Transaction Decoding
+     * @description Decode a transaction
+     */
+    get: operations["getDotTxDecoding"];
+  };
+  "/v1/dot/transaction/prepare": {
+    /**
+     * Prepare Transaction
+     * @description Prepare a transaction for broadcast on Polkadot by adding a signature to it
+     */
+    post: operations["postDotPrepareTx"];
+  };
+  "/v1/dot/transaction/broadcast": {
+    /**
+     * Broadcast Transaction
+     * @description Broadcast a signed transaction on Polkadot
+     */
+    post: operations["postDotBroadcastTx"];
+  };
+  "/v1/eth/onchain/v2/stakes": {
+    /**
+     * On-Chain V2 Stakes
+     * @description Get the status of Ethereum OnChain V2 (vSuite) stakes
+     */
+    get: operations["getEthOnchainV2Stakes"];
+  };
+  "/v1/eth/onchain/v2/operations": {
+    /**
+     * On-Chain V2 Operations
+     * @description Get the operations of Ethereum OnChain V2 (vSuite) operations
+     */
+    get: operations["getEthOnchainV2Operations"];
+  };
+  "/v1/eth/onchain/v2/rewards": {
+    /**
+     * On-Chain V2 Rewards
+     * @description Get historical rewards of Ethereum OnChain V2 (vSuite) daily rewards
+     */
+    get: operations["getEthOnchainV2Rewards"];
+  };
+  "/v1/eth/onchain/v2/network-stats": {
+    /**
+     * On-Chain V2 Network Stats
+     * @description Get the network stats of Ethereum OnChain V2 (vSuite) integration
+     */
+    get: operations["getEthOnchainV2NetworkStats"];
   };
 }
 
@@ -748,6 +1150,17 @@ export interface components {
        */
       delegated_block?: number | null;
       /**
+       * Format: date-time
+       * @description Date of exit on the Ethereum consensus layer
+       * @example 2023-01-14T01:13:59Z
+       */
+      exited_at?: string | null;
+      /**
+       * @description Epoch of exit on the Ethereum consensus layer
+       * @example 174049
+       */
+      exited_epoch?: number | null;
+      /**
        * @description Address of the sender of the first deposit transaction
        * @example 0xe1f4acc0affB36a805474e3b6ab786738C6900A2
        */
@@ -788,6 +1201,16 @@ export interface components {
        */
       rewards?: string | null;
       /**
+       * @description For Kiln On-Chain stakes only, the amount of execution rewards in WEI that can be withdrawn.
+       * @example 76187808000000000
+       */
+      claimable_execution_rewards?: string | null;
+      /**
+       * @description For Kiln On-Chain stakes only, the amount of consensus rewards in WEI that can be withdrawn.
+       * @example 76187808000000000
+       */
+      claimable_consensus_rewards?: string | null;
+      /**
        * @description Gross annual percentage yield
        * @example 3.407
        */
@@ -806,12 +1229,12 @@ export interface components {
     };
     PostETHStakesPayload: {
       stakes: {
-          /**
-           * @description Validator pubkey
-           * @example 0x95373bcf8e2c64e1c373a6e534c002f210adbcc84c5abda3b6306677e171430ae50781a51c9f579a47622e334dba2412
-           */
-          validator?: string;
-        }[];
+        /**
+         * @description Validator pubkey
+         * @example 0x95373bcf8e2c64e1c373a6e534c002f210adbcc84c5abda3b6306677e171430ae50781a51c9f579a47622e334dba2412
+         */
+        validator?: string;
+      }[];
       /**
        * @description Kiln Account ID
        * @example 92f5bfd4-ea38-4824-84f7-686eddff5539
@@ -831,10 +1254,25 @@ export interface components {
        */
       consensus_rewards?: string;
       /**
-       * @description Accumulated execution rewards in WEI during the day
+       * @description Accumulated execution rewards in WEI during the day (MEV + non-MEV)
        * @example 0
        */
       execution_rewards?: string;
+      /**
+       * @description Sum of execution rewards in WEI earned by this stake via MEV
+       * @example 0
+       */
+      mev_execution_rewards?: string | null;
+      /**
+       * @description Sum of execution rewards in WEI earned by this stake without MEV
+       * @example 0
+       */
+      non_mev_execution_rewards?: string | null;
+      /**
+       * @description Median execution reward in WEI for the day (MEV + non-MEV)
+       * @example 0
+       */
+      median_execution_reward?: string;
       /**
        * @description Accumulated consensus and execution rewards in WEI during the day
        * @example 2988504000000000
@@ -860,6 +1298,15 @@ export interface components {
        * @example 0
        */
       el_apy?: number;
+      /**
+       * @description Weighted number of active validators during the day
+       * @example 152636.33
+       */
+      active_validator_count?: number;
+      /** @description Estimated value of rewards generated for that day in USD */
+      estimated_rewards_usd?: number;
+      /** @description Estimated value of the staked balance at the beginning of the day in USD */
+      estimated_stake_balance_usd?: number;
     };
     ETHNetworkStats: {
       /**
@@ -971,15 +1418,13 @@ export interface components {
        * This is the address that will receive consensus rewards.
        * BLS format is not supported.
        * This address is used as the execution-layer fee-recipient unless `fee_recipient_address` is specified.
-       * Only available for the `"native"` flavour.
        *
        * @example 0xe1f4acc0affB36a805474e3b6ab786738C6900A2
        */
-      withdrawal_address?: string;
+      withdrawal_address: string;
       /**
        * @description Ethereum fee-recipient address for execution rewards.
        * Uses the `withdrawal_address` both for consensus and execution rewards if not specified.
-       * Only available for the `"native"` flavour.
        *
        * @example 0xe1f4acc0affB36a805474e3b6ab786738C6900A2
        */
@@ -990,86 +1435,108 @@ export interface components {
        */
       number: number;
       /**
-       * @description Flavour to use to generate Ethereum keys. Use `"native"` for most cases.
-       * The `"kiln-v1"` flavour infers the withdrawal credentials and fee recipient address from the generated validation key, the `kiln_v1_fee_recipient_contract_address` and the `kiln_v1_staking_contract_address`.
-       * If no flavour is specified, uses `"native"`.
-       *
-       * @default native
-       */
-      flavour?: string;
-      /**
-       * @description Response format. Use "cli_deposit" for more information about each key.
+       * @description Response format. Use `"cli_deposit"` for more information about each key.
        * @default batch_deposit
        * @example cli_deposit
        */
       format?: string;
+    };
+    ETHPostKeysOnChainPayload: {
+      /**
+       * Format: uuid
+       * @description Kiln Account ID to stake into.
+       * @example b7177fd2-fbb3-479f-aa92-db9fb16e229f
+       */
+      account_id: string;
+      /**
+       * @description Number of validator keys to generate. You can generate up to 150 keys at once.
+       * @example 1
+       */
+      number: number;
       /**
        * @description Kiln V1 Smart-contract that will handle the dispatch of fees.
-       * Only available for the `"kiln-v1"` flavour.
        *
        * @example 0xe1f4acc0affB36a805474e3b6ab786738C6900A2
        */
-      kiln_v1_fee_recipient_contract_address?: string;
+      fee_recipient_contract_address?: string;
       /**
        * @description Kiln V1 Smart-contract used to stake generated keys.
-       * Only available for the `"kiln-v1"` flavour.
        *
        * @example 0xe1f4acc0affB36a805474e3b6ab786738C6900A2
        */
-      kiln_v1_staking_contract_address?: string;
+      staking_contract_address?: string;
+    };
+    ETHPostKeysVSuitePayload: {
+      /**
+       * Format: uuid
+       * @description Kiln Account ID to stake into.
+       * @example b7177fd2-fbb3-479f-aa92-db9fb16e229f
+       */
+      account_id: string;
+      /**
+       * @description Number of validator keys to generate. You can generate up to 150 keys at once.
+       * @example 1
+       */
+      number: number;
+      /**
+       * @description Smart-Contract address on the Ethereum execution layer of the Kiln vSuite Factory.
+       *
+       * @example 0xe1f4acc0affB36a805474e3b6ab786738C6900A2
+       */
+      factory_contract_address?: string;
     };
     ETHPostKeysCliResponse: {
-        /**
-         * @description Format of the key
-         * @example cli_deposit
-         */
-        format?: string;
-        /**
-         * @description Public key of the validator
-         * @example 8f36e2f4e921b1ed5ce9c94f21e1f26a748ac4e0c57f0d8973e7d576a2f8953b87dd86300de718238de23b1fecb19db5
-         */
-        pubkey?: string;
-        /**
-         * @description Withdrawals credentials of the validator
-         * @example 010000000000000000000000e1f4acc0affb36a805474e3b6ab786738c6900a2
-         */
-        withdrawal_credentials?: string;
-        /**
-         * @description Amount in GWEI that needs to be deposited to activate the validator
-         * @example 32000000000
-         */
-        amount?: number;
-        /**
-         * @description BLS signature for the deposit data structure required to stake on the Ethereum chain
-         * @example b7947eabf631d4772c4014a9fec2ecac2c15fc5175ad83023bbdfc9e6618cb8e78829231477c060bc9339482058ff195141f2aeb801c0329a1a4afebd7e76ce0ba1d9d88f8820d052836a79d59aea673db9eb5009db4a4f6e04fb7ffbdbdd604
-         */
-        signature?: string;
-        /**
-         * @description Root hash ensuring the deposit message integrity
-         * @example 65db6ae73c6465311a7acf2cd8a2863eececf09901872550639f0d8f6c1876f5
-         */
-        deposit_message_root?: string;
-        /**
-         * @description Root hash ensuring the deposit data integrity
-         * @example 9b74cccf3a3c501374179be4bb6f505c4b40da41c205a101db3342a8df0af2dd
-         */
-        deposit_data_root?: string;
-        /**
-         * @description Identifier for the fork version
-         * @example 00000000
-         */
-        fork_version?: string;
-        /**
-         * @description Ethereum network for the generated validation key(s)
-         * @example mainnet
-         */
-        network_name?: string;
-        /**
-         * @description Version of the deposit-cli tool used to generate the validation key
-         * @example 2.2.0
-         */
-        deposit_cli_version?: string;
-      }[];
+      /**
+       * @description Format of the key
+       * @example cli_deposit
+       */
+      format?: string;
+      /**
+       * @description Public key of the validator
+       * @example 8f36e2f4e921b1ed5ce9c94f21e1f26a748ac4e0c57f0d8973e7d576a2f8953b87dd86300de718238de23b1fecb19db5
+       */
+      pubkey?: string;
+      /**
+       * @description Withdrawals credentials of the validator
+       * @example 010000000000000000000000e1f4acc0affb36a805474e3b6ab786738c6900a2
+       */
+      withdrawal_credentials?: string;
+      /**
+       * @description Amount in GWEI that needs to be deposited to activate the validator
+       * @example 32000000000
+       */
+      amount?: number;
+      /**
+       * @description BLS signature for the deposit data structure required to stake on the Ethereum chain
+       * @example b7947eabf631d4772c4014a9fec2ecac2c15fc5175ad83023bbdfc9e6618cb8e78829231477c060bc9339482058ff195141f2aeb801c0329a1a4afebd7e76ce0ba1d9d88f8820d052836a79d59aea673db9eb5009db4a4f6e04fb7ffbdbdd604
+       */
+      signature?: string;
+      /**
+       * @description Root hash ensuring the deposit message integrity
+       * @example 65db6ae73c6465311a7acf2cd8a2863eececf09901872550639f0d8f6c1876f5
+       */
+      deposit_message_root?: string;
+      /**
+       * @description Root hash ensuring the deposit data integrity
+       * @example 9b74cccf3a3c501374179be4bb6f505c4b40da41c205a101db3342a8df0af2dd
+       */
+      deposit_data_root?: string;
+      /**
+       * @description Identifier for the fork version
+       * @example 00000000
+       */
+      fork_version?: string;
+      /**
+       * @description Ethereum network for the generated validation key(s)
+       * @example mainnet
+       */
+      network_name?: string;
+      /**
+       * @description Version of the deposit-cli tool used to generate the validation key
+       * @example 2.2.0
+       */
+      deposit_cli_version?: string;
+    }[];
     ETHPostKeysBatchResponse: {
       /**
        * @description Format of the key
@@ -1122,6 +1589,20 @@ export interface components {
        * @example 32000000000000000000
        */
       amount_wei: string;
+    };
+    ETHCraftRequestExitTxPayload: {
+      /**
+       * @description Wallet to request-exit from, it must be the owner of the stake.
+       * @example 0xe1f4acc0affB36a805474e3b6ab786738C6900A2
+       */
+      wallet: string;
+      /**
+       * @description Public keys of the validators to exit
+       * @example [
+       *   "0x8015a0ef9bf2cf742b5dc34c117ecd0191f27a8748a40cdfa27dbbbe6d6a52066d0743e8a9b7f5c7c2e9fa6db4943a70"
+       * ]
+       */
+      validators: string[];
     };
     ETHPrepareTxPayload: {
       /**
@@ -1245,6 +1726,17 @@ export interface components {
        */
       delegated_block?: string | null;
       /**
+       * Format: date-time
+       * @description Block time at which the undelegation transaction was made
+       * @example 2023-01-14T01:13:59Z
+       */
+      undelegated_at?: string | null;
+      /**
+       * @description Cycle in which the unstaking transaction was made, corresponds to the block it was part of.
+       * @example 542
+       */
+      undelegated_cycle?: number | null;
+      /**
        * @description Current active balance earning rewards in mutez
        * @example 32076187808000000000
        */
@@ -1271,7 +1763,7 @@ export interface components {
        */
       updated_at?: string | null;
     };
-    XTZDailyReward: {
+    XTZRewardByDay: {
       /**
        * Format: date
        * @description Day for this reward entry
@@ -1293,8 +1785,12 @@ export interface components {
        * @example 3.42
        */
       gross_apy?: number;
+      /** @description Estimated value of rewards generated for that day in USD */
+      estimated_rewards_usd?: number;
+      /** @description Estimated value of the staked balance at the beginning of the day in USD */
+      estimated_stake_balance_usd?: number;
     };
-    XTZCycleReward: {
+    XTZRewardByCycle: {
       /**
        * @description The cycle number
        * @example 271
@@ -1595,11 +2091,11 @@ export interface components {
        * @example null
        */
       signed_messages: {
-          /** @description Public key of the signing key */
-          pubkey?: string;
-          /** @description Signature of the message */
-          signature?: string;
-        }[];
+        /** @description Public key of the signing key */
+        pubkey?: string;
+        /** @description Signature of the message */
+        signature?: string;
+      }[];
     };
     ADABroadcastTxPayload: {
       /**
@@ -1699,6 +2195,65 @@ export interface components {
        * @example 1
        */
       chain_id?: number;
+    };
+    ETHStakeTx: {
+      /**
+       * @description Hash of the unsigned transaction
+       * @example 0x43244f90814b31dec250de24df5bb023a338790c1d5a39244cf1064cf6d98c94
+       */
+      unsigned_tx_hash?: string;
+      /**
+       * @description Unsigned serialized transaction
+       * @example 0x20a40259b763d549dfa1c082776a036dd8dabbe8b5e32ee721be017512dc
+       */
+      unsigned_tx_serialized?: string;
+      /**
+       * @description Contract address of the transaction recipient
+       * @example 0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852
+       */
+      to?: string;
+      /**
+       * @description Hex encoded contract data to be sent with the transaction
+       * @example 0xca0bfcce0000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000012000000000000000000000000000000000000000000000000000000000000001a000000000000000000000000000000000000000000000000000000000000002600000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000309696c02ec4dbb99f714e26ff1acdf6b258d36dcbad7b8b549553bc99b94ea639cd247f31683564995afd48568c1b6edd00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000020010000000000000000000000bc86717bad3f8ccf86d2882a6bc351c94580a994000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060a3869da2ed5cc558f016d59fc5ceb0cac28e58743836aa3cf146221f1ef0b959e3cc5c589e05e171f1473596aadf36411767ad92edaae421ba0291bd7568267b3faabc3ab6ed9ddfc048ea6640370977f16f4f626a0e567a11ba25acdc520bb000000000000000000000000000000000000000000000000000000000000000012dd65914dda46639df6344701de54ac3ebe34a4b230262d3017fcd6c29954452
+       */
+      contract_call_data?: string;
+      /**
+       * @description Amount of ETH to send in wei
+       * @example 32000000000000000000
+       */
+      amount_wei?: string;
+      /**
+       * @description Nonce of the transaction
+       * @example 1
+       */
+      nonce?: number;
+      /**
+       * @description Gas limit of the transaction in gas units. We provide a default value of two times the estimated gas limit
+       * @example 140244
+       */
+      gas_limit?: number;
+      /**
+       * @description Max priority fee per gas in wei. This is basically the miner fee. We provide a default value of 2 gwei so transactions are mined faster.
+       * @example 2000000000
+       */
+      max_priority_fee_per_gas_wei?: string;
+      /**
+       * @description Max fee per gas in wei. This is the maxium amount of gas that you are willing to pay for the transaction.
+       * @example 383687469748
+       */
+      max_fee_per_gas_wei?: string;
+      /**
+       * @description Chain ID of the network
+       * @example 1
+       */
+      chain_id?: number;
+      /**
+       * @description List of generated validator public keys
+       * @example [
+       *   "0xaa9a4d5afb0367ea466d25fc5bcec11edff778b7ebcaf733735b6c5606e6d4fddecb543019e2b180978e91e9c2888a9f"
+       * ]
+       */
+      pubkeys?: unknown[];
     };
     XTZPrepareTxPayload: {
       /**
@@ -2495,6 +3050,156 @@ export interface components {
        */
       tx_hash?: string;
     };
+    ADAStake: {
+      /**
+       * @description The list of wallet addresses associated to the stake address
+       * @example [
+       *   "addr_test1qqumsdyju8ee4tvee7kyzd6jenkl9jvgdjtzqlf729wqd66eay504fk550rss8ckhksw3t742vf5vy99kyxpz60cxqcqdeu78t"
+       * ]
+       */
+      wallet_addresses?: string[];
+      /**
+       * @description The stake address
+       * @example stake_test1upv7j2865m2283cgruttmg8g4l24xy6xzzjmzrq3d8urqvqla4ngk
+       */
+      stake_address?: string;
+      /**
+       * @description The pool id associated to the stake address
+       * @example pool1u4x4ly6qyx9fs9k2lt7f9hpa2gftd52fee67jcmuhnt7qqae3x0
+       */
+      pool_id?: string;
+      /**
+       * @description Current stake balance in Lovelace
+       * @example 30004690613
+       */
+      balance?: string | null;
+      /**
+       * @description Total stake rewards in Lovelace
+       * @example 37201548
+       */
+      rewards?: string | null;
+      /**
+       * @description Withdrawal amount of rewards in Lovelace
+       * @example 4588
+       */
+      available_rewards?: string | null;
+      /**
+       * @description Last epoch at which the corresponding staking transaction was executed
+       * @example 42
+       */
+      delegated_epoch?: number | null;
+      /**
+       * Format: date-time
+       * @description Last date at which the corresponding staking transaction was executed
+       * @example 2023-01-06T22:00:00Z
+       */
+      delegated_at?: string | null;
+      /**
+       * @description Epoch at which the stake was activated
+       * @example 44
+       */
+      activated_epoch?: number | null;
+      /**
+       * Format: date-time
+       * @description Date at which the stake was activated
+       * @example 2023-01-16T22:00:00Z
+       */
+      activated_at?: string | null;
+      /**
+       * @description State of the stake
+       * @example active
+       */
+      state?: string;
+      /**
+       * @description Net annual percentage yield
+       * @example 0.188014
+       */
+      net_apy?: number | null;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-09-04T14:46:03Z
+       */
+      updated_at?: string | null;
+    };
+    ADARewardByEpoch: {
+      epoch: {
+        /**
+         * @description Epoch number
+         * @example 44
+         */
+        nb?: number;
+        /**
+         * @description Epoch start date
+         * @example 2023-01-06T22:00:00Z
+         */
+        begin_at?: string;
+      };
+      /**
+       * @description Reward amount in lovelace
+       * @example 1000000
+       */
+      rewards?: string;
+      /**
+       * @description Active balance
+       * @example 1000000
+       */
+      active_balance?: string;
+      /**
+       * @description Net APY
+       * @example 3.05
+       */
+      net_apy?: number;
+    };
+    ADARewardByDay: {
+      /**
+       * @description Reward amount in lovelace
+       * @example 1000000
+       */
+      rewards?: string;
+      /**
+       * @description Date of reward
+       * @example 2023-01-06
+       */
+      date: string;
+      /**
+       * @description Active balance
+       * @example 1000000
+       */
+      active_balance?: string;
+      /**
+       * @description Net APY
+       * @example 3.05
+       */
+      net_apy?: number;
+      /** @description Estimated value of rewards generated for that day in USD */
+      estimated_rewards_usd?: number;
+      /** @description Estimated value of the staked balance at the beginning of the day in USD */
+      estimated_stake_balance_usd?: number;
+    };
+    ADANetworkStats: {
+      /**
+       * @description Gross annual percentage yield
+       * @example 3.3
+       */
+      network_gross_apy?: number;
+      /**
+       * @description Price of ADA in USD
+       * @example 0.29
+       */
+      ada_price_usd?: number;
+      /**
+       * @description Percentage of ADA being staked
+       * @example 62.24
+       */
+      supply_staked_percent?: number;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-08-09T11:41:36Z
+       */
+      updated_at?: string;
+    };
     SOLStake: {
       /**
        * @description Delegated stake account
@@ -2582,6 +3287,10 @@ export interface components {
        * @example 3.407
        */
       net_apy?: number;
+      /** @description Estimated value of rewards generated for that day in USD */
+      estimated_rewards_usd?: number;
+      /** @description Estimated value of the staked balance at the beginning of the day in USD */
+      estimated_stake_balance_usd?: number;
     };
     SOLRewardByEpoch: {
       /**
@@ -3022,20 +3731,31 @@ export interface components {
        * @example 402
        */
       nb_validators?: number;
+      /**
+       * @description SOL price in USD
+       * @example 3.5
+       */
+      sol_price_usd?: number;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-01-14T01:13:59Z
+       */
+      updated_at?: string;
     };
     SOLPostStakesPayload: {
-      stakes: ({
-          /**
-           * @description Stake account to be delegated
-           * @example 3sfokk2DFsd88ujd8sfa9slsdf99kjnFJksdf
-           */
-          stakeAccount?: string | null;
-          /**
-           * @description Balance to delegate in SOL
-           * @example 1000000
-           */
-          balance?: number;
-        })[];
+      stakes: {
+        /**
+         * @description Stake account to be delegated
+         * @example 3sfokk2DFsd88ujd8sfa9slsdf99kjnFJksdf
+         */
+        stakeAccount?: string | null;
+        /**
+         * @description Balance to delegate in SOL
+         * @example 1000000
+         */
+        balance?: number;
+      }[];
       /**
        * @description Kiln Account ID
        * @example 92f5bfd4-ea38-4824-84f7-686eddff5539
@@ -3401,7 +4121,6 @@ export interface components {
        */
       delegated_at?: string | null;
       /**
-       * Format: number
        * @description Block of first delegation ever for the stake. Unavailable for stakes older than [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary).
        * @example 15739267
        */
@@ -3413,7 +4132,6 @@ export interface components {
        */
       undelegated_at?: string | null;
       /**
-       * Format: number
        * @description Block of undelegation for the stake
        * @example 16126416
        */
@@ -3449,20 +4167,46 @@ export interface components {
        * @example 2023-01-14T01:13:59Z
        */
       updated_at?: string;
+      /** @description unbondings currently active on the stakes. ignored if no unbondings are returned */
+      unbondings?:
+        | {
+            /**
+             * @description Block at which the unbonding was created
+             * @example 15000000
+             */
+            creation_height?: number;
+            /**
+             * Format: date-time
+             * @description Exact time at which the unbonding will take effect
+             * @example 2023-01-10T01:12:34Z
+             */
+            completion_time?: string;
+            /**
+             * @description Amount currently associated with the unbonding (slashes included)
+             * @example 129300
+             */
+            balance?: string;
+            /**
+             * @description Amount expected at creation (slashes non-included)
+             * @example 150300
+             */
+            initial_balance?: string;
+          }[]
+        | null;
     };
     PostATOMStakesPayload: {
       stakes: {
-          /**
-           * @description Stake id {validator_address}_{delegator_address}
-           * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2_cosmos1mfdn23y2ydnp6j3l3f8rw6r2gzazrmprgxn5xl
-           */
-          stakeId?: string;
-          /**
-           * @description Balance staked in uATOM
-           * @example 1000000
-           */
-          balance?: number;
-        }[];
+        /**
+         * @description Stake id {validator_address}_{delegator_address}
+         * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2_cosmos1mfdn23y2ydnp6j3l3f8rw6r2gzazrmprgxn5xl
+         */
+        stakeId?: string;
+        /**
+         * @description Balance staked in uATOM
+         * @example 1000000
+         */
+        balance?: number;
+      }[];
       /**
        * @description Kiln Account ID
        * @example 92f5bfd4-ea38-4824-84f7-686eddff5539
@@ -3491,6 +4235,227 @@ export interface components {
        * @example 20.76
        */
       net_apy?: number | null;
+      /** @description Estimated value of rewards generated for that day in USD */
+      estimated_rewards_usd?: number;
+      /** @description Estimated value of the staked balance at the beginning of the day in USD */
+      estimated_stake_balance_usd?: number;
+    };
+    ATOMOperationDelegate: {
+      /**
+       * @description Operation type
+       * @example staking.MsgDelegate
+       */
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Date of the operation
+       * @example 2023-06-22T15:35:01.892644Z
+       */
+      time?: string;
+      /**
+       * @description Transaction block
+       * @example 15828207
+       */
+      block?: number;
+      /**
+       * @description Transaction hash
+       * @example 7DBC7C481A9A28961BDDF5BCDD47217A126EC0497017908453D71FACA9FA3506
+       */
+      tx_hash?: string;
+      /**
+       * @description Gas used for the whole transaction in uATOM
+       * @example 186733
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Index of the message in the transaction
+       * @example 0
+       */
+      message_index?: number;
+      /**
+       * @description Validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address?: string;
+      /**
+       * @description Delegator address
+       * @example cosmos1hz9ew395caudqtynfwry0mxxw9jyvngkw255l5
+       */
+      delegator_address?: string;
+      /**
+       * @description Amount added to the staked balance in uATOM
+       * @example 3000000
+       */
+      amount?: string;
+      /**
+       * @description Rewards auto-claimed alongside the operation in uATOM
+       * @example 10841
+       */
+      withdraw_rewards?: string;
+    };
+    ATOMOperationUndelegate: {
+      /**
+       * @description Operation type
+       * @example staking.MsgUndelegate
+       */
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Date of the operation
+       * @example 2023-06-22T15:35:01.892644Z
+       */
+      time?: string;
+      /**
+       * @description Transaction block
+       * @example 15828207
+       */
+      block?: number;
+      /**
+       * @description Transaction hash
+       * @example 7DBC7C481A9A28961BDDF5BCDD47217A126EC0497017908453D71FACA9FA3506
+       */
+      tx_hash?: string;
+      /**
+       * @description Gas used for the whole transaction in uATOM
+       * @example 186733
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Index of the message in the transaction
+       * @example 0
+       */
+      message_index?: number;
+      /**
+       * @description Validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address?: string;
+      /**
+       * @description Delegator address
+       * @example cosmos1hz9ew395caudqtynfwry0mxxw9jyvngkw255l5
+       */
+      delegator_address?: string;
+      /**
+       * @description Amount removed from the staked balance in uATOM
+       * @example 3000000
+       */
+      amount?: string;
+      /**
+       * @description Rewards auto-claimed alongside the operation in uATOM
+       * @example 10841
+       */
+      withdraw_rewards?: string;
+    };
+    ATOMOperationRedelegate: {
+      /**
+       * @description Operation type
+       * @example staking.MsgBeginRedelegate
+       */
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Date of the operation
+       * @example 2023-06-22T15:35:01.892644Z
+       */
+      time?: string;
+      /**
+       * @description Transaction block
+       * @example 15828207
+       */
+      block?: number;
+      /**
+       * @description Transaction hash
+       * @example 7DBC7C481A9A28961BDDF5BCDD47217A126EC0497017908453D71FACA9FA3506
+       */
+      tx_hash?: string;
+      /**
+       * @description Gas used for the whole transaction in uATOM
+       * @example 186733
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Index of the message in the transaction
+       * @example 0
+       */
+      message_index?: number;
+      /**
+       * @description Destination validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address?: string;
+      /**
+       * @description Source validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address_source?: string;
+      /**
+       * @description Delegator address
+       * @example cosmos1hz9ew395caudqtynfwry0mxxw9jyvngkw255l5
+       */
+      delegator_address?: string;
+      /**
+       * @description Amount moved from the source validator staked balance to the destination validator staked balance in uATOM
+       * @example 3000000
+       */
+      amount?: string;
+      /**
+       * @description Rewards auto-claimed from the destination validator alongside the operation in uATOM
+       * @example 10841
+       */
+      withdraw_rewards?: string;
+      /**
+       * @description Rewards auto-claimed from the source validator alongside the operation in uATOM
+       * @example 10841
+       */
+      withdraw_rewards_source?: string;
+    };
+    ATOMOperationWithdrawRewards: {
+      /**
+       * @description Operation type
+       * @example distr.MsgWithdrawDelegatorReward
+       */
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Date of the operation
+       * @example 2023-06-22T15:35:01.892644Z
+       */
+      time?: string;
+      /**
+       * @description Transaction block
+       * @example 15828207
+       */
+      block?: number;
+      /**
+       * @description Transaction hash
+       * @example 7DBC7C481A9A28961BDDF5BCDD47217A126EC0497017908453D71FACA9FA3506
+       */
+      tx_hash?: string;
+      /**
+       * @description Gas used for the whole transaction in uATOM
+       * @example 186733
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Index of the message in the transaction
+       * @example 0
+       */
+      message_index?: number;
+      /**
+       * @description Validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address?: string;
+      /**
+       * @description Delegator address
+       * @example cosmos1hz9ew395caudqtynfwry0mxxw9jyvngkw255l5
+       */
+      delegator_address?: string;
+      /**
+       * @description Rewards claimed alongside the operation in uATOM
+       * @example 10841
+       */
+      withdraw_rewards?: string;
     };
     ATOMNetworkStats: {
       /**
@@ -3528,7 +4493,7 @@ export interface components {
        */
       account_id: string;
       /**
-       * @description Wallet compressed or uncompressed public key, this is different than the wallet address
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
        * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
        */
       pubkey: string;
@@ -3543,9 +4508,37 @@ export interface components {
        */
       amount_uatom: string;
     };
+    ATOMCraftRedelegateTxPayload: {
+      /**
+       * Format: uuid
+       * @description Kiln Account ID to which the new stake will be linked
+       * @example b7177fd2-fbb3-479f-aa92-db9fb16e229f
+       */
+      account_id: string;
+      /**
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
+       * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
+       */
+      pubkey: string;
+      /**
+       * @description Validator source address of current stake
+       * @example cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9
+       */
+      validator_source: string;
+      /**
+       * @description Validator destination address to which redelegate the stake
+       * @example cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9
+       */
+      validator_destination: string;
+      /**
+       * @description Amount to redelegate in uATOM
+       * @example 1000000000000000000000000
+       */
+      amount_uatom?: string;
+    };
     ATOMCraftWithdrawRewardsTxPayload: {
       /**
-       * @description Wallet compressed public key, this is different than the wallet address
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
        * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
        */
       pubkey: string;
@@ -3557,7 +4550,7 @@ export interface components {
     };
     ATOMCraftUnstakeTxPayload: {
       /**
-       * @description Wallet compressed public key, this is different than the wallet address
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
        * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
        */
       pubkey: string;
@@ -3574,7 +4567,7 @@ export interface components {
     };
     ATOMPrepareTxPayload: {
       /**
-       * @description Wallet compressed public key, this is different than the wallet address
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
        * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
        */
       pubkey: string;
@@ -4174,6 +5167,11 @@ export interface components {
     };
     ATOMUnsignedTx: {
       /**
+       * @description Unsigned serialized transaction
+       * @example 0adf010adc010a2a2f636f736d6f732e7374616b696e672e763162657461312e4d7367426567696e526564656c656761746512ad010a2d636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a7165617465761234636f736d6f7376616c6f70657231307636777664656e65653872396c36776c73706863677572326c746c387a746b6672766a39611a34636f736d6f7376616c6f70657231796d7a336b6a7466397a6b666d6d3273326c7279376568307a6439657a33766335797030306622100a057561746f6d12073433313030303012670a500a460a1f2f636f736d6f732e63727970746f2e736563703235366b312e5075624b657912230a21039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f4612040a020801186d12130a0d0a057561746f6d1204353030301080897a1a1174686574612d746573746e65742d30303120e0cd2a
+       */
+      unsigned_tx_serialized?: string;
+      /**
        * @description Hash of the unsigned transaction
        * @example b6ce1c8185416ce7d42a8c39566a9a2b6b2361a55c04a1dba3dd7445a0e1e364
        */
@@ -4236,6 +5234,1137 @@ export interface components {
        */
       tx_hash?: string;
     };
+    OSMOStake: {
+      /**
+       * @description Public key of the validator
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address?: string;
+      /**
+       * @description Public key of the delegator
+       * @example cosmos1mfdn23y2ydnp6j3l3f8rw6r2gzazrmprgxn5xl
+       */
+      delegator_address?: string;
+      /**
+       * Format: date-time
+       * @description Date of first delegation ever for the stake. Unavailable for stakes older than [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary).
+       * @example 2023-06-16T03:13:23.058547Z
+       */
+      delegated_at?: string | null;
+      /**
+       * @description Block of first delegation ever for the stake. Unavailable for stakes older than [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary).
+       * @example 15739267
+       */
+      delegated_block?: number | null;
+      /**
+       * Format: date-time
+       * @description Date of undelegation for the stake
+       * @example 2023-07-14T03:56:13.561156Z
+       */
+      undelegated_at?: string | null;
+      /**
+       * @description Block of undelegation for the stake
+       * @example 16126416
+       */
+      undelegated_block?: number | null;
+      /**
+       * @description Total rewards accumulated by this stake since its first ever delegation in uOSMO. Includes currently available rewards not yet withdrawn.
+       * @example 735573808534727891000000
+       */
+      rewards?: string | null;
+      /**
+       * @description Available rewards in uOSMO that can be withdrawn from this stake
+       * @example 36748808534727891000000
+       */
+      available_rewards?: string | null;
+      /**
+       * @description Staked balance on this stake in uOSMO
+       * @example 6300000000000000000000000
+       */
+      balance?: string | null;
+      /**
+       * @description Net annual percentage yield. Unavailable for stakes older than [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary).
+       * @example 5.76
+       */
+      net_apy?: number | null;
+      /**
+       * @description State of the Osmo stake
+       * @example active
+       */
+      state?: string;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-01-14T01:13:59Z
+       */
+      updated_at?: string;
+      /** @description unbondings currently active on the stakes. ignored if no unbondings are returned */
+      unbondings?:
+        | {
+            /**
+             * @description Block at which the unbonding was created
+             * @example 15000000
+             */
+            creation_height?: number;
+            /**
+             * Format: date-time
+             * @description Exact time at which the unbonding will take effect
+             * @example 2023-01-10T01:12:34Z
+             */
+            completion_time?: string;
+            /**
+             * @description Amount currently associated with the unbonding (slashes included)
+             * @example 129300
+             */
+            balance?: string;
+            /**
+             * @description Amount expected at creation (slashes non-included)
+             * @example 150300
+             */
+            initial_balance?: string;
+          }[]
+        | null;
+    };
+    PostOSMOStakesPayload: {
+      stakes: {
+        /**
+         * @description Stake id {validator_address}_{delegator_address}
+         * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2_cosmos1mfdn23y2ydnp6j3l3f8rw6r2gzazrmprgxn5xl
+         */
+        stakeId?: string;
+        /**
+         * @description Balance staked in uOSMO
+         * @example 1000000
+         */
+        balance?: number;
+      }[];
+      /**
+       * @description Kiln Account ID
+       * @example 92f5bfd4-ea38-4824-84f7-686eddff5539
+       */
+      account_id: string;
+    };
+    OSMOReward: {
+      /**
+       * Format: date
+       * @description Day for this reward entry
+       * @example 2023-01-15
+       */
+      date?: string;
+      /**
+       * @description Accumulated rewards in uOSMO during the day
+       * @example 3575891083876864200000
+       */
+      rewards?: string | null;
+      /**
+       * @description Staked balance in uOSMO at the end of the day
+       * @example 6300000000000000000000000
+       */
+      balance?: string | null;
+      /**
+       * @description Net annual percentage yield
+       * @example 20.76
+       */
+      net_apy?: number | null;
+      /** @description Estimated value of rewards generated for that day in USD */
+      estimated_rewards_usd?: number;
+      /** @description Estimated value of the staked balance at the beginning of the day in USD */
+      estimated_stake_balance_usd?: number;
+    };
+    OSMOOperationDelegate: {
+      /**
+       * @description Operation type
+       * @example staking.MsgDelegate
+       */
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Date of the operation
+       * @example 2023-06-22T15:35:01.892644Z
+       */
+      time?: string;
+      /**
+       * @description Transaction block
+       * @example 15828207
+       */
+      block?: number;
+      /**
+       * @description Transaction hash
+       * @example 7DBC7C481A9A28961BDDF5BCDD47217A126EC0497017908453D71FACA9FA3506
+       */
+      tx_hash?: string;
+      /**
+       * @description Gas used for the whole transaction in uOSMO
+       * @example 186733
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Index of the message in the transaction
+       * @example 0
+       */
+      message_index?: number;
+      /**
+       * @description Validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address?: string;
+      /**
+       * @description Delegator address
+       * @example cosmos1hz9ew395caudqtynfwry0mxxw9jyvngkw255l5
+       */
+      delegator_address?: string;
+      /**
+       * @description Amount added to the staked balance in uOSMO
+       * @example 3000000
+       */
+      amount?: string;
+      /**
+       * @description Rewards auto-claimed alongside the operation in uOSMO
+       * @example 10841
+       */
+      withdraw_rewards?: string;
+    };
+    OSMOOperationUndelegate: {
+      /**
+       * @description Operation type
+       * @example staking.MsgUndelegate
+       */
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Date of the operation
+       * @example 2023-06-22T15:35:01.892644Z
+       */
+      time?: string;
+      /**
+       * @description Transaction block
+       * @example 15828207
+       */
+      block?: number;
+      /**
+       * @description Transaction hash
+       * @example 7DBC7C481A9A28961BDDF5BCDD47217A126EC0497017908453D71FACA9FA3506
+       */
+      tx_hash?: string;
+      /**
+       * @description Gas used for the whole transaction in uOSMO
+       * @example 186733
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Index of the message in the transaction
+       * @example 0
+       */
+      message_index?: number;
+      /**
+       * @description Validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address?: string;
+      /**
+       * @description Delegator address
+       * @example cosmos1hz9ew395caudqtynfwry0mxxw9jyvngkw255l5
+       */
+      delegator_address?: string;
+      /**
+       * @description Amount removed from the staked balance in uOSMO
+       * @example 3000000
+       */
+      amount?: string;
+      /**
+       * @description Rewards auto-claimed alongside the operation in uOSMO
+       * @example 10841
+       */
+      withdraw_rewards?: string;
+    };
+    OSMOOperationRedelegate: {
+      /**
+       * @description Operation type
+       * @example staking.MsgBeginRedelegate
+       */
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Date of the operation
+       * @example 2023-06-22T15:35:01.892644Z
+       */
+      time?: string;
+      /**
+       * @description Transaction block
+       * @example 15828207
+       */
+      block?: number;
+      /**
+       * @description Transaction hash
+       * @example 7DBC7C481A9A28961BDDF5BCDD47217A126EC0497017908453D71FACA9FA3506
+       */
+      tx_hash?: string;
+      /**
+       * @description Gas used for the whole transaction in uOSMO
+       * @example 186733
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Index of the message in the transaction
+       * @example 0
+       */
+      message_index?: number;
+      /**
+       * @description Destination validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address?: string;
+      /**
+       * @description Source validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address_source?: string;
+      /**
+       * @description Delegator address
+       * @example cosmos1hz9ew395caudqtynfwry0mxxw9jyvngkw255l5
+       */
+      delegator_address?: string;
+      /**
+       * @description Amount moved from the source validator staked balance to the destination validator staked balance in uOSMO
+       * @example 3000000
+       */
+      amount?: string;
+      /**
+       * @description Rewards auto-claimed from the destination validator alongside the operation in uOSMO
+       * @example 10841
+       */
+      withdraw_rewards?: string;
+      /**
+       * @description Rewards auto-claimed from the source validator alongside the operation in uOSMO
+       * @example 10841
+       */
+      withdraw_rewards_source?: string;
+    };
+    OSMOOperationWithdrawRewards: {
+      /**
+       * @description Operation type
+       * @example distr.MsgWithdrawDelegatorReward
+       */
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Date of the operation
+       * @example 2023-06-22T15:35:01.892644Z
+       */
+      time?: string;
+      /**
+       * @description Transaction block
+       * @example 15828207
+       */
+      block?: number;
+      /**
+       * @description Transaction hash
+       * @example 7DBC7C481A9A28961BDDF5BCDD47217A126EC0497017908453D71FACA9FA3506
+       */
+      tx_hash?: string;
+      /**
+       * @description Gas used for the whole transaction in uOSMO
+       * @example 186733
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Index of the message in the transaction
+       * @example 0
+       */
+      message_index?: number;
+      /**
+       * @description Validator address
+       * @example cosmosvaloper1uxlf7mvr8nep3gm7udf2u9remms2jyjqvwdul2
+       */
+      validator_address?: string;
+      /**
+       * @description Delegator address
+       * @example cosmos1hz9ew395caudqtynfwry0mxxw9jyvngkw255l5
+       */
+      delegator_address?: string;
+      /**
+       * @description Rewards claimed alongside the operation in uOSMO
+       * @example 10841
+       */
+      withdraw_rewards?: string;
+    };
+    OSMONetworkStats: {
+      /**
+       * @description Number of validators in the network
+       * @example 100
+       */
+      nb_validators?: number;
+      /**
+       * @description Gross annual percentage yield
+       * @example 4.5
+       */
+      network_gross_apy?: number;
+      /**
+       * @description Supply of OSMO currently staked
+       * @example 12.4
+       */
+      supply_staked_percent?: number;
+      /**
+       * @description Price of OSMO in USD
+       * @example 10.53
+       */
+      osmo_price_usd?: number;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-01-14T01:13:59Z
+       */
+      updated_at?: string;
+    };
+    OSMOCraftStakeTxPayload: {
+      /**
+       * Format: uuid
+       * @description Kiln Account ID to stake into
+       * @example b7177fd2-fbb3-479f-aa92-db9fb16e229f
+       */
+      account_id: string;
+      /**
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
+       * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
+       */
+      pubkey: string;
+      /**
+       * @description Validator address
+       * @example cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9
+       */
+      validator: string;
+      /**
+       * @description Amount to stake in uOSMO
+       * @example 1000000000000000000000000
+       */
+      amount_uosmo: string;
+    };
+    OSMOCraftRedelegateTxPayload: {
+      /**
+       * Format: uuid
+       * @description Kiln Account ID to which the new stake will be linked
+       * @example b7177fd2-fbb3-479f-aa92-db9fb16e229f
+       */
+      account_id: string;
+      /**
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
+       * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
+       */
+      pubkey: string;
+      /**
+       * @description Validator source address of current stake
+       * @example cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9
+       */
+      validator_source: string;
+      /**
+       * @description Validator destination address to which redelegate the stake
+       * @example cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9
+       */
+      validator_destination: string;
+      /**
+       * @description Amount to redelegate in uOSMO
+       * @example 1000000000000000000000000
+       */
+      amount_uosmo?: string;
+    };
+    OSMOCraftWithdrawRewardsTxPayload: {
+      /**
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
+       * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
+       */
+      pubkey: string;
+      /**
+       * @description Validator address
+       * @example cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9
+       */
+      validator: string;
+    };
+    OSMOCraftUnstakeTxPayload: {
+      /**
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
+       * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
+       */
+      pubkey: string;
+      /**
+       * @description Validator address
+       * @example cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9
+       */
+      validator: string;
+      /**
+       * @description Amount to unstake in uOSMO. Omit to unstake all the delegated amount
+       * @example 1000000000000000000000000
+       */
+      amount_uosmo?: string;
+    };
+    OSMOPrepareTxPayload: {
+      /**
+       * @description Wallet public key (compressed or uncompressed), this is different than the wallet address
+       * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
+       */
+      pubkey: string;
+      /**
+       * @description Transaction body serialized in hex
+       * @example 0a9e010a232f636f736d6f732e7374616b696e672e763162657461312e4d736744656c656761746512770a2d636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a7165617465761234636f736d6f7376616c6f706572313679733065673933356d6b71706b79646b6766636a39616765326175386c39366e61657265391a100a057561746f6d120731303030303030
+       */
+      tx_body: string;
+      /**
+       * @description Transaction auth info serialized in hex
+       * @example 0a2c0a2a0a28636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a716561746576120a2d636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a7165617465761234636f736d6f7376616c6f706572313679733065673933356d6b71706b79646b6766636a39616765326175386c39366e6165726539
+       */
+      tx_auth_info: string;
+      /**
+       * @description Transaction signature serialized in hex
+       * @example 191f87a54dceafb6ab9a5f112a13444ca37e49a029e531bb21301fd72e9d390304c763cca5a9760a631dc85705dd6b08b50f5fff7d5de8d73b2cebd1f4c3b6a0
+       */
+      signature: string;
+    };
+    OSMOBroadcastTxPayload: {
+      /**
+       * @description Signed transaction serialized in hex
+       * @example 0aa1010a9e010a232f636f736d6f732e7374616b696e672e763162657461312e4d736744656c656761746512770a2d636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a7165617465761234636f736d6f7376616c6f706572313679733065673933356d6b71706b79646b6766636a39616765326175386c39366e61657265391a100a057561746f6d12073130303030303012670a500a460a1f2f636f736d6f732e63727970746f2e736563703235366b312e5075624b657912230a21039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f4612040a020801182012130a0d0a057561746f6d12043530303010e0a7121a40191f87a54dceafb6ab9a5f112a13444ca37e49a029e531bb21301fd72e9d390304c763cca5a9760a631dc85705dd6b08b50f5fff7d5de8d73b2cebd1f4c3b6a0
+       */
+      tx_serialized: string;
+    };
+    OSMOTxStatus: {
+      /**
+       * @description Transaction status
+       * @example success
+       */
+      status?: string;
+      /**
+       * @description Transaction receipt. Only present if status is success. Object shape can be found [here](https://github.com/cosmos/cosmjs/blob/e8e65aa0c145616ccb58625c32bffe08b46ff574/packages/stargate/src/stargateclient.ts#L67)
+       * @example {
+       *   "height": 16007296,
+       *   "txIndex": 0,
+       *   "hash": "2B4F732E12D5D5AF1F907AD03B199167A718EDC6201DE5713143AB80990420CB",
+       *   "code": 0,
+       *   "events": [
+       *     {
+       *       "type": "coin_spent",
+       *       "attributes": [
+       *         {
+       *           "key": "spender",
+       *           "value": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev"
+       *         },
+       *         {
+       *           "key": "amount",
+       *           "value": "5000uosmo"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "coin_received",
+       *       "attributes": [
+       *         {
+       *           "key": "receiver",
+       *           "value": "cosmos17xpfvakm2amg962yls6f84z3kell8c5lserqta"
+       *         },
+       *         {
+       *           "key": "amount",
+       *           "value": "5000uosmo"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "transfer",
+       *       "attributes": [
+       *         {
+       *           "key": "recipient",
+       *           "value": "cosmos17xpfvakm2amg962yls6f84z3kell8c5lserqta"
+       *         },
+       *         {
+       *           "key": "sender",
+       *           "value": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev"
+       *         },
+       *         {
+       *           "key": "amount",
+       *           "value": "5000uosmo"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "message",
+       *       "attributes": [
+       *         {
+       *           "key": "sender",
+       *           "value": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "tx",
+       *       "attributes": [
+       *         {
+       *           "key": "fee",
+       *           "value": "5000uosmo"
+       *         },
+       *         {
+       *           "key": "fee_payer",
+       *           "value": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "tx",
+       *       "attributes": [
+       *         {
+       *           "key": "acc_seq",
+       *           "value": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev/33"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "tx",
+       *       "attributes": [
+       *         {
+       *           "key": "signature",
+       *           "value": "GR+HpU3Or7arml8RKhNETKN+SaAp5TG7ITAf1y6dOQMEx2PMpal2CmMdyFcF3WsItQ9f/31d6Nc7LOvR9MO2oA=="
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "message",
+       *       "attributes": [
+       *         {
+       *           "key": "action",
+       *           "value": "/cosmos.staking.v1beta1.MsgDelegate"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "coin_spent",
+       *       "attributes": [
+       *         {
+       *           "key": "spender",
+       *           "value": "cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl"
+       *         },
+       *         {
+       *           "key": "amount",
+       *           "value": "5uosmo"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "coin_received",
+       *       "attributes": [
+       *         {
+       *           "key": "receiver",
+       *           "value": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev"
+       *         },
+       *         {
+       *           "key": "amount",
+       *           "value": "5uosmo"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "transfer",
+       *       "attributes": [
+       *         {
+       *           "key": "recipient",
+       *           "value": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev"
+       *         },
+       *         {
+       *           "key": "sender",
+       *           "value": "cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl"
+       *         },
+       *         {
+       *           "key": "amount",
+       *           "value": "5uosmo"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "message",
+       *       "attributes": [
+       *         {
+       *           "key": "sender",
+       *           "value": "cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "withdraw_rewards",
+       *       "attributes": [
+       *         {
+       *           "key": "amount",
+       *           "value": "5uosmo"
+       *         },
+       *         {
+       *           "key": "validator",
+       *           "value": "cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "coin_spent",
+       *       "attributes": [
+       *         {
+       *           "key": "spender",
+       *           "value": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev"
+       *         },
+       *         {
+       *           "key": "amount",
+       *           "value": "100000uosmo"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "coin_received",
+       *       "attributes": [
+       *         {
+       *           "key": "receiver",
+       *           "value": "cosmos1fl48vsnmsdzcv85q5d2q4z5ajdha8yu34mf0eh"
+       *         },
+       *         {
+       *           "key": "amount",
+       *           "value": "100000uosmo"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "delegate",
+       *       "attributes": [
+       *         {
+       *           "key": "validator",
+       *           "value": "cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9"
+       *         },
+       *         {
+       *           "key": "amount",
+       *           "value": "100000uosmo"
+       *         },
+       *         {
+       *           "key": "new_shares",
+       *           "value": "100000.000000000000000000"
+       *         }
+       *       ]
+       *     },
+       *     {
+       *       "type": "message",
+       *       "attributes": [
+       *         {
+       *           "key": "module",
+       *           "value": "staking"
+       *         },
+       *         {
+       *           "key": "sender",
+       *           "value": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev"
+       *         }
+       *       ]
+       *     }
+       *   ],
+       *   "rawLog": "[{\"events\":[{\"type\":\"coin_received\",\"attributes\":[{\"key\":\"receiver\",\"value\":\"cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev\"},{\"key\":\"amount\",\"value\":\"5uosmo\"},{\"key\":\"receiver\",\"value\":\"cosmos1fl48vsnmsdzcv85q5d2q4z5ajdha8yu34mf0eh\"},{\"key\":\"amount\",\"value\":\"100000uosmo\"}]},{\"type\":\"coin_spent\",\"attributes\":[{\"key\":\"spender\",\"value\":\"cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl\"},{\"key\":\"amount\",\"value\":\"5uosmo\"},{\"key\":\"spender\",\"value\":\"cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev\"},{\"key\":\"amount\",\"value\":\"100000uosmo\"}]},{\"type\":\"delegate\",\"attributes\":[{\"key\":\"validator\",\"value\":\"cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9\"},{\"key\":\"amount\",\"value\":\"100000uosmo\"},{\"key\":\"new_shares\",\"value\":\"100000.000000000000000000\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/cosmos.staking.v1beta1.MsgDelegate\"},{\"key\":\"sender\",\"value\":\"cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl\"},{\"key\":\"module\",\"value\":\"staking\"},{\"key\":\"sender\",\"value\":\"cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev\"}]},{\"type\":\"transfer\",\"attributes\":[{\"key\":\"recipient\",\"value\":\"cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev\"},{\"key\":\"sender\",\"value\":\"cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl\"},{\"key\":\"amount\",\"value\":\"5uosmo\"}]},{\"type\":\"withdraw_rewards\",\"attributes\":[{\"key\":\"amount\",\"value\":\"5uosmo\"},{\"key\":\"validator\",\"value\":\"cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9\"}]}]}]",
+       *   "tx": {
+       *     "0": 10,
+       *     "1": 160,
+       *     "2": 1,
+       *     "3": 10,
+       *     "4": 157,
+       *     "5": 1,
+       *     "6": 10,
+       *     "7": 35,
+       *     "8": 47,
+       *     "9": 99,
+       *     "10": 111,
+       *     "11": 115,
+       *     "12": 109,
+       *     "13": 111,
+       *     "14": 115,
+       *     "15": 46,
+       *     "16": 115,
+       *     "17": 116,
+       *     "18": 97,
+       *     "19": 107,
+       *     "20": 105,
+       *     "21": 110,
+       *     "22": 103,
+       *     "23": 46,
+       *     "24": 118,
+       *     "25": 49,
+       *     "26": 98,
+       *     "27": 101,
+       *     "28": 116,
+       *     "29": 97,
+       *     "30": 49,
+       *     "31": 46,
+       *     "32": 77,
+       *     "33": 115,
+       *     "34": 103,
+       *     "35": 68,
+       *     "36": 101,
+       *     "37": 108,
+       *     "38": 101,
+       *     "39": 103,
+       *     "40": 97,
+       *     "41": 116,
+       *     "42": 101,
+       *     "43": 18,
+       *     "44": 118,
+       *     "45": 10,
+       *     "46": 45,
+       *     "47": 99,
+       *     "48": 111,
+       *     "49": 115,
+       *     "50": 109,
+       *     "51": 111,
+       *     "52": 115,
+       *     "53": 49,
+       *     "54": 57,
+       *     "55": 99,
+       *     "56": 57,
+       *     "57": 102,
+       *     "58": 100,
+       *     "59": 104,
+       *     "60": 52,
+       *     "61": 56,
+       *     "62": 56,
+       *     "63": 118,
+       *     "64": 113,
+       *     "65": 106,
+       *     "66": 99,
+       *     "67": 108,
+       *     "68": 108,
+       *     "69": 116,
+       *     "70": 119,
+       *     "71": 112,
+       *     "72": 54,
+       *     "73": 56,
+       *     "74": 106,
+       *     "75": 109,
+       *     "76": 53,
+       *     "77": 48,
+       *     "78": 121,
+       *     "79": 100,
+       *     "80": 119,
+       *     "81": 121,
+       *     "82": 104,
+       *     "83": 51,
+       *     "84": 54,
+       *     "85": 106,
+       *     "86": 113,
+       *     "87": 101,
+       *     "88": 97,
+       *     "89": 116,
+       *     "90": 101,
+       *     "91": 118,
+       *     "92": 18,
+       *     "93": 52,
+       *     "94": 99,
+       *     "95": 111,
+       *     "96": 115,
+       *     "97": 109,
+       *     "98": 111,
+       *     "99": 115,
+       *     "100": 118,
+       *     "101": 97,
+       *     "102": 108,
+       *     "103": 111,
+       *     "104": 112,
+       *     "105": 101,
+       *     "106": 114,
+       *     "107": 49,
+       *     "108": 54,
+       *     "109": 121,
+       *     "110": 115,
+       *     "111": 48,
+       *     "112": 101,
+       *     "113": 103,
+       *     "114": 57,
+       *     "115": 51,
+       *     "116": 53,
+       *     "117": 109,
+       *     "118": 107,
+       *     "119": 113,
+       *     "120": 112,
+       *     "121": 107,
+       *     "122": 121,
+       *     "123": 100,
+       *     "124": 107,
+       *     "125": 103,
+       *     "126": 102,
+       *     "127": 99,
+       *     "128": 106,
+       *     "129": 57,
+       *     "130": 97,
+       *     "131": 103,
+       *     "132": 101,
+       *     "133": 50,
+       *     "134": 97,
+       *     "135": 117,
+       *     "136": 56,
+       *     "137": 108,
+       *     "138": 57,
+       *     "139": 54,
+       *     "140": 110,
+       *     "141": 97,
+       *     "142": 101,
+       *     "143": 114,
+       *     "144": 101,
+       *     "145": 57,
+       *     "146": 26,
+       *     "147": 15,
+       *     "148": 10,
+       *     "149": 5,
+       *     "150": 117,
+       *     "151": 97,
+       *     "152": 116,
+       *     "153": 111,
+       *     "154": 109,
+       *     "155": 18,
+       *     "156": 6,
+       *     "157": 49,
+       *     "158": 48,
+       *     "159": 48,
+       *     "160": 48,
+       *     "161": 48,
+       *     "162": 48,
+       *     "163": 18,
+       *     "164": 103,
+       *     "165": 10,
+       *     "166": 80,
+       *     "167": 10,
+       *     "168": 70,
+       *     "169": 10,
+       *     "170": 31,
+       *     "171": 47,
+       *     "172": 99,
+       *     "173": 111,
+       *     "174": 115,
+       *     "175": 109,
+       *     "176": 111,
+       *     "177": 115,
+       *     "178": 46,
+       *     "179": 99,
+       *     "180": 114,
+       *     "181": 121,
+       *     "182": 112,
+       *     "183": 116,
+       *     "184": 111,
+       *     "185": 46,
+       *     "186": 115,
+       *     "187": 101,
+       *     "188": 99,
+       *     "189": 112,
+       *     "190": 50,
+       *     "191": 53,
+       *     "192": 54,
+       *     "193": 107,
+       *     "194": 49,
+       *     "195": 46,
+       *     "196": 80,
+       *     "197": 117,
+       *     "198": 98,
+       *     "199": 75,
+       *     "200": 101,
+       *     "201": 121,
+       *     "202": 18,
+       *     "203": 35,
+       *     "204": 10,
+       *     "205": 33,
+       *     "206": 3,
+       *     "207": 156,
+       *     "208": 228,
+       *     "209": 123,
+       *     "210": 42,
+       *     "211": 129,
+       *     "212": 61,
+       *     "213": 19,
+       *     "214": 135,
+       *     "215": 97,
+       *     "216": 49,
+       *     "217": 169,
+       *     "218": 195,
+       *     "219": 190,
+       *     "220": 119,
+       *     "221": 232,
+       *     "222": 196,
+       *     "223": 175,
+       *     "224": 164,
+       *     "225": 158,
+       *     "226": 148,
+       *     "227": 135,
+       *     "228": 68,
+       *     "229": 171,
+       *     "230": 190,
+       *     "231": 225,
+       *     "232": 31,
+       *     "233": 147,
+       *     "234": 158,
+       *     "235": 42,
+       *     "236": 66,
+       *     "237": 15,
+       *     "238": 70,
+       *     "239": 18,
+       *     "240": 4,
+       *     "241": 10,
+       *     "242": 2,
+       *     "243": 8,
+       *     "244": 1,
+       *     "245": 24,
+       *     "246": 33,
+       *     "247": 18,
+       *     "248": 19,
+       *     "249": 10,
+       *     "250": 13,
+       *     "251": 10,
+       *     "252": 5,
+       *     "253": 117,
+       *     "254": 97,
+       *     "255": 116,
+       *     "256": 111,
+       *     "257": 109,
+       *     "258": 18,
+       *     "259": 4,
+       *     "260": 53,
+       *     "261": 48,
+       *     "262": 48,
+       *     "263": 48,
+       *     "264": 16,
+       *     "265": 224,
+       *     "266": 167,
+       *     "267": 18,
+       *     "268": 26,
+       *     "269": 64,
+       *     "270": 25,
+       *     "271": 31,
+       *     "272": 135,
+       *     "273": 165,
+       *     "274": 77,
+       *     "275": 206,
+       *     "276": 175,
+       *     "277": 182,
+       *     "278": 171,
+       *     "279": 154,
+       *     "280": 95,
+       *     "281": 17,
+       *     "282": 42,
+       *     "283": 19,
+       *     "284": 68,
+       *     "285": 76,
+       *     "286": 163,
+       *     "287": 126,
+       *     "288": 73,
+       *     "289": 160,
+       *     "290": 41,
+       *     "291": 229,
+       *     "292": 49,
+       *     "293": 187,
+       *     "294": 33,
+       *     "295": 48,
+       *     "296": 31,
+       *     "297": 215,
+       *     "298": 46,
+       *     "299": 157,
+       *     "300": 57,
+       *     "301": 3,
+       *     "302": 4,
+       *     "303": 199,
+       *     "304": 99,
+       *     "305": 204,
+       *     "306": 165,
+       *     "307": 169,
+       *     "308": 118,
+       *     "309": 10,
+       *     "310": 99,
+       *     "311": 29,
+       *     "312": 200,
+       *     "313": 87,
+       *     "314": 5,
+       *     "315": 221,
+       *     "316": 107,
+       *     "317": 8,
+       *     "318": 181,
+       *     "319": 15,
+       *     "320": 95,
+       *     "321": 255,
+       *     "322": 125,
+       *     "323": 93,
+       *     "324": 232,
+       *     "325": 215,
+       *     "326": 59,
+       *     "327": 44,
+       *     "328": 235,
+       *     "329": 209,
+       *     "330": 244,
+       *     "331": 195,
+       *     "332": 182,
+       *     "333": 160
+       *   },
+       *   "gasUsed": 167798,
+       *   "gasWanted": 300000
+       * }
+       */
+      receipt?: Record<string, never>;
+    };
+    OSMOUnsignedTx: {
+      /**
+       * @description Unsigned serialized transaction
+       * @example 0adf010adc010a2a2f636f736d6f732e7374616b696e672e763162657461312e4d7367426567696e526564656c656761746512ad010a2d636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a7165617465761234636f736d6f7376616c6f70657231307636777664656e65653872396c36776c73706863677572326c746c387a746b6672766a39611a34636f736d6f7376616c6f70657231796d7a336b6a7466397a6b666d6d3273326c7279376568307a6439657a33766335797030306622100a057561746f6d12073433313030303012670a500a460a1f2f636f736d6f732e63727970746f2e736563703235366b312e5075624b657912230a21039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f4612040a020801186d12130a0d0a057561746f6d1204353030301080897a1a1174686574612d746573746e65742d30303120e0cd2a
+       */
+      unsigned_tx_serialized?: string;
+      /**
+       * @description Hash of the unsigned transaction
+       * @example b6ce1c8185416ce7d42a8c39566a9a2b6b2361a55c04a1dba3dd7445a0e1e364
+       */
+      unsigned_tx_hash?: string;
+      /**
+       * @description Transaction body serialized in hex
+       * @example 0a9e010a232f636f736d6f732e7374616b696e672e763162657461312e4d736744656c656761746512770a2d636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a7165617465761234636f736d6f7376616c6f706572313679733065673933356d6b71706b79646b6766636a39616765326175386c39366e61657265391a100a057561746f6d120731303030303030
+       */
+      tx_body?: string;
+      /**
+       * @description Transaction auth info serialized in hex
+       * @example 0a2c0a2a0a28636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a716561746576120a2d636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a7165617465761234636f736d6f7376616c6f706572313679733065673933356d6b71706b79646b6766636a39616765326175386c39366e6165726539
+       */
+      tx_auth_info?: string;
+      /**
+       * @description Wallet compressed public key, this is different than the wallet address
+       * @example 039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f46
+       */
+      pubkey?: string;
+      /**
+       * @description Message included in the transaction
+       * @example {
+       *   "typeUrl": "/cosmos.staking.v1beta1.MsgDelegate",
+       *   "value": {
+       *     "delegatorAddress": "cosmos19c9fdh488vqjclltwp68jm50ydwyh36jqeatev",
+       *     "validatorAddress": "cosmosvaloper16ys0eg935mkqpkydkgfcj9age2au8l96naere9",
+       *     "amount": {
+       *       "denom": "uosmo",
+       *       "amount": "1000000"
+       *     }
+       *   }
+       * }
+       */
+      message?: Record<string, never>;
+      /**
+       * @description Fee included in the transaction. Object shape can be found [here](https://github.com/cosmos/cosmjs/blob/72da7971ee4fd77fec1bfef2ec1ba4f14f8c319d/packages/amino/src/signdoc.ts#L12)
+       * @example {
+       *   "amount": [
+       *     {
+       *       "denom": "uosmo",
+       *       "amount": "5000"
+       *     }
+       *   ],
+       *   "gas": "200000"
+       * }
+       */
+      fee?: Record<string, never>;
+    };
+    OSMOSignedTx: {
+      /**
+       * @description Serialized signed transaction in hex
+       * @example 0aa1010a9e010a232f636f736d6f732e7374616b696e672e763162657461312e4d736744656c656761746512770a2d636f736d6f733139633966646834383876716a636c6c74777036386a6d3530796477796833366a7165617465761234636f736d6f7376616c6f706572313679733065673933356d6b71706b79646b6766636a39616765326175386c39366e61657265391a100a057561746f6d12073130303030303012670a500a460a1f2f636f736d6f732e63727970746f2e736563703235366b312e5075624b657912230a21039ce47b2a813d13876131a9c3be77e8c4afa49e948744abbee11f939e2a420f4612040a020801182012130a0d0a057561746f6d12043530303010e0a7121a40191f87a54dceafb6ab9a5f112a13444ca37e49a029e531bb21301fd72e9d390304c763cca5a9760a631dc85705dd6b08b50f5fff7d5de8d73b2cebd1f4c3b6a0
+       */
+      signed_tx_serialized?: string;
+    };
+    OSMOTxHash: {
+      /**
+       * @description Hash of the transaction
+       * @example 2B4F732E12D5D5AF1F907AD03B199167A718EDC6201DE5713143AB80990420CB
+       */
+      tx_hash?: string;
+    };
     AccountsResponse: components["schemas"]["Account"][];
     Account: {
       /**
@@ -4286,67 +6415,67 @@ export interface components {
       total_active_stakes?: number;
       /** @description List of protocols staked within the account */
       protocols?: {
-          /**
-           * @description Token name
-           * @example eth
-           */
-          token?: string;
-          /**
-           * @description Protocol name
-           * @example Ethereum
-           */
-          name?: string;
-          /**
-           * @description Total number of stakes for this protocol
-           * @example 12
-           */
-          total_stakes?: number;
-          /**
-           * @description Total number of stakes actively collecting rewards for this protocol
-           * @example 10
-           */
-          total_active_stakes?: number;
-          total_balance?: {
-            /**
-             * Format: float
-             * @description Total USD balance of stakes for this protocol
-             * @example 10896.4568
-             */
-            amount_usd?: number;
-            /**
-             * Format: float
-             * @description Total balance of stakes in the native protocol token for this protocol
-             * @example 1896.4563
-             */
-            amount?: number;
-          };
-          total_rewards?: {
-            /**
-             * Format: float
-             * @description Total USD of rewards earned for this protocol
-             * @example 10896.4568
-             */
-            amount_usd?: number;
-            /**
-             * Format: float
-             * @description Total rewards earned in the native protocol token for this protocol
-             * @example 1896.4568
-             */
-            amount?: number;
-          };
+        /**
+         * @description Token name
+         * @example eth
+         */
+        token?: string;
+        /**
+         * @description Protocol name
+         * @example Ethereum
+         */
+        name?: string;
+        /**
+         * @description Total number of stakes for this protocol
+         * @example 12
+         */
+        total_stakes?: number;
+        /**
+         * @description Total number of stakes actively collecting rewards for this protocol
+         * @example 10
+         */
+        total_active_stakes?: number;
+        total_balance?: {
           /**
            * Format: float
-           * @description Protocol share of the total balance
-           * @example 42.59
+           * @description Total USD balance of stakes for this protocol
+           * @example 10896.4568
            */
-          balance_share_percent?: number;
+          amount_usd?: number;
           /**
            * Format: float
-           * @description Protocol share of the total rewards earned
-           * @example 42.59
+           * @description Total balance of stakes in the native protocol token for this protocol
+           * @example 1896.4563
            */
-          rewards_share_percent?: number;
-        }[];
+          amount?: number;
+        };
+        total_rewards?: {
+          /**
+           * Format: float
+           * @description Total USD of rewards earned for this protocol
+           * @example 10896.4568
+           */
+          amount_usd?: number;
+          /**
+           * Format: float
+           * @description Total rewards earned in the native protocol token for this protocol
+           * @example 1896.4568
+           */
+          amount?: number;
+        };
+        /**
+         * Format: float
+         * @description Protocol share of the total balance
+         * @example 42.59
+         */
+        balance_share_percent?: number;
+        /**
+         * Format: float
+         * @description Protocol share of the total rewards earned
+         * @example 42.59
+         */
+        rewards_share_percent?: number;
+      }[];
     };
     AccountPayload: {
       /**
@@ -4388,6 +6517,817 @@ export interface components {
        * @example 2023-02-06T21:48:11.038Z
        */
       updated_at: string;
+    };
+    MATICStake: {
+      /**
+       * @description Public key owning shares of a validator
+       * @example 0xe1f4acc0affB36a805474e3b6ab786738C6900A2
+       */
+      delegator_address?: string;
+      /**
+       * @description Validator's index
+       * @example 1
+       */
+      validator_index?: number;
+      /**
+       * @description State of the Matic stake
+       * @example active
+       */
+      state?: string;
+      /**
+       * @description Block at which the corresponding staking transaction was executed
+       * @example 6307582
+       */
+      delegated_block?: number | null;
+      /**
+       * Format: date-time
+       * @description Date of staking transaction on the Ethereum consensus layer
+       * @example 2022-02-02T08:31:07Z
+       */
+      delegated_at?: string | null;
+      /**
+       * @description Current balance in WEI of the stake
+       * @example 11364372934211323407387
+       */
+      balance?: string | null;
+      /**
+       * @description Amount of validator shares owned by the stake
+       * @example 126664878892234995894
+       */
+      shares?: string | null;
+      /**
+       * @description Balance in wei waiting to be withdrawn
+       * @example 11364372934211323407387
+       */
+      unbounded_balance?: string | null;
+      /**
+       * @description Epoch at which the withdrawn was requested
+       * @example 8
+       */
+      unbounded_epoch?: number | null;
+      /**
+       * @description Whether the withdrawal delay since unbounded_epoch has passed
+       * @example true
+       */
+      is_unbounding_complete?: boolean | null;
+      /**
+       * @description Sum of all rewards in WEI earned by this stake
+       * @example 689020902235393456944
+       */
+      rewards?: string | null;
+      /**
+       * @description Net annual percentage yield
+       * @example 4.066307880973232
+       */
+      net_apy?: number | null;
+      /**
+       * @description Available rewards in WEI that can be withdrawn from this stake
+       * @example 659936623311645699
+       */
+      available_rewards?: string | null;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-07-31T13:56:58Z
+       */
+      updated_at?: string | null;
+    };
+    MATICReward: {
+      /**
+       * Format: date
+       * @description Day for this reward entry
+       * @example 2023-01-15
+       */
+      date?: string;
+      /**
+       * @description Accumulated rewards in WEI during the day
+       * @example 2988504000000000
+       */
+      rewards?: string;
+      /**
+       * @description Staked balance in WEI that contributed to this rewards
+       * @example 64000000000000000000
+       */
+      active_balance?: string;
+      /**
+       * @description Gross annual percentage yield
+       * @example 3.407
+       */
+      net_apy?: number;
+      /** @description Estimated value of rewards generated for that day in USD */
+      estimated_rewards_usd?: number;
+      /** @description Estimated value of the staked balance at the beginning of the day in USD */
+      estimated_stake_balance_usd?: number;
+    };
+    MATICOperationShareMinted: {
+      /**
+       * @description Event emitted by a ValidatorShare contract when minting new shares.
+       * This can happen through the buyVoucher, restake and migrateIn methods.
+       * @example share_minted
+       */
+      type?: string;
+      /**
+       * @description Block number containing the transaction
+       * @example 15955054
+       */
+      block?: number;
+      /**
+       * Format: date-time
+       * @description Timestamp of the block
+       * @example 2023-07-31T13:56:58Z
+       */
+      time?: string;
+      /**
+       * @description Base fee used for this block in WEI
+       * @example 7
+       */
+      block_base_fee?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 0x43244f90814b31dec250de24df5bb023a338790c1d5a39244cf1064cf6d98c94
+       */
+      tx_hash?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 1
+       */
+      tx_index?: number;
+      /**
+       * @description Address of the sender of the transaction
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      tx_sender?: string;
+      /**
+       * @description Name of the contract method executed by the transaction
+       * @example buyVoucher
+       */
+      tx_method_name?: string | null;
+      /**
+       * @description Ordered list of smart-contracts in the calling chain
+       * @example [
+       *   "0x1e68238cE926DEC62b3FBC99AB06eB1D85CE0270",
+       *   "0x43244f90814b31dec250de24df5bb023eB1D85CE"
+       * ]
+       */
+      tx_proxies?: string[] | null;
+      /**
+       * @description Gas used by the transaction in WEI
+       * @example 2700999916653262
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Effective gas price used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_effective_gas_price?: string | null;
+      /**
+       * @description Cumulative gas used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_cumulative_gas_used?: string | null;
+      /**
+       * @description Index of the validator recipient of the delegation
+       * @example 1
+       */
+      validator_id?: number;
+      /**
+       * @description Address receiving the shares
+       * @example 0xa
+       */
+      user?: string;
+      /**
+       * @description Amount in WEI deposited by the user
+       * @example 300000000
+       */
+      amount?: string;
+      /**
+       * @description Amount of shares received
+       * @example 300000000
+       */
+      tokens?: string;
+    };
+    MATICOperationShareBurned: {
+      /**
+       * @description Event emitted by a ValidatorShare contract when burning shares.
+       * This can happen through the sellVoucher and migrateOut methods.
+       * @example share_burned
+       */
+      type?: string;
+      /**
+       * @description Block number containing the transaction
+       * @example 15955054
+       */
+      block?: number;
+      /**
+       * Format: date-time
+       * @description Timestamp of the block
+       * @example 2023-07-31T13:56:58Z
+       */
+      time?: string;
+      /**
+       * @description Base fee used for this block in WEI
+       * @example 7
+       */
+      block_base_fee?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 0x43244f90814b31dec250de24df5bb023a338790c1d5a39244cf1064cf6d98c94
+       */
+      tx_hash?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 1
+       */
+      tx_index?: number;
+      /**
+       * @description Address of the sender of the transaction
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      tx_sender?: string;
+      /**
+       * @description Name of the contract method executed by the transaction
+       * @example buyVoucher
+       */
+      tx_method_name?: string | null;
+      /**
+       * @description Ordered list of smart-contracts in the calling chain
+       * @example [
+       *   "0x1e68238cE926DEC62b3FBC99AB06eB1D85CE0270",
+       *   "0x43244f90814b31dec250de24df5bb023eB1D85CE"
+       * ]
+       */
+      tx_proxies?: string[] | null;
+      /**
+       * @description Gas used by the transaction in WEI
+       * @example 2700999916653262
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Effective gas price used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_effective_gas_price?: string | null;
+      /**
+       * @description Cumulative gas used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_cumulative_gas_used?: string | null;
+      /**
+       * @description Index of the validator reducing its shares
+       * @example 1
+       */
+      validator_id?: number;
+      /**
+       * @description Address burning the shares
+       * @example 0xa
+       */
+      user?: string;
+      /**
+       * @description Amount in WEI retrieved by the user
+       * @example 300000000
+       */
+      amount?: string;
+      /**
+       * @description Amount of shares burnt
+       * @example 300000000
+       */
+      tokens?: string;
+    };
+    MATICOperationShareBurnedWithID: {
+      /**
+       * @description Event emitted by a ValidatorShare contract when burning shares.
+       * This can happen through the sellVoucher_new method.
+       * @example share_burned
+       */
+      type?: string;
+      /**
+       * @description Block number containing the transaction
+       * @example 15955054
+       */
+      block?: number;
+      /**
+       * Format: date-time
+       * @description Timestamp of the block
+       * @example 2023-07-31T13:56:58Z
+       */
+      time?: string;
+      /**
+       * @description Base fee used for this block in WEI
+       * @example 7
+       */
+      block_base_fee?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 0x43244f90814b31dec250de24df5bb023a338790c1d5a39244cf1064cf6d98c94
+       */
+      tx_hash?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 1
+       */
+      tx_index?: number;
+      /**
+       * @description Address of the sender of the transaction
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      tx_sender?: string;
+      /**
+       * @description Name of the contract method executed by the transaction
+       * @example buyVoucher
+       */
+      tx_method_name?: string | null;
+      /**
+       * @description Ordered list of smart-contracts in the calling chain
+       * @example [
+       *   "0x1e68238cE926DEC62b3FBC99AB06eB1D85CE0270",
+       *   "0x43244f90814b31dec250de24df5bb023eB1D85CE"
+       * ]
+       */
+      tx_proxies?: string[] | null;
+      /**
+       * @description Gas used by the transaction in WEI
+       * @example 2700999916653262
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Effective gas price used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_effective_gas_price?: string | null;
+      /**
+       * @description Cumulative gas used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_cumulative_gas_used?: string | null;
+      /**
+       * @description Index of the validator reducing its shares
+       * @example 1
+       */
+      validator_id?: number;
+      /**
+       * @description Address burning the shares
+       * @example 0xa
+       */
+      user?: string;
+      /**
+       * @description Amount in WEI retrieved by the user
+       * @example 300000000
+       */
+      amount?: string;
+      /**
+       * @description Amount of shares burnt
+       * @example 300000000
+       */
+      tokens?: string;
+      /**
+       * @description Id of the event, matching a DelegatorUnstakedWithID
+       * @example 1
+       */
+      nonce?: number;
+    };
+    MATICOperationDelegatorRestaked: {
+      /**
+       * @description Event emitted by a ValidatorShare contract when one of its delegators restake its rewards.
+       * This can happen through the restake method.
+       * It is important to note that this event only shows how much matic the delegator has delegated in total, it doesn't show how many rewards were restaked.
+       * @example delegator_restaked
+       */
+      type?: string;
+      /**
+       * @description Block number containing the transaction
+       * @example 15955054
+       */
+      block?: number;
+      /**
+       * Format: date-time
+       * @description Timestamp of the block
+       * @example 2023-07-31T13:56:58Z
+       */
+      time?: string;
+      /**
+       * @description Base fee used for this block in WEI
+       * @example 7
+       */
+      block_base_fee?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 0x43244f90814b31dec250de24df5bb023a338790c1d5a39244cf1064cf6d98c94
+       */
+      tx_hash?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 1
+       */
+      tx_index?: number;
+      /**
+       * @description Address of the sender of the transaction
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      tx_sender?: string;
+      /**
+       * @description Name of the contract method executed by the transaction
+       * @example buyVoucher
+       */
+      tx_method_name?: string | null;
+      /**
+       * @description Ordered list of smart-contracts in the calling chain
+       * @example [
+       *   "0x1e68238cE926DEC62b3FBC99AB06eB1D85CE0270",
+       *   "0x43244f90814b31dec250de24df5bb023eB1D85CE"
+       * ]
+       */
+      tx_proxies?: string[] | null;
+      /**
+       * @description Gas used by the transaction in WEI
+       * @example 2700999916653262
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Effective gas price used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_effective_gas_price?: string | null;
+      /**
+       * @description Cumulative gas used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_cumulative_gas_used?: string | null;
+      /**
+       * @description Index of the validator recipient of the re-delegation
+       * @example 1
+       */
+      validator_id?: number;
+      /**
+       * @description Address re-delegating
+       * @example 0xa
+       */
+      user?: string;
+      /**
+       * @description Total amount of WEI staked
+       * @example 300000000
+       */
+      total_staked?: string;
+    };
+    MATICOperationDelegatorUnstaked: {
+      /**
+       * @description Event emitted by a ValidatorShare contract when one of its delegators unstake MATIC for which shares were burned previously.
+       * This can happen through the unstakeClaimTokens and migrateOut methods.
+       * @example delegator_unstaked
+       */
+      type?: string;
+      /**
+       * @description Block number containing the transaction
+       * @example 15955054
+       */
+      block?: number;
+      /**
+       * Format: date-time
+       * @description Timestamp of the block
+       * @example 2023-07-31T13:56:58Z
+       */
+      time?: string;
+      /**
+       * @description Base fee used for this block in WEI
+       * @example 7
+       */
+      block_base_fee?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 0x43244f90814b31dec250de24df5bb023a338790c1d5a39244cf1064cf6d98c94
+       */
+      tx_hash?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 1
+       */
+      tx_index?: number;
+      /**
+       * @description Address of the sender of the transaction
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      tx_sender?: string;
+      /**
+       * @description Name of the contract method executed by the transaction
+       * @example buyVoucher
+       */
+      tx_method_name?: string | null;
+      /**
+       * @description Ordered list of smart-contracts in the calling chain
+       * @example [
+       *   "0x1e68238cE926DEC62b3FBC99AB06eB1D85CE0270",
+       *   "0x43244f90814b31dec250de24df5bb023eB1D85CE"
+       * ]
+       */
+      tx_proxies?: string[] | null;
+      /**
+       * @description Gas used by the transaction in WEI
+       * @example 2700999916653262
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Effective gas price used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_effective_gas_price?: string | null;
+      /**
+       * @description Cumulative gas used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_cumulative_gas_used?: string | null;
+      /**
+       * @description Index of the validator from which the user is unstaking
+       * @example 1
+       */
+      validator_id?: number;
+      /**
+       * @description Address unstaking
+       * @example 0xa
+       */
+      user?: string;
+      /**
+       * @description Amount of WEI unstaked
+       * @example 300000000
+       */
+      amount?: string;
+    };
+    MATICOperationDelegatorUnstakedWithID: {
+      /**
+       * @description Event emitted by a ValidatorShare contract when one of its delegators unstake MATIC for which shares were burned previously.
+       * This can happen through the unstakeClaimTokens_new.
+       * @example delegator_unstaked
+       */
+      type?: string;
+      /**
+       * @description Block number containing the transaction
+       * @example 15955054
+       */
+      block?: number;
+      /**
+       * Format: date-time
+       * @description Timestamp of the block
+       * @example 2023-07-31T13:56:58Z
+       */
+      time?: string;
+      /**
+       * @description Base fee used for this block in WEI
+       * @example 7
+       */
+      block_base_fee?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 0x43244f90814b31dec250de24df5bb023a338790c1d5a39244cf1064cf6d98c94
+       */
+      tx_hash?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 1
+       */
+      tx_index?: number;
+      /**
+       * @description Address of the sender of the transaction
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      tx_sender?: string;
+      /**
+       * @description Name of the contract method executed by the transaction
+       * @example buyVoucher
+       */
+      tx_method_name?: string | null;
+      /**
+       * @description Ordered list of smart-contracts in the calling chain
+       * @example [
+       *   "0x1e68238cE926DEC62b3FBC99AB06eB1D85CE0270",
+       *   "0x43244f90814b31dec250de24df5bb023eB1D85CE"
+       * ]
+       */
+      tx_proxies?: string[] | null;
+      /**
+       * @description Gas used by the transaction in WEI
+       * @example 2700999916653262
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Effective gas price used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_effective_gas_price?: string | null;
+      /**
+       * @description Cumulative gas used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_cumulative_gas_used?: string | null;
+      /**
+       * @description Index of the validator from which the user is unstaking
+       * @example 1
+       */
+      validator_id?: number;
+      /**
+       * @description Address unstaking
+       * @example 0xa
+       */
+      user?: string;
+      /**
+       * @description Amount of WEI unstaked
+       * @example 300000000
+       */
+      amount?: string;
+      /**
+       * @description Id of the event, matching a ShareBurnedWithID
+       * @example 1
+       */
+      nonce?: number;
+    };
+    MATICOperationDelegatorClaimedRewards: {
+      /**
+       * @description Event emitted by a ValidatorShare contract when one of its delegators withdraw its rewards.
+       * This can happen through most interactions with the contract when the delegators has enough rewards.
+       * @example delegator_claimed_rewards
+       */
+      type?: string;
+      /**
+       * @description Block number containing the transaction
+       * @example 15955054
+       */
+      block?: number;
+      /**
+       * Format: date-time
+       * @description Timestamp of the block
+       * @example 2023-07-31T13:56:58Z
+       */
+      time?: string;
+      /**
+       * @description Base fee used for this block in WEI
+       * @example 7
+       */
+      block_base_fee?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 0x43244f90814b31dec250de24df5bb023a338790c1d5a39244cf1064cf6d98c94
+       */
+      tx_hash?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 1
+       */
+      tx_index?: number;
+      /**
+       * @description Name of the contract method executed by the transaction
+       * @example buyVoucher
+       */
+      tx_method_name?: string | null;
+      /**
+       * @description Address of the sender of the transaction
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      tx_sender?: string;
+      /**
+       * @description Ordered list of smart-contracts in the calling chain
+       * @example [
+       *   "0x1e68238cE926DEC62b3FBC99AB06eB1D85CE0270",
+       *   "0x43244f90814b31dec250de24df5bb023eB1D85CE"
+       * ]
+       */
+      tx_proxies?: string[] | null;
+      /**
+       * @description Gas used by the transaction in WEI
+       * @example 2700999916653262
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Effective gas price used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_effective_gas_price?: string | null;
+      /**
+       * @description Cumulative gas used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_cumulative_gas_used?: string | null;
+      /**
+       * @description Index of the validator from which the user claims its rewards
+       * @example 1
+       */
+      validator_id?: number;
+      /**
+       * @description Address claiming its rewards
+       * @example 0xa
+       */
+      user?: string;
+      /**
+       * @description Amount claimed in WEI
+       * @example 300000000
+       */
+      rewards?: string;
+    };
+    MATICOperationSharesTransfer: {
+      /**
+       * @description Event emitted by a ValidatorShare contract when one of its delegators transfers its shares to another address.
+       * This can happen through the transfer method.
+       * @example delegator_claimed_rewards
+       */
+      type?: string;
+      /**
+       * @description Block number containing the transaction
+       * @example 15955054
+       */
+      block?: number;
+      /**
+       * Format: date-time
+       * @description Timestamp of the block
+       * @example 2023-07-31T13:56:58Z
+       */
+      time?: string;
+      /**
+       * @description Base fee used for this block in WEI
+       * @example 7
+       */
+      block_base_fee?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 0x43244f90814b31dec250de24df5bb023a338790c1d5a39244cf1064cf6d98c94
+       */
+      tx_hash?: string;
+      /**
+       * @description Hash of the transaction
+       * @example 1
+       */
+      tx_index?: number;
+      /**
+       * @description Address of the sender of the transaction
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      tx_sender?: string;
+      /**
+       * @description Name of the contract method executed by the transaction
+       * @example buyVoucher
+       */
+      tx_method_name?: string | null;
+      /**
+       * @description Ordered list of smart-contracts in the calling chain
+       * @example [
+       *   "0x1e68238cE926DEC62b3FBC99AB06eB1D85CE0270",
+       *   "0x43244f90814b31dec250de24df5bb023eB1D85CE"
+       * ]
+       */
+      tx_proxies?: string[] | null;
+      /**
+       * @description Gas used by the transaction in WEI
+       * @example 2700999916653262
+       */
+      tx_gas_used?: string;
+      /**
+       * @description Effective gas price used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_effective_gas_price?: string | null;
+      /**
+       * @description Cumulative gas used for this TX in WEI
+       * @example 1499997889
+       */
+      tx_cumulative_gas_used?: string | null;
+      /**
+       * @description Index of the validator from which the user claims its rewards
+       * @example 1
+       */
+      validator_id?: number;
+      /**
+       * @description Address transfering the shares
+       * @example 0xa
+       */
+      from?: string;
+      /**
+       * @description Address receiving the shares
+       * @example 0xa
+       */
+      to?: string;
+      /**
+       * @description Amount in WEI
+       * @example 300000000
+       */
+      value?: string;
+    };
+    MATICNetworkStats: {
+      /**
+       * @description Gross annual percentage yield
+       * @example 4.5
+       */
+      network_gross_apy?: number;
+      /**
+       * @description Size of Polygon's active set
+       * @example 100
+       */
+      nb_validators?: number;
+      /**
+       * @description Percentage of MATIC being staked
+       * @example 20.4
+       */
+      supply_staked_percent?: number;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-07-31T13:56:58Z
+       */
+      updated_at?: string | null;
     };
     MATICCraftApproveTxPayload: {
       /**
@@ -4660,6 +7600,16 @@ export interface components {
        */
       rewards?: string;
       /**
+       * @description Current unstaked balance in Yocto
+       * @example 1000000000
+       */
+      unstaked_balance?: string;
+      /**
+       * @description Whether the stake can be withdrawn
+       * @example true
+       */
+      can_withdraw?: boolean;
+      /**
        * Format: date-time
        * @description Timestamp of the block at which the corresponding staking transaction was executed
        * @example 2023-01-14T01:13:59Z
@@ -4687,6 +7637,54 @@ export interface components {
        */
       updated_at?: string;
     };
+    NEAROperation: {
+      /**
+       * @description Receipt ID
+       * @example 5f5tskdja3MP4YajQuvhz9bmvY4CqJsYunVKbPcEUEFw
+       */
+      receipt_id?: string;
+      /**
+       * @description Operation type
+       * @example unstake, unstake_all, withdraw, withdraw_all, withdraw, stake, stake_all
+       */
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Date of the block containing the receipt
+       * @example 2023-06-22T15:35:01.892644Z
+       */
+      time?: string;
+      /**
+       * @description Block containing the receipt
+       * @example 15828207
+       */
+      block?: number;
+      /**
+       * @description Hash of the transaction containing the receipt
+       * @example DvzvJVCsm63RiRo8iEdZUEtTwDty2Wb14yqrUr5v9naa
+       */
+      tx_hash?: string;
+      /**
+       * @description Fee paid by the transaction at the origin of the receipt in Yocto
+       * @example 17304
+       */
+      tx_fees?: string;
+      /**
+       * @description Validator ID
+       * @example validator.testnet
+       */
+      validator?: string;
+      /**
+       * @description Account ID
+       * @example account.testnet
+       */
+      account?: string;
+      /**
+       * @description Amount of the operation in Yocto
+       * @example 1000000000000000000000000
+       */
+      amount?: string;
+    };
     NEARRewardByDay: {
       /**
        * Format: date
@@ -4695,12 +7693,12 @@ export interface components {
        */
       date: string;
       /**
-       * @description Accumulated rewards in Yocto during the day
+       * @description Accumulated rewards in Yocto during the day. The sum of rewards computed on the epochs of that day.
        * @example 1000
        */
       rewards?: string;
       /**
-       * @description Active balance in Yocto after rewards computing
+       * @description Active balance in Yocto in the block before the last reward computation that occured that day.
        * @example 1000
        */
       active_balance?: string;
@@ -4709,6 +7707,10 @@ export interface components {
        * @example 3.407
        */
       net_apy?: number;
+      /** @description Estimated value of rewards generated for that day in USD */
+      estimated_rewards_usd?: number;
+      /** @description Estimated value of the staked balance at the beginning of the day in USD */
+      estimated_stake_balance_usd?: number;
     };
     NEARRewardByEpoch: {
       /**
@@ -4724,12 +7726,12 @@ export interface components {
        */
       epoch_ts?: string;
       /**
-       * @description Accumulated rewards in Yocto during the day
+       * @description Accumulated rewards in Yocto during the epoch
        * @example 1000
        */
       rewards?: string;
       /**
-       * @description Active balance in Yocto after rewards computing
+       * @description Active balance in Yocto in the block before rewards computation.
        * @example 1000
        */
       active_balance?: string;
@@ -4751,7 +7753,7 @@ export interface components {
        */
       network_gross_apy?: number;
       /**
-       * @description Supply percentage of Tezos currently staked
+       * @description Supply percentage of NEAR currently staked
        * @example 12.4
        */
       supply_staked_percent?: number;
@@ -4767,35 +7769,672 @@ export interface components {
        */
       near_price_usd?: number;
     };
+    OsmoNetworkStats: {
+      /**
+       * @description Number of active validators
+       * @example 402
+       */
+      nb_validators?: number;
+      /**
+       * @description Gross annual percentage yield
+       * @example 4.5
+       */
+      network_gross_apy?: number;
+      /**
+       * @description Supply percentage of Osmosis  currently staked
+       * @example 12.4
+       */
+      supply_staked_percent?: number;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-01-14T01:13:59Z
+       */
+      updated_at?: string | null;
+      /**
+       * @description Osmosis price in USD
+       * @example 3.5
+       */
+      osmo_price_usd?: number;
+    };
+    EgldNetworkStats: {
+      /**
+       * @description Number of active validators
+       * @example 402
+       */
+      nb_validators?: number;
+      /**
+       * @description Gross annual percentage yield
+       * @example 4.5
+       */
+      network_gross_apy?: number;
+      /**
+       * @description Supply percentage of Osmosis  currently staked
+       * @example 12.4
+       */
+      supply_staked_percent?: number;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-01-14T01:13:59Z
+       */
+      updated_at?: string | null;
+      /**
+       * @description MutiversX price in USD
+       * @example 3.5
+       */
+      egld_price_usd?: number;
+    };
     PostNEARStakesPayload: {
       stakes: {
-          /**
-           * @description Kiln internal stake account ID
-           * @example validator.testnet_account.testnet
-           */
-          stakeAccount?: string;
-          /**
-           * @description Kiln organization account ID
-           * @example account
-           */
-          account?: string;
-          /**
-           * @description Balance to delegate in Yocto
-           * @example 1000000000
-           */
-          balance?: string;
-        }[];
+        /**
+         * @description Kiln internal stake account ID
+         * @example validator.testnet_account.testnet
+         */
+        stakeAccount?: string;
+        /**
+         * @description Kiln organization account ID
+         * @example account
+         */
+        account?: string;
+        /**
+         * @description Balance to delegate in Yocto
+         * @example 1000000000
+         */
+        balance?: string;
+      }[];
       /**
        * @description Kiln Account ID
        * @example 92f5bfd4-ea38-4824-84f7-686eddff5539
        */
       account_id: string;
     };
+    DOTSignedTx: {
+      /**
+       * @description Signed serialized transaction
+       * @example 0xc1018400373c6f8e84c6822a9f87035f65cccf899eef3fcdee61077041a93e1805bab24e00ce178c21ced7677c58ebfb93496dd0a305581bfead9d1e1d7834dd8448dd81612a24548a8650650bb75747b5bfd5fc9373903cacf81bfabed7ae05e53dd5ae0fc5001901000601070010a5d4e8
+       */
+      signed_tx_serialized?: string;
+    };
+    DOTBroadcastTxPayload: {
+      /**
+       * @description Signed serialized transaction
+       * @example 0xc1018400373c6f8e84c6822a9f87035f65cccf899eef3fcdee61077041a93e1805bab24e00ce178c21ced7677c58ebfb93496dd0a305581bfead9d1e1d7834dd8448dd81612a24548a8650650bb75747b5bfd5fc9373903cacf81bfabed7ae05e53dd5ae0fc5001901000601070010a5d4e8
+       */
+      tx_serialized: string;
+    };
+    DOTBroadcastedTx: {
+      /**
+       * @description Hash of the transaction
+       * @example 0x1b9097a6e3d50066348cb173f3150546457a6188fada6a3a40d571798da1a53c
+       */
+      tx_hash?: string;
+    };
+    DOTTxStatus: {
+      /**
+       * @description Request status code
+       * @example 0
+       */
+      code?: number;
+      /**
+       * @description Request status message
+       * @example Success
+       */
+      message?: string;
+      /**
+       * @description Timestamp at which the request was generated
+       * @example 1697471079
+       */
+      generated_at?: number;
+      /**
+       * @description Transaction data
+       * @example {
+       *   "block_timestamp": 1697211912,
+       *   "block_num": 17860727,
+       *   "extrinsic_index": "17860727-2",
+       *   "call_module_function": "join",
+       *   "call_module": "nominationpools",
+       *   "account_id": "5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj",
+       *   "signature": "0x3e80f71312c759ebffeea594f48c0f66cd276e821b37496bef98ef760ee58a6c6289a9656c32a3f23146cdf6d07f9ef9d046c669570d4e4e778b87de43106b06",
+       *   "nonce": 80,
+       *   "extrinsic_hash": "0x1b9097a6e3d50066348cb173f3150546457a6188fada6a3a40d571798da1a53c",
+       *   "success": false,
+       *   "params": [
+       *     {
+       *       "name": "amount",
+       *       "type": "compact<U128>",
+       *       "type_name": "BalanceOf",
+       *       "value": "100000000000"
+       *     },
+       *     {
+       *       "name": "pool_id",
+       *       "type": "U32",
+       *       "type_name": "PoolId",
+       *       "value": 1
+       *     }
+       *   ],
+       *   "transfer": null,
+       *   "event": [
+       *     {
+       *       "event_index": "17860727-2",
+       *       "block_num": 17860727,
+       *       "extrinsic_idx": 2,
+       *       "module_id": "balances",
+       *       "event_id": "Withdraw",
+       *       "params": "[{\"type\":\"[U8; 32]\",\"type_name\":\"AccountId\",\"value\":\"0x373c6f8e84c6822a9f87035f65cccf899eef3fcdee61077041a93e1805bab24e\",\"name\":\"who\"},{\"type\":\"U128\",\"type_name\":\"Balance\",\"value\":\"14717944072\",\"name\":\"amount\"}]",
+       *       "phase": 0,
+       *       "event_idx": 5,
+       *       "extrinsic_hash": "0x1b9097a6e3d50066348cb173f3150546457a6188fada6a3a40d571798da1a53c",
+       *       "finalized": true,
+       *       "block_timestamp": 0
+       *     },
+       *     {
+       *       "event_index": "17860727-2",
+       *       "block_num": 17860727,
+       *       "extrinsic_idx": 2,
+       *       "module_id": "balances",
+       *       "event_id": "Deposit",
+       *       "params": "[{\"type\":\"[U8; 32]\",\"type_name\":\"AccountId\",\"value\":\"0x767f36484b1e2acf5c265c7a64bfb46e95259c66a8189bbcd216195def436852\",\"name\":\"who\"},{\"type\":\"U128\",\"type_name\":\"Balance\",\"value\":\"14717944072\",\"name\":\"amount\"}]",
+       *       "phase": 0,
+       *       "event_idx": 6,
+       *       "extrinsic_hash": "0x1b9097a6e3d50066348cb173f3150546457a6188fada6a3a40d571798da1a53c",
+       *       "finalized": true,
+       *       "block_timestamp": 0
+       *     },
+       *     {
+       *       "event_index": "17860727-2",
+       *       "block_num": 17860727,
+       *       "extrinsic_idx": 2,
+       *       "module_id": "transactionpayment",
+       *       "event_id": "TransactionFeePaid",
+       *       "params": "[{\"type\":\"[U8; 32]\",\"type_name\":\"AccountId\",\"value\":\"0x373c6f8e84c6822a9f87035f65cccf899eef3fcdee61077041a93e1805bab24e\",\"name\":\"who\"},{\"type\":\"U128\",\"type_name\":\"BalanceOf\",\"value\":\"14717944072\",\"name\":\"actual_fee\"},{\"type\":\"U128\",\"type_name\":\"BalanceOf\",\"value\":\"0\",\"name\":\"tip\"}]",
+       *       "phase": 0,
+       *       "event_idx": 7,
+       *       "extrinsic_hash": "0x1b9097a6e3d50066348cb173f3150546457a6188fada6a3a40d571798da1a53c",
+       *       "finalized": true,
+       *       "block_timestamp": 0
+       *     },
+       *     {
+       *       "event_index": "17860727-2",
+       *       "block_num": 17860727,
+       *       "extrinsic_idx": 2,
+       *       "module_id": "system",
+       *       "event_id": "ExtrinsicFailed",
+       *       "params": "[{\"type\":\"sp_runtime:DispatchError\",\"type_name\":\"DispatchError\",\"value\":{\"Module\":{\"error\":\"0x04000000\",\"index\":29}},\"name\":\"dispatch_error\"},{\"type\":\"frame_support:dispatch:DispatchInfo\",\"type_name\":\"DispatchInfo\",\"value\":{\"class\":\"Normal\",\"pays_fee\":\"Yes\",\"weight\":{\"proof_size\":8877,\"ref_time\":1949112000}},\"name\":\"dispatch_info\"}]",
+       *       "phase": 0,
+       *       "event_idx": 8,
+       *       "extrinsic_hash": "0x1b9097a6e3d50066348cb173f3150546457a6188fada6a3a40d571798da1a53c",
+       *       "finalized": true,
+       *       "block_timestamp": 0
+       *     }
+       *   ],
+       *   "event_count": 4,
+       *   "fee": "14717944072",
+       *   "fee_used": "14717944072",
+       *   "error": {
+       *     "module": "NominationPools",
+       *     "name": "AccountBelongsToOtherPool",
+       *     "doc": "An account is already delegating in another pool. An account may only belong to one,pool at a time.",
+       *     "value": "",
+       *     "batch_index": -1
+       *   },
+       *   "finalized": true,
+       *   "lifetime": {
+       *     "birth": 17860724,
+       *     "death": 17860788
+       *   },
+       *   "tip": "0",
+       *   "account_display": {
+       *     "address": "5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj"
+       *   },
+       *   "block_hash": "0x60f526ec0e82a958f6d72e9b9b9d1be392c079bf0c7248e309dd899134add9ee",
+       *   "pending": false
+       * }
+       */
+      data?: Record<string, never>;
+    };
+    DOTPrepareTxPayload: {
+      /**
+       * @description Unsigned serialized transaction
+       * @example 0x20a40259b763d549dfa1c082776a036dd8dabbe8b5e32ee721be017512dc
+       */
+      unsigned_tx_serialized: string;
+      /**
+       * @description Signature of the transaction
+       * @example 0x00ce178c21ced7677c58ebfb93496dd0a305581bfead9d1e1d7834dd8448dd81612a24548a8650650bb75747b5bfd5fc9373903cacf81bfabed7ae05e53dd5ae0f
+       */
+      signature: string;
+    };
+    DOTUnsignedTx: {
+      /**
+       * @description Hash of the unsigned transaction payload to sign
+       * @example 0x0600070010a5d4e803373c6f8e84c6822a9f87035f65cccf899eef3fcdee61077041a93e1805bab24eb5001d0100d624000016000000e143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e28c36af0145fcb9c878851016179049f057988bc805990732fda56d45c48e125
+       */
+      unsigned_tx_payload?: string;
+      /**
+       * @description Unsigned serialized transaction
+       * @example 7b2261646472657373223a2235444b38536871747975566b32773471724639487761424a6f695a5631627951733541525a336466325074385636566a222c2261737365744964223a302c22626c6f636b48617368223a22307832386333366166303134356663623963383738383531303136313739303439663035373938386263383035393930373332666461353664343563343865313235222c22626c6f636b4e756d626572223a2230783031313035303862222c22657261223a22307862353030222c2267656e6573697348617368223a22307865313433663233383033616335306538663666386536323639356431636539653465316436386161333663316364326366643135333430323133663334323365222c226d65746164617461527063223a223078222c226d6574686f64223a22307830363030303730303130613564346538303333373363366638653834633638323261396638373033356636356363636638393965656633666364656536313037373034316139336531383035626162323465222c226e6f6e6365223a2230783030303030303437222c227369676e6564457874656e73696f6e73223a5b22436865636b4e6f6e5a65726f53656e646572222c22436865636b5370656356657273696f6e222c22436865636b547856657273696f6e222c22436865636b47656e65736973222c22436865636b4d6f7274616c697479222c22436865636b4e6f6e6365222c22436865636b576569676874222c224368617267655472616e73616374696f6e5061796d656e74225d2c227370656356657273696f6e223a2230783030303032346436222c22746970223a2230783030303030303030303030303030303030303030303030303030303030303030222c227472616e73616374696f6e56657273696f6e223a2230783030303030303136222c2276657273696f6e223a347d
+       */
+      unsigned_tx_serialized?: string;
+      /**
+       * @description Transaction payload
+       * @example {
+       *   "blockHash": "0x28c36af0145fcb9c878851016179049f057988bc805990732fda56d45c48e125",
+       *   "eraPeriod": 64,
+       *   "genesisHash": "0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e",
+       *   "metadataRpc": "0x",
+       *   "method": {
+       *     "args": {
+       *       "value": "1000000000000",
+       *       "payee": {
+       *         "account": "5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj"
+       *       }
+       *     },
+       *     "name": "bond",
+       *     "pallet": "staking"
+       *   },
+       *   "nonce": 71,
+       *   "specVersion": 9430,
+       *   "tip": 0,
+       *   "transactionVersion": 22
+       * }
+       */
+      unsigned_tx?: Record<string, never>;
+    };
+    DOTCraftBondTxPayload: {
+      /**
+       * Format: uuid
+       * @description Kiln Account ID to stake into
+       * @example b7177fd2-fbb3-479f-aa92-db9fb16e229f
+       */
+      account_id: string;
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      stash_account: string;
+      /**
+       * @description Amount in planck
+       * @example 100000
+       */
+      amount_planck: string;
+      /**
+       * @description Reward destination address. You can also set it to "Stash" to accumulate rewards in the stash account or "Staked" to accumulate rewards in the stash account and stake them (auto-compounding).
+       * @example Staked
+       */
+      reward_destination: string;
+    };
+    DOTCraftBondExtraTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      stash_account: string;
+      /**
+       * @description Amount in planck
+       * @example 100000
+       */
+      amount_planck: string;
+    };
+    DOTCraftRebondTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      stash_account: string;
+      /**
+       * @description Amount in planck
+       * @example 100000
+       */
+      amount_planck: string;
+    };
+    DOTCraftUnbondTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      stash_account: string;
+      /**
+       * @description Amount in planck
+       * @example 100000
+       */
+      amount_planck: string;
+    };
+    DOTCraftNominateTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      stash_account: string;
+      /** @description List of validator addresses to nominate */
+      validator_addresses: string[];
+    };
+    DOTCraftWithdrawUnbondedTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      stash_account: string;
+    };
+    DOTCraftChillTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      stash_account: string;
+    };
+    DOTCraftSetPayeeTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      stash_account: string;
+      /**
+       * @description Reward destination address. You can also set it to "Stash" to accumulate rewards in the stash account or "Staked" to accumulate rewards in the stash account and stake them (auto-compounding).
+       * @example Staked
+       */
+      reward_destination: string;
+    };
+    DOTCraftJoinPoolTxPayload: {
+      /**
+       * Format: uuid
+       * @description Kiln Account ID to stake into
+       * @example b7177fd2-fbb3-479f-aa92-db9fb16e229f
+       */
+      account_id: string;
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      member_account: string;
+      /**
+       * @description Amount in planck
+       * @example 100000
+       */
+      amount_planck: string;
+      /**
+       * @description Id of the pool to join. This can be found on explorers like [Subscan](https://polkadot.subscan.io/nomination_pool/118)
+       * @example 118
+       */
+      pool_id: string;
+    };
+    DOTCraftBondExtraToPoolTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      member_account: string;
+      /**
+       * @description Amount in planck
+       * @example 100000
+       */
+      amount_planck: string;
+    };
+    DOTCraftBondRewardsToPoolTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      member_account: string;
+    };
+    DOTCraftClaimPayoutFromPoolTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      member_account: string;
+    };
+    DOTCraftUnbondFromPoolTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      member_account: string;
+      /**
+       * @description Amount in planck
+       * @example 100000
+       */
+      amount_planck: string;
+    };
+    DOTCraftWithdrawUnbondedFromPoolTxPayload: {
+      /**
+       * @description Wallet address controlling the stake
+       * @example 5DK8ShqtyuVk2w4qrF9HwaBJoiZV1byQs5ARZ3df2Pt8V6Vj
+       */
+      member_account: string;
+    };
+    ETHOnchainV2Stake: {
+      /**
+       * @description Address of the owner of the stake
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      owner?: string;
+      /**
+       * @description Name of the integrator of the stake
+       * @example Kiln
+       */
+      integrator?: string;
+      /**
+       * @description Address of the integrator of the stake
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      integrator_address?: string;
+      /**
+       * @description Balance of the stake in WEI
+       * @example 300000000
+       */
+      balance?: string;
+      /**
+       * @description Rewards of the stake in WEI
+       * @example 300000000
+       */
+      rewards?: string;
+      /**
+       * @description Net annual percentage yield
+       * @example 3.407
+       */
+      nrr?: number;
+      /** @description Structure of the stake */
+      structure?: {
+        /**
+         * @description Name of the pool
+         * @example Kiln Pool
+         */
+        pool?: string;
+        /**
+         * @description Share of the stake in the pool
+         * @example 0.5
+         */
+        share?: number;
+      }[];
+      /**
+       * @description Block at which the stake was delegated
+       * @example 123
+       */
+      delegated_block?: number;
+      /**
+       * Format: date-time
+       * @description Timestamp at which the stake was delegated
+       * @example 2023-01-14T01:13:59Z
+       */
+      delegated_at?: string;
+      /**
+       * Format: date-time
+       * @description Last date this data was updated
+       * @example 2023-01-14T01:13:59Z
+       */
+      updated_at?: string;
+    };
+    ETHOnchainV2Operation: {
+      /**
+       * @description ID for the operation
+       * @example 10970
+       */
+      id?: string;
+      /**
+       * @description Owner (wallet) of the operation
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      owner?: string;
+      /**
+       * @description Timestamp of the operation
+       * @example 2023-09-11T12:54:36.000Z
+       */
+      time?: string;
+      /**
+       * @description Block number of the operation
+       * @example 9676129
+       */
+      block?: number;
+      /**
+       * @description Hash of the transaction associated with the operation
+       * @example 0xce804f083605289e5a1e1d197876067e1d59474e3dbf7faf65f44e7f3db72722
+       */
+      tx_hash?: string;
+    } & (
+      | components["schemas"]["ETHOnChainV2ExitOperation"]
+      | components["schemas"]["ETHOnChainV2ClaimOperation"]
+      | components["schemas"]["ETHOnChainV2DepositOperation"]
+    );
+    ETHOnChainV2ExitOperation: {
+      /** @enum {string} */
+      type?: "exit";
+      /**
+       * @description ID of the exit ticket
+       * @example 6125082604576892342340792916294922100547
+       */
+      ticket_id?: string;
+      /**
+       * @description Status of the exit ticket
+       * @example unfulfillable
+       */
+      ticket_status?: components["schemas"]["EthOnChainV2ExitTicketStatus"];
+      /**
+       * @description Size of the exit ticket in WEI
+       * @example 49982523094294339
+       */
+      size?: string;
+      /**
+       * @description Size of the exit ticket in shares
+       * @example 50157843875857851
+       */
+      size_shares?: string;
+      /**
+       * @description Claimable amount of the exit ticket in WEI
+       * @example 0
+       */
+      claimable?: string;
+      /**
+       * @description Claimable amount of the exit ticket in shares
+       * @example 0
+       */
+      claimable_shares?: string;
+      /**
+       * @description IDs of the casks associated with the exit ticket
+       * @example [
+       *   "43"
+       * ]
+       */
+      cask_ids?: string[];
+    };
+    ETHOnChainV2ClaimOperation: {
+      /** @enum {string} */
+      type?: "claim";
+      ticket_id?: string;
+      ticket_status?: components["schemas"]["EthOnChainV2ClaimTicketStatus"];
+      claimed?: string;
+      claimed_shares?: string;
+      remaining?: string;
+      remaining_shares?: string;
+      used_cask_ids?: string[];
+    };
+    ETHOnChainV2DepositOperation: {
+      /** @enum {string} */
+      type?: "deposit";
+      amount?: string;
+      amount_shares?: string;
+    };
+    /** @enum {string} */
+    EthOnChainV2ExitTicketStatus: "unfulfillable" | "fulfillable" | "partially_fulfillable";
+    /** @enum {string} */
+    EthOnChainV2ClaimTicketStatus: "fulfilled" | "fulfillable" | "partially_fulfillable";
+    ETHOnchainV2Reward: {
+      /**
+       * Format: date
+       * @description Day for this reward entry
+       * @example 2023-01-15
+       */
+      date?: string;
+      /**
+       * @description Accumulated rewards in WEI during the day
+       * @example 1000
+       */
+      rewards?: string;
+      /**
+       * @description Balance in WEI at the end of the day
+       * @example 1000
+       */
+      balance?: string;
+      /**
+       * @description Net annual percentage yield
+       * @example 3.407
+       */
+      nrr?: number;
+      /**
+       * @description Estimated value of rewards generated for that day in USD
+       * @example 400
+       */
+      estimated_rewards_usd?: number;
+      /**
+       * @description Estimated value of the balance at the end of the day in USD
+       * @example 3400
+       */
+      estimated_balance_usd?: number;
+    };
+    ETHOnchainV2NetworkStats: {
+      /**
+       * @description Address of the integration
+       * @example 0x41bf25fc8c52d292bd66d3bcecd8a919ecb9ef88
+       */
+      address?: string;
+      /**
+       * @description Name of the integration
+       * @example Kiln
+       */
+      name?: string;
+      /**
+       * @description Symbol of the integration
+       * @example KILN
+       */
+      symbol?: string;
+      /**
+       * @description Fee of the integration
+       * @example 10
+       */
+      fee?: number;
+      /**
+       * @description Net annual percentage yield
+       * @example 3.407
+       */
+      nrr?: number;
+      /**
+       * @description Total supply of the integration
+       * @example 104865118570632775697
+       */
+      total_supply?: string;
+      /**
+       * @description Total underlying supply of the integration
+       * @example 103891951311279705404
+       */
+      total_underlying_supply?: string;
+    };
   };
   responses: never;
   parameters: {
     /** @description Comma-separated list of validators addresses */
     ETHValidatorsParam?: string[];
+    /** @description Scope of validators to fetch (all network, all kiln keys) */
+    ETHScopeParam?: string;
     /** @description Comma-separated list of wallets addresses */
     ETHWalletsParam?: string[];
     /** @description Comma-separated list of proxy-contract addresses */
@@ -4808,12 +8447,14 @@ export interface components {
     PaginationPageParam?: number;
     /** @description Number of entries to list per page. Only used when `current_page` is specified */
     PaginationPageSizeParam?: number;
-    /** @description Comma-separated list of states to filter on (see `state` for complete list) */
+    /** @description Comma-separated list of states to filter on (see `state` for complete list). Not available with the `scope` parameter */
     FilterStatesParam?: string[];
-    /** @description Get rewards from this date (YYYY-MM-DD) */
+    /** @description Get data from this date (YYYY-MM-DD) */
     StartDateParam?: string;
-    /** @description Get rewards to this date (YYYY-MM-DD) */
+    /** @description Get data to this date (YYYY-MM-DD) */
     EndDateParam?: string;
+    /** @description Include rewards and balance in USD in response. <br/> If a `format` parameter exists it will only work with `format=daily` */
+    IncludeUSDParam?: boolean;
     /** @description Get rewards from this block */
     StartBlockParam?: number;
     /** @description Get rewards to this block */
@@ -4824,25 +8465,29 @@ export interface components {
     OrganizationIdParam: string;
     /** @description Comma-separated list of wallets addresses */
     XTZWalletsParam?: string[];
-    /** @description The cycle from which we want to fetch rewards. Must be used with format=cycle */
+    /** @description The cycle from which we want to fetch rewards. Must be used with `format=cycle` */
     XTZStartCycleParam?: number;
-    /** @description The cycle until which we want to fetch rewards. Must be used with format=cycle */
+    /** @description The cycle until which we want to fetch rewards. Must be used with `format=cycle` */
     XTZEndCycleParam?: number;
-    /** @description The format of the response. Defaults to daily */
+    /** @description The format of the response. Defaults to `daily` */
     XTZRewardsFormatParam?: string;
     ADAStakeAddressesParam?: string;
     ADAWalletsParam?: string;
-    /** @description The format of the response. Defaults to daily */
+    /** @description The format of the response. Defaults to `daily` */
     ADARewardsFormatParam?: string;
+    /** @description The epoch from which we want to fetch rewards. Must be used with `format=epoch` */
+    ADAStartEpochParam?: number;
+    /** @description The epoch until which we want to fetch rewards. Must be used with `format=epoch` */
+    ADAEndEpochParam?: number;
     /** @description Comma-separated list of wallets addresses */
     SOLWalletsParam?: string[];
     /** @description Comma-separated list of stake addresses */
     SOLStakeAccountsParam?: string[];
-    /** @description The epoch from which we want to fetch rewards. Must be used with format=epoch */
+    /** @description The epoch from which we want to fetch rewards. Must be used with `format=epoch` */
     SOLStartEpochParam?: number;
-    /** @description The epoch until which we want to fetch rewards. Must be used with format=epoch */
+    /** @description The epoch until which we want to fetch rewards. Must be used with `format=epoch` */
     SOLEndEpochParam?: number;
-    /** @description The format of the response. Defaults to daily */
+    /** @description The format of the response. Defaults to `daily` */
     SOLRewardsFormatParam?: string;
     /**
      * @description Comma-separated list of validators addresses, these addresses
@@ -4858,26 +8503,49 @@ export interface components {
      * validator address as parameters.
      */
     ATOMDelegatorsParam?: string[];
+    /**
+     * @description Comma-separated list of validators addresses, these addresses
+     * are matched with the corresponding delegator addresses. To
+     * fetch a specific stake, pass your wallet address and the
+     * validator address as parameters.
+     */
+    OSMOValidatorsParam?: string[];
+    /**
+     * @description Comma-separated list of delegator addresses, these addresses
+     * are matched with the corresponding validator addresses. To
+     * fetch a specific stake, pass your wallet address and the
+     * validator address as parameters.
+     */
+    OSMODelegatorsParam?: string[];
+    /** @description Comma-separated list of wallets addresses */
+    MATICWalletsParam?: string[];
+    /** @description Comma-separated list of validators' indexes */
+    MATICValidatorIndexesParam?: number[];
     /** @description Comma-separated list of NEAR account ID */
     NEARWalletsParam?: string[];
     /** @description Comma-separated list of Kiln internal stake account ID */
     NEARStakeAccountsParam?: string[];
-    /** @description The epoch from which we want to fetch rewards. Must be used with format=epoch */
+    /** @description The epoch from which we want to fetch rewards. Must be used with `format=epoch` */
     NEARStartEpochParam?: number;
-    /** @description The epoch until which we want to fetch rewards. Must be used with format=epoch */
+    /** @description The epoch until which we want to fetch rewards. Must be used with `format=epoch` */
     NEAREndEpochParam?: number;
-    /** @description The format of the response. Defaults to daily */
+    /** @description The format of the response. Defaults to `daily` */
     NEARRewardsFormatParam?: string;
+    /** @description The integration address to fetch network stats for */
+    ETHOnChainIntegrationParam: string;
+    /** @description Comma-separated list of operation IDs */
+    ETHOnChainOperationIDs?: string[];
   };
   requestBodies: never;
   headers: never;
   pathItems: never;
 }
 
+export type $defs = Record<string, never>;
+
 export type external = Record<string, never>;
 
 export interface operations {
-
   /**
    * Stakes
    * @description Get the status of Ethereum stakes
@@ -4886,6 +8554,7 @@ export interface operations {
     parameters: {
       query?: {
         validators?: components["parameters"]["ETHValidatorsParam"];
+        scope?: components["parameters"]["ETHScopeParam"];
         wallets?: components["parameters"]["ETHWalletsParam"];
         proxies?: components["parameters"]["ETHProxiesParam"];
         validator_indexes?: components["parameters"]["ETHValidatorIndexesParam"];
@@ -4906,11 +8575,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -4934,11 +8609,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -4946,6 +8627,47 @@ export interface operations {
    * @description Get historical rewards by day of Ethereum stakes
    */
   getEthRewards: {
+    parameters: {
+      query?: {
+        validators?: components["parameters"]["ETHValidatorsParam"];
+        scope?: components["parameters"]["ETHScopeParam"];
+        wallets?: components["parameters"]["ETHWalletsParam"];
+        proxies?: components["parameters"]["ETHProxiesParam"];
+        validator_indexes?: components["parameters"]["ETHValidatorIndexesParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
+        include_usd?: components["parameters"]["IncludeUSDParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ETHReward"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Operations
+   * @description Get the operations of Ethereum stakes
+   */
+  getEthOperations: {
     parameters: {
       query?: {
         validators?: components["parameters"]["ETHValidatorsParam"];
@@ -4962,47 +8684,26 @@ export interface operations {
       200: {
         content: {
           "application/json; charset=utf-8": {
-            data?: components["schemas"]["ETHReward"][];
+            data?: (
+              | components["schemas"]["ETHOperationDeposit"]
+              | components["schemas"]["ETHOperationConsensusWithdrawal"]
+              | components["schemas"]["ETHOperationExecutionReward"]
+            )[];
           };
         };
       };
       /** @description Invalid parameters */
-      400: never;
-      /** @description Unauthorized */
-      401: never;
-      /** @description Internal server error */
-      500: never;
-    };
-  };
-  /**
-   * Operations
-   * @description Get the operations of Ethereum stakes
-   */
-  getEthOperations: {
-    parameters: {
-      query?: {
-        validators?: components["parameters"]["ETHValidatorsParam"];
-        wallets?: components["parameters"]["ETHWalletsParam"];
-        proxies?: components["parameters"]["ETHProxiesParam"];
-        validator_indexes?: components["parameters"]["ETHValidatorIndexesParam"];
-        accounts?: components["parameters"]["AccountsParam"];
+      400: {
+        content: never;
       };
-    };
-    responses: {
-      /** @description Successful operation */
-      200: {
-        content: {
-          "application/json; charset=utf-8": {
-            data?: (components["schemas"]["ETHOperationDeposit"] | components["schemas"]["ETHOperationConsensusWithdrawal"] | components["schemas"]["ETHOperationExecutionReward"])[];
-          };
-        };
-      };
-      /** @description Invalid parameters */
-      400: never;
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5020,9 +8721,13 @@ export interface operations {
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5040,14 +8745,18 @@ export interface operations {
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
    * Validation Keys
-   * @description Create Ethereum validation keys on Kiln's infrastructure.
+   * @description Create Ethereum native validation keys on Kiln's infrastructure.
    */
   postEthKeys: {
     /** @description Ethereum keys to generate */
@@ -5066,11 +8775,91 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Validation On-Chain V1 Keys
+   * @description Create Ethereum validation keys for the Kiln On-Chain V1
+   * smart-contract suite. This route is for Ethereum operators
+   * only of the Kiln On-Chain V1 smart-contract. Use `/v1/eth/keys`
+   * if you want to use classic native staking.
+   */
+  postEthOnChainKeys: {
+    /** @description Ethereum keys to generate */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["ETHPostKeysOnChainPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ETHPostKeysCliResponse"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Validation On-Chain V2 Keys
+   * @description Create Ethereum validation keys for the Kiln On-Chain V2
+   * smart-contract suite. This route is for Ethereum operators
+   * only of the Kiln On-Chain V2 (vSuite) smart-contract. Use `/v1/eth/keys` if
+   * you want to use classic native staking.
+   */
+  postEthVSuiteKeys: {
+    /** @description Ethereum keys to generate on withdrawal channel 0 of the vSuite contract */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["ETHPostKeysVSuitePayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ETHPostKeysCliResponse"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5089,16 +8878,22 @@ export interface operations {
       201: {
         content: {
           "application/json; charset=utf-8": {
-            data?: components["schemas"]["ETHUnsignedTx"];
+            data?: components["schemas"]["ETHStakeTx"];
           };
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5122,11 +8917,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5150,11 +8951,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5178,11 +8985,83 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Request Exit
+   * @description Generates an Ethereum EIP 1559 request-exit transaction
+   */
+  postEthRequestExitTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["ETHCraftRequestExitTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ETHUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Decoding
+   * @description Decode a transaction
+   */
+  getEthTxDecoding: {
+    parameters: {
+      query: {
+        /** @description Raw transaction to decode */
+        tx_serialized: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": Record<string, never>;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5205,11 +9084,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5232,13 +9117,21 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Non-existing stake or the stake is not eligible to for exits (it needs to be active on chain) */
-      404: never;
+      404: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5262,11 +9155,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5283,6 +9182,7 @@ export interface operations {
         end_date?: components["parameters"]["EndDateParam"];
         start_cycle?: components["parameters"]["XTZStartCycleParam"];
         end_cycle?: components["parameters"]["XTZEndCycleParam"];
+        include_usd?: components["parameters"]["IncludeUSDParam"];
       };
     };
     responses: {
@@ -5290,16 +9190,22 @@ export interface operations {
       200: {
         content: {
           "application/json; charset=utf-8": {
-            data?: (components["schemas"]["XTZDailyReward"] | components["schemas"]["XTZCycleReward"])[];
+            data?: (components["schemas"]["XTZRewardByDay"] | components["schemas"]["XTZRewardByCycle"])[];
           };
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5311,6 +9217,8 @@ export interface operations {
       query?: {
         wallets?: components["parameters"]["XTZWalletsParam"];
         accounts?: components["parameters"]["AccountsParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
       };
     };
     responses: {
@@ -5318,16 +9226,27 @@ export interface operations {
       200: {
         content: {
           "application/json; charset=utf-8": {
-            data?: (components["schemas"]["XTZOperationDelegate"] | components["schemas"]["XTZOperationUndelegate"] | components["schemas"]["XTZOperationActivation"] | components["schemas"]["XTZOperationPayment"])[];
+            data?: (
+              | components["schemas"]["XTZOperationDelegate"]
+              | components["schemas"]["XTZOperationUndelegate"]
+              | components["schemas"]["XTZOperationActivation"]
+              | components["schemas"]["XTZOperationPayment"]
+            )[];
           };
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5345,9 +9264,13 @@ export interface operations {
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5369,11 +9292,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5397,11 +9326,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5425,11 +9360,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5453,11 +9394,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5481,11 +9428,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5511,11 +9464,49 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Decoding
+   * @description Decode a Tezos transaction
+   */
+  getXtzTxDecoding: {
+    parameters: {
+      query: {
+        /** @description Raw transaction to decode */
+        tx_serialized: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": Record<string, never>;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5540,11 +9531,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5568,11 +9565,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5585,11 +9588,12 @@ export interface operations {
         stake_accounts?: components["parameters"]["SOLStakeAccountsParam"];
         wallets?: components["parameters"]["SOLWalletsParam"];
         accounts?: components["parameters"]["AccountsParam"];
+        format?: components["parameters"]["SOLRewardsFormatParam"];
         start_date?: components["parameters"]["StartDateParam"];
         end_date?: components["parameters"]["EndDateParam"];
-        format?: components["parameters"]["SOLRewardsFormatParam"];
         start_epoch?: components["parameters"]["SOLStartEpochParam"];
         end_epoch?: components["parameters"]["SOLEndEpochParam"];
+        include_usd?: components["parameters"]["IncludeUSDParam"];
       };
     };
     responses: {
@@ -5602,11 +9606,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5619,6 +9629,8 @@ export interface operations {
         stake_accounts?: components["parameters"]["SOLStakeAccountsParam"];
         wallets?: components["parameters"]["SOLWalletsParam"];
         accounts?: components["parameters"]["AccountsParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
       };
     };
     responses: {
@@ -5626,16 +9638,31 @@ export interface operations {
       200: {
         content: {
           "application/json; charset=utf-8": {
-            data?: (components["schemas"]["SOLOperationCreateAccountWithSeed"] | components["schemas"]["SOLOperationCreateAccount"] | components["schemas"]["SOLOperationDelegate"] | components["schemas"]["SOLOperationDeactivate"] | components["schemas"]["SOLOperationRedelegate"] | components["schemas"]["SOLOperationSplit"] | components["schemas"]["SOLOperationWithdraw"] | components["schemas"]["SOLOperationMerge"])[];
+            data?: (
+              | components["schemas"]["SOLOperationCreateAccountWithSeed"]
+              | components["schemas"]["SOLOperationCreateAccount"]
+              | components["schemas"]["SOLOperationDelegate"]
+              | components["schemas"]["SOLOperationDeactivate"]
+              | components["schemas"]["SOLOperationRedelegate"]
+              | components["schemas"]["SOLOperationSplit"]
+              | components["schemas"]["SOLOperationWithdraw"]
+              | components["schemas"]["SOLOperationMerge"]
+            )[];
           };
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5653,9 +9680,13 @@ export interface operations {
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5679,11 +9710,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5707,11 +9744,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5735,11 +9778,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5763,11 +9812,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5791,11 +9846,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5819,11 +9880,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5847,11 +9914,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5875,11 +9948,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5903,16 +9982,54 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Decoding
+   * @description Decode a transaction
+   */
+  getSolTxDecoding: {
+    parameters: {
+      query: {
+        /** @description Raw transaction to decode */
+        tx_serialized: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": Record<string, never>;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
    * Stakes
-   * @description Get the status of ATOM stakes. Units are in uATOM (10⁻⁶ ATOM). Only stakes active after [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available.
+   * @description Retrieve the status of ATOM stakes, expressed in uATOM (10⁻⁶ ATOM). All stakes that have been active since [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available. For stakes without a specific delegation timestamp, the API computes the status based on the first available reward snapshot to provide a comprehensive overview.
    */
   getAtomStakes: {
     parameters: {
@@ -5932,11 +10049,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -5960,18 +10083,62 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
    * Rewards
-   * @description Get historical rewards by day of ATOM stakes. Units are in uATOM (10⁻⁶ ATOM). Only daily breakdowns starting 13/04/2022 ([Theta v7](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary)) are available.
+   * @description Get historical rewards by day of ATOM stakes. Units are in uATOM (10⁻⁶ ATOM). Only daily breakdowns after 13/04/2022 ([Theta v7](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary)) are available.
    */
   getAtomRewards: {
+    parameters: {
+      query?: {
+        validators?: components["parameters"]["ATOMValidatorsParam"];
+        delegators?: components["parameters"]["ATOMDelegatorsParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
+        include_usd?: components["parameters"]["IncludeUSDParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ATOMReward"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Operations
+   * @description Get the operations of ATOM stakes. Units are in uATOM (10⁻⁶ ATOM). All operations after [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available.
+   */
+  getAtomOperations: {
     parameters: {
       query?: {
         validators?: components["parameters"]["ATOMValidatorsParam"];
@@ -5986,16 +10153,27 @@ export interface operations {
       200: {
         content: {
           "application/json; charset=utf-8": {
-            data?: components["schemas"]["ATOMReward"][];
+            data?: (
+              | components["schemas"]["ATOMOperationDelegate"]
+              | components["schemas"]["ATOMOperationUndelegate"]
+              | components["schemas"]["ATOMOperationRedelegate"]
+              | components["schemas"]["ATOMOperationWithdrawRewards"]
+            )[];
           };
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6013,9 +10191,13 @@ export interface operations {
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6038,11 +10220,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6066,11 +10254,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6094,11 +10288,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6122,11 +10322,51 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Redelegate Transaction
+   * @description Generates a redelegate transaction on Cosmos to move a stake from a validator to another without going through the 21 days unbonding period.
+   */
+  postAtomRedelegateTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["ATOMCraftRedelegateTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ATOMUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6150,11 +10390,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6178,11 +10424,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6206,11 +10458,525 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Decoding
+   * @description Decode a transaction
+   */
+  getAtomTxDecoding: {
+    parameters: {
+      query: {
+        /** @description Raw transaction to decode */
+        tx_serialized: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": Record<string, never>;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Stakes
+   * @description Get the status of OSMO stakes. Units are in uOSMO (10⁻⁶ OSMO). All stakes active after [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available.
+   */
+  getOsmoStakes: {
+    parameters: {
+      query?: {
+        validators?: components["parameters"]["OSMOValidatorsParam"];
+        delegators?: components["parameters"]["OSMODelegatorsParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMOStake"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Create stakes
+   * @description Link an OSMO stake to a Kiln account
+   */
+  postOsmoStakes: {
+    /** @description Stakes to create */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["PostOSMOStakesPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["CoreStake"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Rewards
+   * @description Get historical rewards by day of OSMO stakes. Units are in uOSMO (10⁻⁶ OSMO). Only daily breakdowns after 13/04/2022 ([Theta v7](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary)) are available.
+   */
+  getOsmoRewards: {
+    parameters: {
+      query?: {
+        validators?: components["parameters"]["OSMOValidatorsParam"];
+        delegators?: components["parameters"]["OSMODelegatorsParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
+        include_usd?: components["parameters"]["IncludeUSDParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMOReward"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Operations
+   * @description Get the operations of OSMO stakes. Units are in uOSMO (10⁻⁶ OSMO). All operations after [Theta v7 (12/04/2022)](https://github.com/cosmos/gaia/tree/main/docs/roadmap#cosmos-hub-summary) are available.
+   */
+  getOsmoOperations: {
+    parameters: {
+      query?: {
+        validators?: components["parameters"]["OSMOValidatorsParam"];
+        delegators?: components["parameters"]["OSMODelegatorsParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: (
+              | components["schemas"]["OSMOOperationDelegate"]
+              | components["schemas"]["OSMOOperationUndelegate"]
+              | components["schemas"]["OSMOOperationRedelegate"]
+              | components["schemas"]["OSMOOperationWithdrawRewards"]
+            )[];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Network Stats
+   * @description Get some network statistics on Cosmos
+   */
+  getOsmoNetworkStats: {
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMONetworkStats"];
+          };
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Reports
+   * @description Get reports on Cosmos staking
+   */
+  getOsmoReports: {
+    parameters: {
+      query?: {
+        delegators?: components["parameters"]["OSMODelegatorsParam"];
+        validators?: components["parameters"]["OSMOValidatorsParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/octet-stream": string;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Stake Transaction
+   * @description Generates a delegate transaction on Cosmos
+   */
+  postOsmoStakeTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["OSMOCraftStakeTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMOUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Withdraw Rewards Transaction
+   * @description Generates a withdraw rewards transaction on Cosmos
+   */
+  postOsmoWithdrawRewardsTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["OSMOCraftWithdrawRewardsTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMOUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Unstake Transaction
+   * @description Generates an undelegate transaction on Cosmos
+   */
+  postOsmoUnstakeTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["OSMOCraftUnstakeTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMOUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Redelegate Transaction
+   * @description Generates a redelegate transaction on Cosmos to move a stake from a validator to another without going through the 21 days unbonding period.
+   */
+  postOsmoRedelegateTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["OSMOCraftRedelegateTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMOUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Prepare Transaction
+   * @description Prepare an unsigned transaction for broadcast by adding signatures to it
+   */
+  postOsmoPrepareTx: {
+    /** @description Transaction to prepare */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["OSMOPrepareTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMOSignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Broadcast Transaction
+   * @description Broadcast a signed transaction to the Cosmos network
+   */
+  postOsmoBroadcastTx: {
+    /** @description Transaction to broadcast */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["OSMOBroadcastTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMOTxHash"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Status
+   * @description Get the status of a transaction
+   */
+  getOsmoTxStatus: {
+    parameters: {
+      query: {
+        /** @description Hash of the transaction */
+        tx_hash: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["OSMOTxStatus"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Decoding
+   * @description Decode a transaction
+   */
+  getOsmoTxDecoding: {
+    parameters: {
+      query: {
+        /** @description Raw transaction to decode */
+        tx_serialized: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": Record<string, never>;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6222,15 +10988,19 @@ export interface operations {
       /** @description Successful operation */
       200: {
         content: {
-          "application/json": {
+          "application/json; charset=utf-8": {
             data?: components["schemas"]["AccountsResponse"];
           };
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6248,17 +11018,23 @@ export interface operations {
       /** @description Successful operation */
       201: {
         content: {
-          "application/json": {
+          "application/json; charset=utf-8": {
             data?: components["schemas"]["Account"];
           };
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6275,15 +11051,19 @@ export interface operations {
       /** @description Successful operation */
       200: {
         content: {
-          "application/json": {
+          "application/json; charset=utf-8": {
             data?: components["schemas"]["Account"];
           };
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6306,17 +11086,23 @@ export interface operations {
       /** @description Successful operation */
       200: {
         content: {
-          "application/json": {
+          "application/json; charset=utf-8": {
             data?: components["schemas"]["Account"];
           };
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6333,15 +11119,19 @@ export interface operations {
       /** @description Successful operation */
       200: {
         content: {
-          "application/json": {
+          "application/json; charset=utf-8": {
             data?: components["schemas"]["Account"];
           };
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6358,15 +11148,19 @@ export interface operations {
       /** @description Successful operation */
       200: {
         content: {
-          "application/json": {
+          "application/json; charset=utf-8": {
             data?: components["schemas"]["Portfolio"];
           };
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6383,15 +11177,95 @@ export interface operations {
       /** @description Successful operation */
       200: {
         content: {
-          "application/json": {
+          "application/json; charset=utf-8": {
             data?: components["schemas"]["Portfolio"];
           };
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Stakes
+   * @description Get the status of Cardano stakes
+   */
+  getAdaStakes: {
+    parameters: {
+      query?: {
+        stake_addresses?: components["parameters"]["ADAStakeAddressesParam"];
+        wallets?: components["parameters"]["ADAWalletsParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ADAStake"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Rewards
+   * @description Get historical rewards by day of ADA stakes
+   */
+  getAdARewards: {
+    parameters: {
+      query?: {
+        stake_addresses?: components["parameters"]["ADAStakeAddressesParam"];
+        wallets?: components["parameters"]["ADAWalletsParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+        format?: components["parameters"]["ADARewardsFormatParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
+        start_epoch?: components["parameters"]["ADAStartEpochParam"];
+        end_epoch?: components["parameters"]["ADAEndEpochParam"];
+        include_usd?: components["parameters"]["IncludeUSDParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: (components["schemas"]["ADARewardByDay"] | components["schemas"]["ADARewardByEpoch"])[];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6415,11 +11289,41 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Network Stats
+   * @description Get some network statistics on ADA staking
+   */
+  getAdaNetworkStats: {
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ADANetworkStats"];
+          };
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6443,11 +11347,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6471,11 +11381,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6499,11 +11415,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6527,11 +11449,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6555,11 +11483,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6583,11 +11517,190 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Decoding
+   * @description Decode a transaction
+   */
+  getAdaTxDecoding: {
+    parameters: {
+      query: {
+        /** @description Raw transaction to decode */
+        tx_serialized: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": Record<string, never>;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Stakes
+   * @description Get the status of Matic stakes
+   */
+  getMaticStakes: {
+    parameters: {
+      query?: {
+        wallets?: components["parameters"]["MATICWalletsParam"];
+        validator_indexes?: components["parameters"]["MATICValidatorIndexesParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["MATICStake"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Rewards
+   * @description Get historical rewards by day of Matic stakes
+   */
+  getMaticRewards: {
+    parameters: {
+      query?: {
+        wallets?: components["parameters"]["MATICWalletsParam"];
+        validator_indexes?: components["parameters"]["MATICValidatorIndexesParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
+        include_usd?: components["parameters"]["IncludeUSDParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["MATICReward"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Operations
+   * @description Get the operations of Polygon stakes
+   */
+  getMaticOperations: {
+    parameters: {
+      query?: {
+        wallets?: components["parameters"]["MATICWalletsParam"];
+        validator_indexes?: components["parameters"]["MATICValidatorIndexesParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: (
+              | components["schemas"]["MATICOperationShareMinted"]
+              | components["schemas"]["MATICOperationShareBurned"]
+              | components["schemas"]["MATICOperationShareBurnedWithID"]
+              | components["schemas"]["MATICOperationDelegatorRestaked"]
+              | components["schemas"]["MATICOperationDelegatorUnstaked"]
+              | components["schemas"]["MATICOperationDelegatorUnstakedWithID"]
+              | components["schemas"]["MATICOperationDelegatorClaimedRewards"]
+              | components["schemas"]["MATICOperationSharesTransfer"]
+            )[];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Network Stats
+   * @description Get some network statistics on Matic staking
+   */
+  getMaticNetworkStats: {
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["MATICNetworkStats"];
+          };
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6611,11 +11724,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6639,11 +11758,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6667,11 +11792,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6695,11 +11826,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6723,11 +11860,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6751,11 +11894,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6779,11 +11928,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6807,11 +11962,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6835,11 +11996,49 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Decoding
+   * @description Decode a transaction of the Ethereum network
+   */
+  getMaticTxDecoding: {
+    parameters: {
+      query: {
+        /** @description Raw transaction to decode */
+        tx_serialized: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": Record<string, never>;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6864,11 +12063,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6892,11 +12097,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6914,6 +12125,7 @@ export interface operations {
         end_date?: components["parameters"]["EndDateParam"];
         start_epoch?: components["parameters"]["NEARStartEpochParam"];
         end_epoch?: components["parameters"]["NEAREndEpochParam"];
+        include_usd?: components["parameters"]["IncludeUSDParam"];
       };
     };
     responses: {
@@ -6926,11 +12138,53 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Operations
+   * @description Get the operations of NEAR stakes
+   */
+  getNearOperations: {
+    parameters: {
+      query?: {
+        stake_accounts?: components["parameters"]["NEARStakeAccountsParam"];
+        accounts?: components["parameters"]["AccountsParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["NEAROperation"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6954,11 +12208,17 @@ export interface operations {
         };
       };
       /** @description Invalid parameters */
-      400: never;
+      400: {
+        content: never;
+      };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
     };
   };
   /**
@@ -6976,9 +12236,817 @@ export interface operations {
         };
       };
       /** @description Unauthorized */
-      401: never;
+      401: {
+        content: never;
+      };
       /** @description Internal server error */
-      500: never;
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Decoding
+   * @description Decode a transaction
+   */
+  getNearTxDecoding: {
+    parameters: {
+      query: {
+        /** @description Raw transaction to decode */
+        tx_serialized: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": Record<string, never>;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Network Stats
+   * @description Get stats on MutiversX network
+   */
+  getEgldNetworkStats: {
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["EgldNetworkStats"];
+          };
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Bond Transaction
+   * @description Generates a bond transaction on Polkadot
+   */
+  postDotBondTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftBondTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Bond extra Transaction
+   * @description Generates a bond extra transaction on Polkadot
+   */
+  postDotBondExtraTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftBondExtraTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Rebond Transaction
+   * @description Generates a rebond transaction on Polkadot (to be used to rebond unbonding token)
+   */
+  postDotRebondTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftRebondTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Unbond Transaction
+   * @description Generates an unbond transaction on Polkadot
+   */
+  postDotUnbondTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftUnbondTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Nominate Transaction
+   * @description Generates a nominate transaction on Polkadot
+   */
+  postDotNominateTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftNominateTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Withdraw unbonded Transaction
+   * @description Generates a withdraw unbonded transaction on Polkadot
+   */
+  postDotWithdrawUnbondedTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftWithdrawUnbondedTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Chill Transaction
+   * @description Generates a chill transaction on Polkadot
+   */
+  postDotChillTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftChillTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Set payee Transaction
+   * @description Generates a set payee transaction on Polkadot
+   */
+  postDotSetPayeeTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftSetPayeeTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Join pool Transaction
+   * @description Generates a join pool transaction on Polkadot
+   */
+  postDotJoinPoolTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftJoinPoolTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Bond extra to pool Transaction
+   * @description Generates a bond extra to pool transaction on Polkadot
+   */
+  postDotBondExtraToPoolTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftBondExtraToPoolTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Bond rewards to pool Transaction
+   * @description Generates a bond rewards to pool transaction on Polkadot
+   */
+  postDotBondRewardsToPoolTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftBondRewardsToPoolTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Claim payout from pool Transaction
+   * @description Generates a claim payout (rewards) from pool transaction on Polkadot
+   */
+  postDotClaimPayoutFromPoolTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftClaimPayoutFromPoolTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Unbond from pool Transaction
+   * @description Generates an unbond from pool transaction on Polkadot
+   */
+  postDotUnbondFromPoolTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftUnbondFromPoolTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Withdraw unbonded from pool Transaction
+   * @description Generates a withdraw unbonded from pool transaction on Polkadot
+   */
+  postDotWithdrawUnbondedFromPoolTx: {
+    /** @description Transaction to craft */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTCraftWithdrawUnbondedFromPoolTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTUnsignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Status
+   * @description Get the status of a transaction
+   */
+  getDotTxStatus: {
+    parameters: {
+      query: {
+        /** @description Hash of the transaction */
+        tx_hash: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTTxStatus"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Transaction Decoding
+   * @description Decode a transaction
+   */
+  getDotTxDecoding: {
+    parameters: {
+      query: {
+        /** @description Raw transaction to decode */
+        tx_serialized: string;
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": Record<string, never>;
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Prepare Transaction
+   * @description Prepare a transaction for broadcast on Polkadot by adding a signature to it
+   */
+  postDotPrepareTx: {
+    /** @description Transaction to prepare */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTPrepareTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTSignedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Broadcast Transaction
+   * @description Broadcast a signed transaction on Polkadot
+   */
+  postDotBroadcastTx: {
+    /** @description Transaction to broadcast */
+    requestBody: {
+      content: {
+        "application/json; charset=utf-8": components["schemas"]["DOTBroadcastTxPayload"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      201: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["DOTBroadcastedTx"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * On-Chain V2 Stakes
+   * @description Get the status of Ethereum OnChain V2 (vSuite) stakes
+   */
+  getEthOnchainV2Stakes: {
+    parameters: {
+      query?: {
+        wallets?: components["parameters"]["ETHWalletsParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ETHOnchainV2Stake"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * On-Chain V2 Operations
+   * @description Get the operations of Ethereum OnChain V2 (vSuite) operations
+   */
+  getEthOnchainV2Operations: {
+    parameters: {
+      query?: {
+        wallets?: components["parameters"]["ETHWalletsParam"];
+        ids?: components["parameters"]["ETHOnChainOperationIDs"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ETHOnchainV2Operation"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * On-Chain V2 Rewards
+   * @description Get historical rewards of Ethereum OnChain V2 (vSuite) daily rewards
+   */
+  getEthOnchainV2Rewards: {
+    parameters: {
+      query?: {
+        wallets?: components["parameters"]["ETHWalletsParam"];
+        start_date?: components["parameters"]["StartDateParam"];
+        end_date?: components["parameters"]["EndDateParam"];
+        include_usd?: components["parameters"]["IncludeUSDParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ETHOnchainV2Reward"][];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * On-Chain V2 Network Stats
+   * @description Get the network stats of Ethereum OnChain V2 (vSuite) integration
+   */
+  getEthOnchainV2NetworkStats: {
+    parameters: {
+      query: {
+        integration: components["parameters"]["ETHOnChainIntegrationParam"];
+      };
+    };
+    responses: {
+      /** @description Successful operation */
+      200: {
+        content: {
+          "application/json; charset=utf-8": {
+            data?: components["schemas"]["ETHOnchainV2NetworkStats"];
+          };
+        };
+      };
+      /** @description Invalid parameters */
+      400: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+      /** @description Internal server error */
+      500: {
+        content: never;
+      };
     };
   };
 }
