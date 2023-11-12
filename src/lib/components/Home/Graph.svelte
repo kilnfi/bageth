@@ -33,7 +33,11 @@
     legend: {
       inactiveColor: "#9ca3af4F",
       textStyle: { color: "#9ca3af", fontFamily: "Space grotesk", fontSize: 14 },
-      data: ["Concensus rewards", "Exec rewards (MEV)", "Exec rewards (Non-MEV)"],
+      data: [
+        { icon: "circle", name: "Concensus rewards" },
+        { icon: "circle", name: "Exec rewards (MEV)" },
+        { icon: "circle", name: "Exec rewards (Non-MEV)" },
+      ],
     },
     title: {
       textStyle: { color: "rgb(209,213,219)", fontSize: "20px", fontFamily: "Space grotesk", fontWeight: "normal" },

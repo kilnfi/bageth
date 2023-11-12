@@ -7,6 +7,18 @@
   export { clazz as class };
 </script>
 
+<svelte:window
+  on:keydown={(e) => {
+    if (
+      e.key === "Escape" && // the key pressed is Escape
+      open && //the modal is opened
+      !required // the modal is not required to be closed manually
+    ) {
+      open = false;
+    }
+  }}
+/>
+
 {#if open}
   <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
   <div

@@ -25,7 +25,7 @@ export function formatAddress(address: string, length = 5) {
 }
 
 export function formatEth(eth: string, decimals = 4) {
-  return parseFloat(formatEther(BigInt(eth))).toFixed(decimals);
+  return formatNumber(Number(formatEther(BigInt(eth))), decimals);
 }
 
 export function formatDate(date: string | Date) {
@@ -49,4 +49,8 @@ export function getRandomRange() {
   const start = Math.floor(Math.random() * RANDOM_SEARCH[get(network)]);
   const end = start + Math.floor(Math.random() * 100) + 10;
   return `${start}..${end}`;
+}
+
+export function formatNumber(number: number, maximumFractionDigits: number = 2) {
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(number);
 }

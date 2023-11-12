@@ -46,7 +46,7 @@
         <a
           data-sveltekit-noscroll
           href={getPageLink($page, i)}
-          class="px-3 py-1 {i === current_page ? 'bg-dark-light' : ''}"
+          class="px-3 py-1 {i === current_page ? '!bg-dark-light' : ''}"
         >
           {i}
         </a>
