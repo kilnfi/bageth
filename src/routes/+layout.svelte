@@ -4,12 +4,13 @@
   import "tippy.js/themes/light-border.css";
   import "tippy.js/themes/translucent.css";
 
-  import Footer from "$lib/components/Footer.svelte";
-  import Header from "$lib/components/Header.svelte";
-  import Seo from "$lib/components/Seo.svelte";
+  import { onMount } from "svelte";
   import nProgress from "nprogress";
   import { afterNavigate, beforeNavigate } from "$app/navigation";
-  import { onMount } from "svelte";
+
+  import Footer from "$lib/components/Shared/Footer.svelte";
+  import NavBar from "$lib/components/Header/NavBar.svelte";
+  import Seo from "$lib/components/Shared/Seo.svelte";
 
   onMount(() => nProgress.configure({ showSpinner: false }));
   afterNavigate(() => nProgress.done());
@@ -18,7 +19,7 @@
 
 <Seo />
 
-<Header />
+<NavBar />
 
 <slot />
 
