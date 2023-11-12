@@ -1,13 +1,12 @@
 import type { PageServerLoad } from "./$types";
 import { queryRewards, queryStakes } from "$lib/server/query";
 import { createServerClient } from "$lib/server/fetcher";
-import type { Network } from "$lib/store/network";
 import { error } from "@sveltejs/kit";
 import { formatDate } from "$lib/utils";
 import { subMonths } from "date-fns";
 
 export const load = (async ({ url, fetch, params }) => {
-  const network = params.network as Network;
+  const network = params.network;
   const search = url.searchParams.get("search");
   const current_page = Number(url.searchParams.get("current_page")) || 1;
   const page_size = Number(url.searchParams.get("page_size")) || 10;
