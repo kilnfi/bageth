@@ -3,7 +3,6 @@ import { queryRewards, queryStakes } from "$lib/server/query";
 import { createServerClient } from "$lib/server/fetcher";
 import type { Network } from "$lib/store/network";
 import { error } from "@sveltejs/kit";
-import { isBLS } from "$lib/utils/validation";
 import { formatDate } from "$lib/utils";
 import { subMonths } from "date-fns";
 
