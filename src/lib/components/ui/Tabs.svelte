@@ -19,25 +19,12 @@
   $: if (browser && active) $tabPos = getPos(active);
 </script>
 
-<div
-  on:mouseleave
-  role="navigation"
-  class="
-    relative
-    flex items-center
-    bg-white dark:bg-black
-    text-black dark:text-white
-  "
-  style="--width: {width}%"
->
-  {#each tabs as tab, i}
+<div role="navigation" class="relative flex items-center bg-dark" style="--width: {width}%">
+  {#each tabs as tab (tab)}
     <div
       role="navigation"
-      class="
-        w-[--width]
-        flex items-center justify-center
-        rounded-lg text-center
-      "
+      class="w-[--width] flex items-center justify-center
+        text-white text-center"
     >
       <slot name="tab" {tab} />
     </div>
@@ -52,13 +39,11 @@
         left: calc({$tabPos}%);
         background-color: {activeColor};
       "
-      class="
-        absolute h-full
+      class="absolute h-full
         rounded-lg
         pointer-events-none
         mix-blend-difference
-        transition-colors duration-200
-      "
+        transition-colors duration-200"
     />
   {/if}
 </div>

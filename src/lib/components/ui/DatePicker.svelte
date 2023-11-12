@@ -4,9 +4,6 @@
   import { formatDate, parseDate } from "$lib/utils";
   import { addDays, format, subMonths, subQuarters, subWeeks, subYears } from "date-fns";
 
-  let clazz = "";
-  export { clazz as class };
-
   export let start = formatDate(subMonths(new Date(), 1));
   export let end = formatDate(new Date());
 
@@ -56,17 +53,13 @@
 </script>
 
 <div
-  class="
-    w-full max-w-5xl px-4 py-2
-    grid sm:grid-cols-[auto_auto_1fr] gap-3
-    border rounded-lg
-    bg-white dark:bg-black
-    {clazz}
-  "
+  class="grid sm:grid-cols-[auto_auto_1fr] gap-3 mb-4
+    border border-dark-light rounded-lg max-w-full
+    overflow-auto px-4 py-2 bg-dark"
 >
-  <div class="flex gap-3 flex-wrap">
+  <div class="flex gap-3">
     <div class="flex items-center gap-3">
-      <span class="dark:text-white">From</span>
+      <span class="text-gray-400">From</span>
 
       <input
         type="date"
@@ -80,7 +73,7 @@
     </div>
 
     <div class="flex items-center gap-3">
-      <span class="dark:text-white">To</span>
+      <span class="text-gray-400">To</span>
 
       <input
         type="date"
@@ -95,12 +88,12 @@
     </div>
   </div>
 
-  <div class="h-[1px] w-full sm:h-full sm:w-[1px] bg-gray-200" />
+  <div class="h-[1px] w-full sm:h-full sm:w-[1px] bg-dark-light" />
 
-  <div class="flex items-center gap-3">
-    <span class="dark:text-white">Preset</span>
+  <div class="flex items-center w-full gap-3">
+    <span class="text-gray-400">Preset</span>
 
-    <div class="flex w-full gap-2 max-sm:flex-wrap">
+    <div class="flex w-full gap-2">
       <button class:active={active === "week"} on:click={handleLastWeek}> week </button>
       <button class:active={active === "month"} on:click={handleLastMonth}> month </button>
       <button class:active={active === "quarter"} on:click={handleLastQuarter}> quarter </button>
@@ -116,13 +109,13 @@
     @apply border rounded-lg
       px-2 py-1
       outline-none
-      bg-gray-50
-      focus:ring-2 focus:ring-black focus:ring-opacity-30;
+      bg-dark-light border-dark-light text-white;
+    color-scheme: dark;
   }
   button {
-    @apply sm:w-full rounded-lg border border-gray-200 bg-gray-100 px-2 py-1;
+    @apply md:w-full text-gray-300 rounded-lg border border-dark-light bg-dark px-2 py-1;
   }
   button.active {
-    @apply bg-gray-200;
+    @apply bg-gray-200 text-dark;
   }
 </style>

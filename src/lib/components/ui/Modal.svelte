@@ -19,23 +19,18 @@
   <div
     use:focusTrap={open}
     role="dialog"
-    class="
-      z-50 p-3
-      fixed top-[50%] max-w-[80vw] -translate-y-1/2
+    class="z-50 p-3
+      fixed top-[50%]
+      max-w-[calc(100%-32px)] xl:max-w-6xl -translate-y-1/2 w-full
       flex flex-col gap-y-3
-      bg-white shadow-2xl
-      rounded-lg border
-      {clazz}
-    "
+      bg-dark shadow-2xl
+      rounded-lg border border-dark-light
+      {clazz}"
   >
     <slot name="title" />
 
     <slot name="content" />
 
-    <slot name="footer">
-      <div class="flex justify-center">
-        <button on:click={() => (open = false)} class="px-2 py-1 rounded-lg bg-black text-white w-20"> close </button>
-      </div>
-    </slot>
+    <slot name="footer" />
   </div>
 {/if}

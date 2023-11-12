@@ -28,23 +28,17 @@
 </script>
 
 {#if page_count !== 0}
-  <div class="flex gap-x-2 justify-center mb-4">
-    <div class="flex gap-2">
+  <div class="flex justify-between">
+    <div
+      class="flex border border-dark-light rounded text-white
+        [&>*]:bg-dark overflow-hidden
+        [&>a:hover]:bg-dark/70 [&>a:hover]:text-white/50
+        [&>a]:transition-colors [&>a]:duration-200
+        [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-dark-light"
+    >
       {#if page_count > 3 && current_page > 3}
-        <a
-          data-sveltekit-noscroll
-          href={getPageLink($page, 1)}
-          class="
-            text-sm px-3 py-1
-            border rounded border-gray-400
-            bg-gray-100 hover:bg-gray-400
-          "
-        >
-          1
-        </a>
-        {#if current_page > 4}
-          <span class="text-gray-500 px-2">...</span>
-        {/if}
+        <a data-sveltekit-noscroll href={getPageLink($page, 1)} class="px-3 py-1"> 1 </a>
+        {#if current_page > 4}<span class="px-2">...</span>{/if}
       {/if}
       {#each [...Array(page_count)]
         .map((_, i) => i + 1)
@@ -52,28 +46,14 @@
         <a
           data-sveltekit-noscroll
           href={getPageLink($page, i)}
-          class="
-            text-sm px-3 py-1
-            rounded border border-gray-400
-            hover:bg-gray-400 {i === current_page ? 'bg-gray-400' : 'bg-gray-100'}
-          "
+          class="px-3 py-1 {i === current_page ? 'bg-dark-light' : ''}"
         >
           {i}
         </a>
       {/each}
       {#if page_count > 2 && current_page < page_count - 2}
-        {#if current_page < page_count - 3}
-          <span class="text-gray-500 px-2">...</span>
-        {/if}
-        <a
-          data-sveltekit-noscroll
-          href={getPageLink($page, page_count)}
-          class="
-            text-sm px-3 py-1
-            bg-gray-100 hover:bg-gray-400
-            border border-gray-400 rounded
-          "
-        >
+        {#if current_page < page_count - 3}<span class="px-2">...</span>{/if}
+        <a data-sveltekit-noscroll href={getPageLink($page, page_count)} class="px-3 py-1">
           {page_count}
         </a>
       {/if}
@@ -82,7 +62,9 @@
     <select
       value={page_size}
       on:change={(e) => changePageSize(Number(e.currentTarget.value))}
-      class="border border-gray-400 px-2 py-1 rounded"
+      class="border border-dark-light px-2 py-1 rounded
+        text-white bg-dark hover:bg-dark/80 hover:text-white/60
+        transition-colors duration-200 cursor-pointer"
     >
       {#each sizes as size}
         <option value={size}>{size}</option>
