@@ -254,7 +254,9 @@
     <tbody
       slot="body"
       use:pulseLoading={Boolean($navigating)}
-      class="[&>tr]:cursor-pointer [&_td:not(first-child)]:!pr-1"
+      class="{data.data?.data !== undefined && data.data?.data.length > 0
+        ? '[&>tr]:cursor-pointer'
+        : ''} [&_td:not(first-child)]:!pr-1"
     >
       {#each data?.data?.data ?? [] as item}
         {@const wallet = item.withdrawal_credentials
@@ -324,7 +326,7 @@
           </td>
         </tr>
       {:else}
-        <tr><td colspan="10" class="text-center p-4">No stakes found</td></tr>
+        <td colspan="10" class="text-center p-4">No stakes found</td>
       {/each}
     </tbody>
 

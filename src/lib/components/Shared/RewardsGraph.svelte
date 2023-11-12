@@ -139,7 +139,10 @@
   });
 </script>
 
-<div class="relative overflow-x-auto max-w-6xl w-full p-4 bg-dark border-dark-light border rounded-lg mb-4">
+<div
+  class="{data.length === 0 ? 'overflow-x-hidden' : 'overflow-x-auto'} relative
+    max-w-6xl w-full p-4 bg-dark border-dark-light border rounded-lg mb-4"
+>
   <div bind:this={chartRef} />
 
   {#if data.length === 0}
