@@ -1,14 +1,16 @@
-<img src="./static/favicon.png" width="64" height="64" />
+<img src="./static/favicon.svg" width="64" height="64" />
 
 # Bageth
 
-Ethereum Explorer for the Beaconchain
-
-<img src="./static/header.jpg" />
+Bageth.xyz is a user-friendly interface for Kiln Connect, enabling easy validator
+queries and real-time staking info in your browser.
 
 Currently includes:
 
-- Stake explorer
+- Stakes
+- Rewards
+- Operations
+- Network stats
 
 ## Developing
 
