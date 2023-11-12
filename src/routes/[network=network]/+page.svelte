@@ -17,6 +17,4 @@
   <Stats data={data.stats} price={data.price ?? 0} />
 </GridBackground>
 
-{#if data.rewards?.data}
-  <Graph data={data.rewards} />
-{/if}
+<Graph data={data.rewards} />

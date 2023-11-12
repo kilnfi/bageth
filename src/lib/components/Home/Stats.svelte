@@ -7,7 +7,7 @@
 
   const format = (num: string = "0") => Number(formatEther(BigInt(num))).toFixed(4);
 
-  let stats = data?.data?.at(0);
+  let stats = data?.at(0);
   let validator_count = stats?.active_validator_count?.toFixed(0);
   let staked_balance = format(stats?.stake_balance);
   let concensus_rewards = format(stats?.consensus_rewards);

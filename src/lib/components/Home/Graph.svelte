@@ -8,7 +8,7 @@
   export let data: PageServerData["rewards"];
 
   const plottedData =
-    data?.data?.map((d) => ({
+    data?.map((d) => ({
       mev: Number(formatEther(BigInt(d.mev_execution_rewards ?? "0"))),
       non_mev: Number(formatEther(BigInt(d.non_mev_execution_rewards ?? "0"))),
       consensus: Number(formatEther(BigInt(d.consensus_rewards ?? "0"))),

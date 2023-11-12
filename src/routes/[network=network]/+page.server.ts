@@ -7,17 +7,23 @@ export const load = (async ({ fetch, params, setHeaders }) => {
   const network = params.network;
   const fetcher = createServerClient(network, fetch);
 
-  const rewards = await fetcher.GET("/v1/eth/rewards", { params: { query: { scope: "network" } } });
-
-  const stats = await fetcher.GET("/v1/eth/rewards", {
-    params: { query: { scope: "network", start_date: formatDate(subDays(new Date(), 1)) } },
-  });
-
-  const price = await fetcher.GET("/v1/eth/network-stats", {});
+  const [rewards, stats, price] = await Promise.all([
+    fetcher
+      .GET("/v1/eth/rewards", {
+        params: { query: { scope: "network" } },
+      })
+      .then((e) => e.data?.data),
+    fetcher
+      .GET("/v1/eth/rewards", {
+        params: { query: { scope: "network", start_date: formatDate(subDays(new Date(), 1)) } },
+      })
+      .then((e) => e.data?.data),
+    fetcher.GET("/v1/eth/network-stats", {}).then((e) => e.data?.data?.eth_price_usd),
+  ]);
 
   setHeaders({
     "cache-control": `max-age=${60 * 60 * 12}`,
   });
 
-  return { rewards: rewards.data, stats: stats.data, price: price.data?.data?.eth_price_usd };
+  return { rewards, stats, price };
 }) satisfies PageServerLoad;
