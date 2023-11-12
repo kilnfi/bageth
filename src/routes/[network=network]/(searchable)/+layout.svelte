@@ -2,6 +2,7 @@
   import { beforeNavigate, goto, onNavigate } from "$app/navigation";
   import { page } from "$app/stores";
   import Curl from "$lib/components/Shared/Curl.svelte";
+  import ExportCsv from "$lib/components/Shared/ExportCsv.svelte";
   import SearchForm from "$lib/components/Shared/SearchForm.svelte";
 
   $: search = $page.url.searchParams.get("search") ?? "";
@@ -26,7 +27,11 @@
 
   <Curl url={$page.data.url} />
 
-  <div class="w-full mt-8">
+  {#if search !== ""}
+    <ExportCsv {search} {type} />
+  {/if}
+
+  <div class={search === "" ? "mt-8" : "mt-2"}>
     <slot />
   </div>
 </div>
