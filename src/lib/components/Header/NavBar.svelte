@@ -29,7 +29,7 @@
 </script>
 
 <header class="w-full relative p-4 lg:px-28 lg:py-6 flex gap-y-3 items-center bg-darker border-b">
-  <a href="/">
+  <a href="/{$network}">
     <Logo />
   </a>
 
