@@ -1,4 +1,7 @@
+import type { Network } from "$lib/store/network";
+import network from "$lib/store/network";
 import { format, parse } from "date-fns";
+import { get } from "svelte/store";
 import { formatEther } from "viem";
 
 export function createRange(start: number, end: number, max = 1_000): number[] | null {
@@ -35,4 +38,15 @@ export function parseDate(date: string) {
 
 export function reverseObject<T extends PropertyKey, K extends PropertyKey>(object: Record<T, K>): Record<K, T> {
   return Object.fromEntries(Object.entries(object).map(([key, value]) => [value, key]));
+}
+
+export function getRandomRange() {
+  const RANDOM_SEARCH: Record<Network, number> = {
+    goerli: 500_000,
+    mainnet: 800_000,
+    holesky: 1_400_000,
+  };
+  const start = Math.floor(Math.random() * RANDOM_SEARCH[get(network)]);
+  const end = start + Math.floor(Math.random() * 100) + 10;
+  return `${start}..${end}`;
 }
