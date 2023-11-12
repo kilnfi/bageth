@@ -78,7 +78,7 @@
   </thead>
 
   <tbody slot="body" use:pulseLoading={Boolean($navigating)}>
-    {#each data?.data?.data.filter((item) => item.type === activeTab) ?? [] as item}
+    {#each data?.data?.data.filter((item) => item.type === activeTab) ?? [] as item, idx}
       <tr>
         <td>{format(new Date(item.time ?? 0), "yyyy-MM-dd")}</td>
         <td>
@@ -115,20 +115,26 @@
               </ExternalLink>
             {:else}-{/if}
           </td>
-          <td class="!p-0 relative">
+          <td>
             <div
-              class="flex flex-col gap-1 h-14
-                overflow-y-hidden p-2
-                hover:h-auto hover:my-2
-                bg-dark hover:border border-dark-light rounded"
+              use:tooltip={{
+                allowHTML: true,
+                interactive: true,
+                content: document.querySelector(`#tooltip-content-${idx}`)?.outerHTML,
+              }}
             >
-              {#each item.proxies ?? [] as proxy}
-                <div class="p-1 border rounded-lg">
+              {item.proxies && item.proxies?.length > 0
+                ? `${formatAddress(item.proxies.at(0) ?? "")} (${item.proxies.length})`
+                : "-"}
+            </div>
+            <div class="hidden">
+              <div id="tooltip-content-{idx}" class="flex flex-col gap-2 p-2">
+                {#each item?.proxies ?? [] as proxy}
                   <ExternalLink variant="beaconcha.in" href="/address/{proxy}">
-                    {formatAddress(proxy)}
+                    {formatAddress(proxy, 10)}
                   </ExternalLink>
-                </div>
-              {/each}
+                {/each}
+              </div>
             </div>
           </td>
           <td>
