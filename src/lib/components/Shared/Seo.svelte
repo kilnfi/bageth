@@ -19,11 +19,11 @@
     },
     {
       property: "og:image",
-      content: "https://bageth.nakamotards.com/favicon.ico",
+      content: "https://www.bageth.xyz/favicon.ico",
     },
     {
       property: "og:url",
-      content: "https://bageth.nakamotards.com",
+      content: "https://www.bageth.xyz",
     },
     {
       property: "twitter:title",
@@ -31,7 +31,7 @@
     },
     {
       property: "twitter:image",
-      content: "https://bageth.nakamotards.com/favicon.ico",
+      content: "https://www.bageth.xyz/favicon.ico",
     },
     {
       property: "twitter:description",
