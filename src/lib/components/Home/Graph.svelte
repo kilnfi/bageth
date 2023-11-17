@@ -66,7 +66,14 @@
       axisTick: { show: true, lineStyle: { color: "#91908F" } },
     },
     dataZoom: [
-      { type: "inside", start: 100 - (180 /* days */ / plottedData.length) * 100, end: 100 },
+      {
+        type: "inside",
+        zoomOnMouseWheel: false,
+        moveOnMouseWheel: false,
+        moveOnMouseMove: false,
+        start: 100 - (180 /* days */ / plottedData.length) * 100,
+        end: 100,
+      },
       {
         textStyle: { color: "#B9B9B9" },
         moveHandleStyle: { color: "#B9B9B9" },
