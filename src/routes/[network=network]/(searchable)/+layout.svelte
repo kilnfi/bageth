@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { beforeNavigate, goto, onNavigate } from "$app/navigation";
+  import { beforeNavigate, goto } from "$app/navigation";
   import { page } from "$app/stores";
   import Curl from "$lib/components/Shared/Curl.svelte";
   import ExportCsv from "$lib/components/Shared/ExportCsv.svelte";
   import SearchForm from "$lib/components/Shared/SearchForm.svelte";
+  import type { LayoutRouteId } from "./$types";
 
   $: search = $page.url.searchParams.get("search") ?? "";
-  $: type = $page.url.pathname.split("/")[2];
+  $: type = ($page.route.id as LayoutRouteId).split("(searchable)")[1].replace("/", "");
 
   beforeNavigate((e) => {
     if (

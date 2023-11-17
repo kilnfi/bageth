@@ -77,7 +77,14 @@
       },
     ],
     dataZoom: [
-      { type: "inside", start: 100 - (1800000 /* days */ / plottedData.length) * 100, end: 100 },
+      {
+        type: "inside",
+        zoomOnMouseWheel: false,
+        moveOnMouseWheel: false,
+        moveOnMouseMove: false,
+        start: 0,
+        end: 100,
+      },
       {
         textStyle: { color: "#B9B9B9" },
         moveHandleStyle: { color: "#B9B9B9" },

@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { formatEther } from "viem";
   import type { PageServerData } from "../../../routes/[network=network]/$types";
-  import { formatEth } from "$lib/utils";
+  import { formatEth, formatNumber } from "$lib/utils";
 
   export let data: PageServerData["stats"];
   export let price: number;
 
   let stats = data?.at(0);
-  let validator_count = stats?.active_validator_count?.toFixed(0);
+  let validator_count = formatNumber(stats?.active_validator_count ?? 0, 0);
   let staked_balance = formatEth(stats?.stake_balance ?? "0");
   let concensus_rewards = formatEth(stats?.consensus_rewards ?? "0");
   let execution_rewards = formatEth(stats?.execution_rewards ?? "0");
