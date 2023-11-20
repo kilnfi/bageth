@@ -28,7 +28,7 @@
 
   <Curl url={$page.data.url} />
 
-  {#if search !== ""}
+  {#if search !== "" && $page.data.url}
     <ExportCsv {search} {type} />
   {/if}
 
