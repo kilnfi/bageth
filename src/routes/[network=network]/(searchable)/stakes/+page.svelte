@@ -115,7 +115,7 @@
       </div>
 
       <div class="flex gap-5">
-        <div class="relative pt-4 px-3 pb-2 border border-dark-light rounded-lg">
+        <div class="relative flex w-1/2 pt-4 px-3 pb-2 border border-dark-light rounded-lg">
           <span
             class="absolute text-white text-sm top-[-16px] left-3.5 px-2 py-0.5 rounded-lg border bg-[#3F606F] border-[#548296]"
             use:tooltip={{ content: help.consensus_rewards }}
@@ -123,11 +123,11 @@
             consensus rewards
           </span>
           <span class="text-lg whitespace-nowrap text-white">
-            {stake.consensus_rewards ? `${formatEth(stake.consensus_rewards, 10)} ETH` : "-"}
+            {stake.consensus_rewards ? `${formatEth(stake.consensus_rewards, 6)} ETH` : "-"}
           </span>
         </div>
 
-        <div class="relative pt-4 px-3 pb-2 border border-dark-light rounded-lg">
+        <div class="relative w-1/2 pt-4 px-3 pb-2 border border-dark-light rounded-lg">
           <span
             class="absolute text-white text-sm top-[-16px] left-3.5 px-2 py-0.5 rounded-lg border bg-[#463F6E] border-[#625997]"
             use:tooltip={{ content: help.execution_rewards }}
@@ -135,7 +135,7 @@
             execution rewards
           </span>
           <span class="text-lg whitespace-nowrap text-white">
-            {stake.execution_rewards ? `${formatEth(stake.execution_rewards, 10)} ETH` : "-"}
+            {stake.execution_rewards ? `${formatEth(stake.execution_rewards, 6)} ETH` : "-"}
           </span>
         </div>
       </div>

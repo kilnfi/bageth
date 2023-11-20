@@ -4,9 +4,9 @@
 
 <p
   class="
-    px-3 py-2 my-4
-    text-red-600 bg-red-50
-    border rounded border-red-500
+    px-5 py-3 my-5
+    text-red-500/80 bg-dark
+    border rounded-xl border-red-500/60
   "
 >
   {$page.error?.message}

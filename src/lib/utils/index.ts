@@ -51,6 +51,9 @@ export function getRandomRange() {
   return `${start}..${end}`;
 }
 
-export function formatNumber(number: number, maximumFractionDigits: number = 2) {
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(number);
+export function formatNumber(number: number, precision: number = 2) {
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: precision,
+    minimumFractionDigits: precision,
+  }).format(number);
 }
