@@ -22,4 +22,9 @@ interface String {
     searchValue: Lookup,
     replaceValue: Value
   ): Replace<This, Lookup, Value>;
+
+  includes<This extends string, Search extends string>(
+    this: This,
+    searchString: Search
+  ): this is `${string}${Search}${string}`;
 }

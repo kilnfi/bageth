@@ -47,6 +47,6 @@
 }
 
 #nprogress .bar {
-  @apply fixed z-50 top-0 left-0 w-full h-[2px];
+  @apply fixed z-50 top-0 left-0 w-full h-[4px];
   background: radial-gradient(circle, #ffb82f 0%, #b0b8ff 40%, #131313ff 85%);
 }

@@ -13,7 +13,8 @@ export function isIndex(index: string) {
   return indexRegex.test(index);
 }
 
-export function isIndexRange(index: string) {
+export function isIndexRange(index: string): index is `${string}..${string}` {
+  if (!index.includes("..")) return false;
   const range = index.split("..");
   return range.length === 2 && range.every((x) => isIndex(x));
 }

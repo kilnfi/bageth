@@ -1,7 +1,7 @@
 import { page } from "$app/stores";
 import { derived } from "svelte/store";
 
-export const NETWORKS = ["mainnet", "goerli"] as const;
+export const NETWORKS = ["mainnet", "goerli", "holesky"] as const;
 
 export type Network = (typeof NETWORKS)[number];
 
