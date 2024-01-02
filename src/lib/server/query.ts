@@ -76,9 +76,7 @@ async function internal_query(endpoint: ApiRoutes, { fetcher, search, params }: 
     const range = search.split("..");
     const indexRange = createRange(Number(range[0]), Number(range[1]));
 
-    if (indexRange === null) {
-      return null;
-    }
+    if (indexRange === null) return null;
 
     const data = await fetcher.GET(endpoint, {
       params: { query: { validator_indexes: indexRange, ...params } },
